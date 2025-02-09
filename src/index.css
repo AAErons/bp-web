@@ -1,0 +1,8 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+@import "tailwindcss/index";
+@import "tailwindcss/theme";
+
+@theme {
+    --color-bpGreen: #06aa94;
+}
