@@ -6,3 +6,11 @@
 @theme {
     --color-bpGreen: #06aa94;
 }
+
+.scroll-snap-type-y {
+    scroll-snap-type: y mandatory;
+}
+
+.scroll-snap-start {
+    scroll-snap-align: start;
+}
