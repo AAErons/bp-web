@@ -1,52 +1,29 @@
 import backgroundImage from './assets/0.jpg';
 import members from './assets/members.jpg';
 import whiteLogo from './assets/2.png';
-import sniegs from './assets/sniegs.png';
-import jeekaa from './assets/jeekaa_outline.png';
-import dj from './assets/dj_outline.png';
-import zirnis from './assets/zirnis_outline.png';
-import abra from './assets/abra_outline.png';
 import about_us from './assets/about_us.jpg';
-import * as React from "react";
-import {useState} from "react";
+import {useEffect, useRef} from "react";
 
 
 export default function App() {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const handleClick = () => {
-        setIsOpen(!isOpen);
-    };
-
     return (
         <div className="h-screen w-full scroll-smooth overflow-y-scroll scroll-snap-type-y mandatory">
             {/* Sections */}
             <div className="space-y-5 scroll-snap-start">
-                <HomeSection id="home" backgroundImage={backgroundImage}>
-                    <p>Welcome to my portfolio! Scroll down to see my work.</p>
-                </HomeSection>
+                <Section id="home" backgroundImage={backgroundImage}/>
 
-                <AboutUsSection id="portfolio" backgroundImage={about_us}>
-                    <p>Here are some of my projects and works.</p>
-                </AboutUsSection>
+                <EmptySection id="portfolio" backgroundImage={about_us}/>
 
-                <MembersSection id="members" backgroundImage={members} useClick={handleClick} isOpen={isOpen}>
-                </MembersSection>
+                <EmptySection id="members" backgroundImage={members}/>
 
-                <EmptySection id="contact">
-                    <p>Get in touch with me through my socials or email.</p>
-                </EmptySection>
+                <EmptySection id="contact" />
             </div>
         </div>
     );
 }
 
-function HomeSection({
-                         id,
-                         backgroundImage,
-                     }: {
+function Section({id,backgroundImage}: {
     id: string;
-    children: React.ReactNode;
     backgroundImage?: string;
 }) {
     return (
@@ -81,120 +58,80 @@ function HomeSection({
     );
 }
 
-function AboutUsSection({
-                            id,
-                            backgroundImage,
-                        }: {
-    id: string;
-    children: React.ReactNode;
-    backgroundImage?: string;
-}) {
+function EmptySection({ id, backgroundImage }: { id: string; backgroundImage?: string }) {
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const slides = ["Page 1", "Page 2", "Page 3"]; // Your actual slides
+
+    // Add first & last slide duplicates for looping
+    const clonedSlides = [slides[slides.length - 1], ...slides, slides[0]];
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            // Start at the first real slide (index 1)
+            const initialPosition = window.innerWidth;
+            scrollRef.current.scrollLeft = initialPosition;
+        }
+    }, []);
+
+    const scroll = (direction: "left" | "right") => {
+        if (!scrollRef.current) return;
+
+        const scrollAmount = window.innerWidth;
+        const newPosition =
+            direction === "left"
+                ? scrollRef.current.scrollLeft - scrollAmount
+                : scrollRef.current.scrollLeft + scrollAmount;
+
+        scrollRef.current.scrollTo({ left: newPosition, behavior: "smooth" });
+
+        setTimeout(() => {
+            if (!scrollRef.current) return;
+
+            const maxScroll = scrollAmount * (slides.length);
+            if (scrollRef.current.scrollLeft >= maxScroll) {
+                // If at the fake last slide, jump to the first real slide
+                scrollRef.current.scrollLeft = scrollAmount;
+            } else if (scrollRef.current.scrollLeft <= 0) {
+                // If at the fake first slide, jump to the last real slide
+                scrollRef.current.scrollLeft = maxScroll - scrollAmount;
+            }
+        }, 500); // Timeout to allow smooth scrolling before the "jump"
+    };
+
     return (
         <section
             id={id}
-            className="h-screen flex flex-col justify-center scroll-snap-start items-center bg-bpGreen"
+            className="h-screen flex flex-col justify-center items-center scroll-snap-start bg-gray-100 relative"
             style={{
                 backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                backgroundSize: "cover",
+                backgroundPosition: "center",
             }}
         >
-            <p className="text-9xl text-cyan-50">Section Under Construction!</p>
-
-
-        </section>
-    );
-}
-
-function MembersSection({
-                            id,
-                            useClick,
-                            isOpen,
-                            backgroundImage
-                        }: {
-    id: string;
-    useClick: () => void;
-    isOpen: boolean;
-    backgroundImage?: string;
-}) {
-    return (
-        <section
-            id={id}
-            className="h-screen flex flex-col justify-center scroll-snap-start items-center bg-bpGreen relative"
-            style={{
-                backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-            }}
-        >
-            <div className="relative w-full h-full">
-                <img
-                    src={jeekaa}
-                    alt="Description of image"
-                    className="absolute top-120 left-10 w-1/3 h-1/3 object-contain scale-[inherit] hover:scale-105"
-                    onClick={useClick}
-                />
-                <img
-                    src={sniegs}
-                    alt="Description of image"
-                    className="absolute top-90 right-190 w-1/2 h-1/2 object-contain scale-[inherit] hover:scale-105"
-                    onClick={useClick}
-                />
-                <img
-                    src={abra}
-                    alt="Description of image"
-                    className="absolute bottom-30 left-130 w-1/2 h-1/2 object-contain scale-[inherit] hover:scale-105"
-                    onClick={useClick}
-                />
-                <img
-                    src={zirnis}
-                    alt="Description of image"
-                    className="absolute bottom-10 left-190 w-1/2 h-1/2 object-contain scale-[inherit] hover:scale-105"
-                    onClick={useClick}
-                />
-                
-                <img
-                    src={dj}
-                    alt="Description of image"
-                    className="absolute top-95 right-5 transform w-1/4 h-1/4 object-contain scale-[inherit] hover:scale-105"
-                    onClick={useClick}
-                />
-                {isOpen && (
-                    <div
-                        className="relative h-1/2 w-1/2 inset-0 bg-bpGreen bg-opacity-50 flex justify-center items-center"
-                        onClick={useClick} // Close the div when clicked outside
-                    >
-                        <div className="text-white p-4">
-                            <p>This is your content inside the black background div!</p>
-                        </div>
+            {/* Scrollable Container */}
+            <div ref={scrollRef} className="w-full h-full overflow-x-auto flex whitespace-nowrap scroll-smooth no-scrollbar">
+                {clonedSlides.map((slide, index) => (
+                    <div key={index} className="min-w-full h-full flex items-center justify-center bg-gray-200">
+                        {slide}
                     </div>
-                )}
+                ))}
             </div>
+
+            {/* Left Button */}
+            <button
+                onClick={() => scroll("left")}
+                className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+            >
+                ◀
+            </button>
+
+            {/* Right Button */}
+            <button
+                onClick={() => scroll("right")}
+                className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+            >
+                ▶
+            </button>
         </section>
     );
 }
-
-function EmptySection({
-                          id,
-                          backgroundImage,
-                      }: {
-    id: string;
-    children: React.ReactNode;
-    backgroundImage?: string;
-}) {
-    return (
-        <section
-            id={id}
-            className="h-screen flex flex-col justify-center scroll-snap-start items-center bg-bpGreen"
-            style={{
-                backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-            }}
-        >
-            <p className="text-9xl text-cyan-50">Section Under Construction!</p>
-
-        </section>
-    );
-}
-
