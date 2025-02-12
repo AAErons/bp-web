@@ -1,222 +1,85 @@
 import backgroundImage from './assets/0.jpg';
 import whiteLogo from './assets/2.png';
-import about_us from './assets/about_us.jpg';
+import about_us from './assets/about_us_3.jpg';
 import about_us_2 from './assets/about_us_2.jpg';
-import {useEffect, useRef} from "react";
 
-
-const aboutUsSlides = [
-    <div className="w-full h-full flex items-center justify-center" style={{ backgroundImage: `url(${about_us})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-    </div>,
-    <div className="w-full h-full flex items-center justify-center" style={{ backgroundImage: `url(${about_us_2})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>,
-    <div className="w-full h-full flex items-center justify-center bg-green-400 text-white text-3xl"></div>,
-];
 
 export default function App() {
     return (
-        <div className="h-screen w-full scroll-smooth overflow-y-scroll scroll-snap-type-y mandatory">
+        <div
+            className="h-screen w-screen scroll-smooth [&::-webkit-scrollbar]:hidden overflow-y-scroll scroll-snap-type-y mandatory">
             {/* Sections */}
-            <div className="space-y-5 scroll-snap-start">
-                <Section id="home" backgroundImage={backgroundImage}/>
+            <div className="scroll-snap-start">
+                <div
+                    className="bg-bpGreen h-screen flex flex-col justify-center items-center scroll-snap-start"
+                    style={{
+                        backgroundImage: `url(${backgroundImage})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                    }}>
 
-                <AboutUsSection id="portfolio" backgroundImage={about_us}/>
+                    <div
+                        className="w-full bg-bpGreen my-4 mt-80 flex items-center justify-center overflow-hidden border-t-10 border-b-10 border-white h-[15vh]">
+                        <img
+                            src={whiteLogo}
+                            alt="Image"
+                            className="w-1/2 h-auto max-w-full sm:w-1/4 md:w-1/4 lg:w-1/4 "
+                        />
+                        <div className="text-white font-bold">
+                            <p className="text-sm md:text-lg lg:text-xl xl:text-2xl">
+                                REPA IMPROVIZĀCIJAS
+                            </p>
+                            <p className="text-sm md:text-lg lg:text-xl xl:text-2xl">
+                                PARSTEIGUMS JŪSU PASĀKUMĀ
+                            </p>
+                        </div>
+                    </div>
 
-                {/*<EmptySection id="members" backgroundImage={members}/>
-
-                <EmptySection id="contact" />*/}
+                </div>
+                <div className="bg-bpGreen h-screen w-screen flex flex-col justify-start items-start scroll-snap-start"
+                     style={{
+                         backgroundImage: `url(${about_us})`,
+                         backgroundSize: 'cover',
+                         backgroundPosition: 'center',
+                     }}>
+                    <div
+                        className="bg-bpGreen overflow-hidden mt-10 h-1/6 w-3/4 xl:w-2/4 md:w-2/4">
+                        <div className="text-white flex flex-col justify-center items-start">
+                            <p className="text-xl ml-5 mt-2 xl:text-4xl xl:mt-5">
+                                Kopš 2018.gada.
+                            </p>
+                            <p className="text-2xl ml-5 font-bold xl:text-5xl">
+                                Joprojām pirmais un vienīgais
+                            </p>
+                            <p className="text-xl ml-5 xl:text-4xl">
+                                repa improvizācijas teātris Latvijā.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-bpGreen h-screen flex flex-col justify-end items-center scroll-snap-start"
+                     style={{
+                         backgroundImage: `url(${about_us_2})`,
+                         backgroundSize: 'cover',
+                         backgroundPosition: 'center',
+                     }}>
+                    <div
+                        className="bg-bpGreen h-2/6 w-screen text-center">
+                        <div className="text-white flex flex-col justify-center items-center">
+                            <p className="text-2xl mt-5 xl:text-6xl md:text-4xl xl:mt-5 font-bold">
+                                Viens kolektīvs, piecas dažādas performances
+                            </p>
+                            <p className="text-sm mt-2 xl:mt-10 xl:text-4xl md:text-2xl">
+                                Septiņu gadu laikā esam izkopuši repa improvizācijas jeb brīvrunas prasmes, lai jebkuru
+                                skatītāju ieteikumu pārvērstu dziesmā, etīdē, komplimentā, batlā - priekšnesumā, kas izklaidē
+                                un aizrauj. Esam uzstājušies gan mazos klubos un dzimšanas dienas ballītēs, gan festivālos,
+                                Mežaparka estrādē vai Arēnā Rīga daudzu tūkstošu skatītāju priekšā. Esam “atkoduši” kā
+                                brīvruna var kļūt par unikāli foršu pieredzi jūsu pasākumā!
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
 }
-
-function Section({id,backgroundImage}: {
-    id: string;
-    backgroundImage?: string;
-}) {
-    return (
-        <section
-            id={id}
-            className="h-screen flex flex-col justify-center items-center scroll-snap-start bg-gray-100"
-            style={{
-                backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-            }}
-        >
-            {/* Horizontal line as a div */}
-            <div className="w-full bg-bpGreen my-4 mt-80 flex items-center justify-center overflow-hidden border-t-10 border-b-10 border-white h-[15vh]">
-                <div className="flex items-center justify-center space-x-2 w-full max-w-7xl">
-                    <img
-                        src={whiteLogo}
-                        alt="Image"
-                        className="w-1/2 h-auto max-w-full sm:w-1/4 md:w-1/4 lg:w-1/4"
-                    />
-                    <div className="text-white font-bold w-1/2">
-                        <p className="text-sm md:text-lg lg:text-xl xl:text-2xl">
-                            REPA IMPROVIZĀCIJAS
-                        </p>
-                        <p className="text-sm md:text-lg lg:text-xl xl:text-2xl">
-                            PARSTEIGUMS JŪSU PASĀKUMĀ
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
-}
-
-function AboutUsSection({ id, backgroundImage }: { id: string; backgroundImage?: string }) {
-    const scrollRef = useRef<HTMLDivElement>(null);
-
-    // Add first & last slide duplicates for looping
-    const clonedSlides = [aboutUsSlides[aboutUsSlides.length - 1], ...aboutUsSlides, aboutUsSlides[0]];
-
-    useEffect(() => {
-        if (scrollRef.current) {
-            // Start at the first real slide (index 1)
-            const initialPosition = window.innerWidth;
-            scrollRef.current.scrollLeft = initialPosition;
-        }
-    }, []);
-
-    const scroll = (direction: "left" | "right") => {
-        if (!scrollRef.current) return;
-
-        const scrollAmount = window.innerWidth;
-        const newPosition =
-            direction === "left"
-                ? scrollRef.current.scrollLeft - scrollAmount
-                : scrollRef.current.scrollLeft + scrollAmount;
-
-        scrollRef.current.scrollTo({ left: newPosition, behavior: "smooth" });
-
-        setTimeout(() => {
-            if (!scrollRef.current) return;
-
-            const maxScroll = scrollAmount * (aboutUsSlides.length);
-            if (scrollRef.current.scrollLeft >= maxScroll) {
-                // If at the fake last slide, jump to the first real slide
-                scrollRef.current.scrollLeft = scrollAmount;
-            } else if (scrollRef.current.scrollLeft <= 0) {
-                // If at the fake first slide, jump to the last real slide
-                scrollRef.current.scrollLeft = maxScroll - scrollAmount;
-            }
-        }, 500); // Timeout to allow smooth scrolling before the "jump"
-    };
-
-    return (
-        <section
-            id={id}
-            className="h-screen flex flex-col justify-center items-center scroll-snap-start bg-gray-100 relative"
-            style={{
-                backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-            }}
-        >
-            {/* Scrollable Container */}
-            <div ref={scrollRef} className="w-full h-full overflow-x-auto flex scroll-smooth no-scrollbar">
-                {clonedSlides.map((aboutUsSlides, index) => (
-                    <div key={index} className="min-w-full min-h-full">
-                        {aboutUsSlides}
-                    </div>
-                ))}
-            </div>
-
-            {/* Left Button */}
-            <button
-                onClick={() => scroll("left")}
-                className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
-            >
-                ◀
-            </button>
-
-            {/* Right Button */}
-            <button
-                onClick={() => scroll("right")}
-                className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
-            >
-                ▶
-            </button>
-        </section>
-    );
-}
-
-/*
-function EmptySection({ id, backgroundImage }: { id: string; backgroundImage?: string }) {
-    const scrollRef = useRef<HTMLDivElement>(null);
-
-    // Add first & last slide duplicates for looping
-    const clonedSlides = [aboutUsSlides[aboutUsSlides.length - 1], ...aboutUsSlides, aboutUsSlides[0]];
-
-    useEffect(() => {
-        if (scrollRef.current) {
-            // Start at the first real slide (index 1)
-            const initialPosition = window.innerWidth;
-            scrollRef.current.scrollLeft = initialPosition;
-        }
-    }, []);
-
-    const scroll = (direction: "left" | "right") => {
-        if (!scrollRef.current) return;
-
-        const scrollAmount = window.innerWidth;
-        const newPosition =
-            direction === "left"
-                ? scrollRef.current.scrollLeft - scrollAmount
-                : scrollRef.current.scrollLeft + scrollAmount;
-
-        scrollRef.current.scrollTo({ left: newPosition, behavior: "smooth" });
-
-        setTimeout(() => {
-            if (!scrollRef.current) return;
-
-            const maxScroll = scrollAmount * (aboutUsSlides.length);
-            if (scrollRef.current.scrollLeft >= maxScroll) {
-                // If at the fake last slide, jump to the first real slide
-                scrollRef.current.scrollLeft = scrollAmount;
-            } else if (scrollRef.current.scrollLeft <= 0) {
-                // If at the fake first slide, jump to the last real slide
-                scrollRef.current.scrollLeft = maxScroll - scrollAmount;
-            }
-        }, 500); // Timeout to allow smooth scrolling before the "jump"
-    };
-
-    return (
-        <section
-            id={id}
-            className="h-screen flex flex-col justify-center items-center scroll-snap-start bg-gray-100 relative"
-            style={{
-                backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-            }}
-        >
-            {/!* Scrollable Container *!/}
-            <div ref={scrollRef} className="w-full h-full overflow-x-auto flex whitespace-nowrap scroll-smooth no-scrollbar">
-                {clonedSlides.map((aboutUsSlides, index) => (
-                    <div key={index} className="min-w-full h-full flex items-center justify-center bg-gray-200">
-                        {aboutUsSlides}
-                    </div>
-                ))}
-            </div>
-
-            {/!* Left Button *!/}
-            <button
-                onClick={() => scroll("left")}
-                className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
-            >
-                ◀
-            </button>
-
-            {/!* Right Button *!/}
-            <button
-                onClick={() => scroll("right")}
-                className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
-            >
-                ▶
-            </button>
-        </section>
-    );
-}
-*/
