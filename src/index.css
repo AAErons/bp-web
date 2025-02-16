@@ -14,3 +14,17 @@
 .scroll-snap-start {
     scroll-snap-align: start;
 }
+
+.red-hat-display-300 {
+    font-family: "Red Hat Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.red-hat-display-600 {
+    font-family: "Red Hat Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+}
