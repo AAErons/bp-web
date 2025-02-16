@@ -99,7 +99,7 @@ export default function App() {
                          backgroundPosition: 'center',
                      }}>
                     <div
-                        className="bg-bpGreen overflow-hidden my-[20px] min-h-[100px] flex items-center">
+                        className="bg-bpGreen overflow-hidden my-[100px] min-h-[100px] flex items-center">
                         <div className="text-white flex flex-col justify-center items-start py-[10px]">
                             <p className="text-lg ml-5 mr-5 xl:text-3xl">Kopš 2018.gada.</p>
                             <p className="text-xl ml-5 mr-5 font-bold xl:text-4xl">
