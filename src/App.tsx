@@ -145,14 +145,14 @@ export default function App() {
                     <h2 className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-6">Piedāvājums</h2>
                     <div className="relative w-full h-[80vh]">
                         <div ref={scrollContainerRef}
-                             className="w-full h-[80vh] flex [&::-webkit-scrollbar]:hidden overflow-x-auto space-x-4 px-10 snap-x snap-mandatory">
+                             className="w-full h-full flex overflow-x-auto overflow-y-hidden space-x-4 px-10 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
                                 <div className="w-2/3 flex flex-col justify-start items-left p-10">
-                                    <h3 className="text-white text-4xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
-                                        Brīvrunu pāsteigums
+                                    <h3 className="text-white text-2xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
+                                        Brīvrunu pārsteigums
                                     </h3>
-                                    <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
-                                        <li className="flex items-center gap-2 xl:text-5xl">
+                                    <ul className="list-disc list-outside text-white text-xl flex flex-col justify-between h-full">
+                                        <li className="flex items-center xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
                                             <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
                                                 <li>KORPORATĪVĀ PASĀKUMĀ</li>
@@ -172,18 +172,18 @@ export default function App() {
                                 </div>
 
                                 <div className="w-1/3 flex justify-center items-center">
-                                    <img src={what_we_do_1} alt="First Slide" className="w-full h-full object-left"/>
+                                    <img src={what_we_do_1} alt="First Slide" className="h-full w-auto overflow-hidden object-cover"/>
                                 </div>
                             </div>
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
                                 <div className="w-2/3 flex flex-col justify-start items-left p-10">
-                                    <h3 className="text-white text-4xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
+                                    <h3 className="text-white text-2xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
                                         Brīvrunu darbnīca
                                     </h3>
-                                    <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
-                                        <li className="flex items-center gap-2 xl:text-5xl">
+                                    <ul className="list-disc list-outside text-white text-xl flex flex-col justify-between h-full">
+                                        <li className="flex items-center xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
-                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4">
+                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
                                                 <li>MĀCĪBU IESTĀDES</li>
                                                 <li>PILSĒTAS SVĒTKOS</li>
                                                 <li>JAUNAS PRASMES UN
@@ -202,18 +202,18 @@ export default function App() {
                                     </ul>
                                 </div>
                                 <div className="w-1/3 flex justify-center items-center">
-                                    <img src={what_we_do_2} alt="Second Slide" className="w-full h-full object-center"/>
+                                    <img src={what_we_do_2} alt="Second Slide" className="h-full w-auto overflow-hidden object-cover"/>
                                 </div>
                             </div>
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
                                 <div className="w-2/3 flex flex-col justify-start items-left p-10">
-                                    <h3 className="text-white text-4xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
+                                    <h3 className="text-white text-2xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
                                         Brīvrunu koncerts
                                     </h3>
-                                    <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
-                                        <li className="flex items-center gap-2 xl:text-5xl">
+                                    <ul className="list-disc list-outside text-white text-xl flex flex-col justify-between h-full">
+                                        <li className="flex items-center xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
-                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4">
+                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
                                                 <li>FESTIVĀLĀ</li>
                                                 <li>PILSĒTAS SVĒTKOS</li>
                                                 <li>KLUBĀ</li>
@@ -231,18 +231,18 @@ export default function App() {
                                     </ul>
                                 </div>
                                 <div className="w-1/3 flex justify-center items-center">
-                                    <img src={what_we_do_3} alt="Third Slide" className="w-full h-full object-fill"/>
+                                    <img src={what_we_do_3} alt="Third Slide" className="h-full w-auto overflow-hidden object-cover"/>
                                 </div>
                             </div>
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
                                 <div className="w-2/3 flex flex-col justify-start items-left p-10">
-                                    <h3 className="text-white text-4xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
+                                    <h3 className="text-white text-2xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
                                         Brīvrunu acoustic
                                     </h3>
-                                    <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
-                                        <li className="flex items-center gap-2 xl:text-5xl">
+                                    <ul className="list-disc list-outside text-white text-xl flex flex-col justify-between h-full">
+                                        <li className="flex items-center xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
-                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4">
+                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
                                                 <li>IZLAIDUMOS</li>
                                                 <li>VECPUIŠU/VECMEITU BALLĪTĒS</li>
                                                 <li>CITU INTĪMU PASĀKUMU PĀRSTEIGUMS, KURĀ
@@ -257,18 +257,18 @@ export default function App() {
                                     </ul>
                                 </div>
                                 <div className="w-1/3 flex justify-center items-center">
-                                    <img src={what_we_do_4} alt="Third Slide" className="w-full h-full object-fill"/>
+                                    <img src={what_we_do_4} alt="Third Slide" className="h-full w-auto overflow-hidden object-cover"/>
                                 </div>
                             </div>
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
                                 <div className="w-2/3 flex flex-col justify-start items-left p-10">
-                                    <h3 className="text-white text-4xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
-                                        IESTUDĒTS PRIEKŠNESUMS
+                                    <h3 className="text-white text-2xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
+                                        Iestudēts priekšnesums
                                     </h3>
-                                    <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
-                                        <li className="flex items-center gap-2 xl:text-5xl">
+                                    <ul className="list-disc list-outside text-white text-xl flex flex-col justify-between h-full">
+                                        <li className="flex items-center xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
-                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4">
+                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
                                                 <li>BALVU PASNIEGŠANAS</li>
                                                 <li>PRODUKTU
                                                     PREZENTĀCIJAS
@@ -287,7 +287,7 @@ export default function App() {
                                     </ul>
                                 </div>
                                 <div className="w-1/3 flex justify-center items-center">
-                                    <img src={what_we_do_5} alt="Third Slide" className="w-full h-full object-fill"/>
+                                    <img src={what_we_do_5} alt="Third Slide" className="h-full w-auto overflow-hidden object-cover"/>
                                 </div>
                             </div>
                         </div>
