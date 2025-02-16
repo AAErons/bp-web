@@ -147,7 +147,7 @@ export default function App() {
                         <div ref={scrollContainerRef}
                              className="w-full h-full flex overflow-x-auto overflow-y-hidden space-x-4 px-10 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
-                                <div className="w-2/3 flex flex-col justify-start items-left p-10">
+                                <div className="w-2/3 flex flex-col justify-start items-left p-5">
                                     <h3 className="text-white text-2xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
                                         Brīvrunu pārsteigums
                                     </h3>
@@ -176,7 +176,7 @@ export default function App() {
                                 </div>
                             </div>
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
-                                <div className="w-2/3 flex flex-col justify-start items-left p-10">
+                                <div className="w-2/3 flex flex-col justify-start items-left p-5">
                                     <h3 className="text-white text-2xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
                                         Brīvrunu darbnīca
                                     </h3>
@@ -186,9 +186,7 @@ export default function App() {
                                             <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
                                                 <li>MĀCĪBU IESTĀDES</li>
                                                 <li>PILSĒTAS SVĒTKOS</li>
-                                                <li>JAUNAS PRASMES UN
-                                                    ZINĀŠANAS KĀ AR IZTĒLI UN BALSI VEIDOT
-                                                    ASOCIĀCIJAS, STĀSTUS, JOKUS UN RĪMES
+                                                <li>JAUNAS PRASMES UN ZINĀŠANAS KĀ AR IZTĒLI UN BALSI VEIDOT ASOCIĀCIJAS, STĀSTUS, JOKUS UN RĪMES
                                                 </li>
                                                 <li>IESPĒJA VIENLAIKUS IESAISTĪT LĪDZ 30
                                                     DALĪBNIEKIEM
@@ -206,7 +204,7 @@ export default function App() {
                                 </div>
                             </div>
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
-                                <div className="w-2/3 flex flex-col justify-start items-left p-10">
+                                <div className="w-2/3 flex flex-col justify-start items-left p-5">
                                     <h3 className="text-white text-2xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
                                         Brīvrunu koncerts
                                     </h3>
@@ -235,7 +233,7 @@ export default function App() {
                                 </div>
                             </div>
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
-                                <div className="w-2/3 flex flex-col justify-start items-left p-10">
+                                <div className="w-2/3 flex flex-col justify-start items-left p-5">
                                     <h3 className="text-white text-2xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
                                         Brīvrunu acoustic
                                     </h3>
@@ -261,7 +259,7 @@ export default function App() {
                                 </div>
                             </div>
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
-                                <div className="w-2/3 flex flex-col justify-start items-left p-10">
+                                <div className="w-2/3 flex flex-col justify-start items-left p-5">
                                     <h3 className="text-white text-2xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
                                         Iestudēts priekšnesums
                                     </h3>
