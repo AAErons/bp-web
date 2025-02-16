@@ -14,3 +14,7 @@
 .scroll-snap-start {
     scroll-snap-align: start;
 }
+
+p {
+    font-family: "Marhey", cursive !important;
+}

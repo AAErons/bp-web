@@ -42,12 +42,9 @@ export default function App() {
                          backgroundSize: 'cover',
                          backgroundPosition: 'center',
                      }}>
-                    <div
-                        className="bg-bpGreen overflow-hidden mt-10 h-1/6 w-3/4 xl:w-2/4 md:w-2/4">
-                        <div className="text-white flex flex-col justify-center items-start">
-                            <p className="text-xl ml-5 mt-2 xl:text-4xl xl:mt-5">
-                                Kopš 2018.gada.
-                            </p>
+                    <div className="bg-bpGreen overflow-hidden my-[20px] w-3/4 xl:w-2/4 md:w-2/4 min-h-[100px] flex items-center">
+                        <div className="text-white flex flex-col justify-center items-start py-[10px]">
+                            <p className="text-xl ml-5 xl:text-4xl">Kopš 2018.gada.</p>
                             <p className="text-2xl ml-5 font-bold xl:text-5xl">
                                 Joprojām pirmais un vienīgais
                             </p>
@@ -63,13 +60,12 @@ export default function App() {
                          backgroundSize: 'cover',
                          backgroundPosition: 'center',
                      }}>
-                    <div
-                        className="bg-bpGreen h-2/6 w-screen text-center">
-                        <div className="text-white flex flex-col justify-center items-center">
-                            <p className="text-2xl mt-5 xl:text-6xl md:text-4xl xl:mt-5 font-bold">
+                    <div className="bg-bpGreen w-full min-h-[150px] my-[10px] flex items-center">
+                        <div className="text-white flex flex-col justify-center items-center py-[10px] text-center px-4">
+                            <p className="text-2xl xl:text-6xl md:text-4xl font-bold">
                                 Viens kolektīvs, piecas dažādas performances
                             </p>
-                            <p className="text-sm mt-2 xl:mt-10 xl:text-4xl md:text-2xl">
+                            <p className="text-sm mt-2 xl:mt-10 xl:text-4xl md:text-2xl font-normal">
                                 Septiņu gadu laikā esam izkopuši repa improvizācijas jeb brīvrunas prasmes, lai jebkuru
                                 skatītāju ieteikumu pārvērstu dziesmā, etīdē, komplimentā, batlā - priekšnesumā, kas izklaidē
                                 un aizrauj. Esam uzstājušies gan mazos klubos un dzimšanas dienas ballītēs, gan festivālos,
@@ -78,6 +74,7 @@ export default function App() {
                             </p>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

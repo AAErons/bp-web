@@ -5,6 +5,9 @@ export default {
             colors: {
                 bpGreen: '#06aa94', // Custom color
             },
+            fontFamily: {
+                marhey: ['Marhey', 'serif']
+            },
         },
     },
     plugins: [],
