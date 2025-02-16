@@ -19,21 +19,26 @@ export default function App() {
                     }}>
 
                     <div
-                        className="w-full bg-bpGreen my-4 mt-80 flex items-center justify-center overflow-hidden border-t-10 border-b-10 border-white h-[15vh]">
+                        className="w-full bg-bpGreen mt-40 flex flex-wrap items-center justify-center
+        border-t-[4px] border-b-[4px] sm:border-t-[8px] sm:border-b-[8px]
+        md:border-t-[6px] md:border-b-[6px] lg:border-t-[4px] lg:border-b-[4px]
+        border-white"
+                    >
                         <img
                             src={whiteLogo}
                             alt="Image"
-                            className="w-1/2 h-auto max-w-full sm:w-1/4 md:w-1/4 lg:w-1/4 "
+                            className="w-1/2 sm:w-1/4 md:w-1/4 lg:w-1/4 h-auto max-w-full"
                         />
-                        <div className="text-white font-bold">
-                            <p className="text-sm md:text-lg lg:text-xl xl:text-2xl">
+                        <div className="text-white font-bold text-center sm:text-left">
+                            <p className="text-md md:text-lg lg:text-xl xl:text-2xl font-serif">
                                 REPA IMPROVIZĀCIJAS
                             </p>
-                            <p className="text-sm md:text-lg lg:text-xl xl:text-2xl">
+                            <p className="text-sm md:text-lg lg:text-xl xl:text-2xl font-serif">
                                 PARSTEIGUMS JŪSU PASĀKUMĀ
                             </p>
                         </div>
                     </div>
+
 
                 </div>
                 <div className="bg-bpGreen h-screen w-screen flex flex-col justify-start items-start scroll-snap-start"
@@ -42,13 +47,14 @@ export default function App() {
                          backgroundSize: 'cover',
                          backgroundPosition: 'center',
                      }}>
-                    <div className="bg-bpGreen overflow-hidden my-[20px] w-3/4 xl:w-2/4 md:w-2/4 min-h-[100px] flex items-center">
+                    <div
+                        className="bg-bpGreen overflow-hidden my-[20px] w-3/4 xl:w-2/4 md:w-2/4 min-h-[100px] flex items-center">
                         <div className="text-white flex flex-col justify-center items-start py-[10px]">
-                            <p className="text-xl ml-5 xl:text-4xl">Kopš 2018.gada.</p>
-                            <p className="text-2xl ml-5 font-bold xl:text-5xl">
+                            <p className="text-xl ml-5 xl:text-4xl font-serif">Kopš 2018.gada.</p>
+                            <p className="text-2xl ml-5 font-bold xl:text-5xl font-serif">
                                 Joprojām pirmais un vienīgais
                             </p>
-                            <p className="text-xl ml-5 xl:text-4xl">
+                            <p className="text-xl ml-5 xl:text-4xl font-serif">
                                 repa improvizācijas teātris Latvijā.
                             </p>
                         </div>
@@ -61,14 +67,17 @@ export default function App() {
                          backgroundPosition: 'center',
                      }}>
                     <div className="bg-bpGreen w-full min-h-[150px] my-[10px] flex items-center">
-                        <div className="text-white flex flex-col justify-center items-center py-[10px] text-center px-4">
-                            <p className="text-2xl xl:text-6xl md:text-4xl font-bold">
+                        <div
+                            className="text-white flex flex-col justify-center items-center py-[10px] text-center px-4">
+                            <p className="text-2xl xl:text-6xl md:text-4xl font-serif font-bold">
                                 Viens kolektīvs, piecas dažādas performances
                             </p>
-                            <p className="text-sm mt-2 xl:mt-10 xl:text-4xl md:text-2xl font-normal">
+                            <p className="text-sm mt-2 xl:mt-10 xl:text-4xl md:text-2xl font-serif font-normal">
                                 Septiņu gadu laikā esam izkopuši repa improvizācijas jeb brīvrunas prasmes, lai jebkuru
-                                skatītāju ieteikumu pārvērstu dziesmā, etīdē, komplimentā, batlā - priekšnesumā, kas izklaidē
-                                un aizrauj. Esam uzstājušies gan mazos klubos un dzimšanas dienas ballītēs, gan festivālos,
+                                skatītāju ieteikumu pārvērstu dziesmā, etīdē, komplimentā, batlā - priekšnesumā, kas
+                                izklaidē
+                                un aizrauj. Esam uzstājušies gan mazos klubos un dzimšanas dienas ballītēs, gan
+                                festivālos,
                                 Mežaparka estrādē vai Arēnā Rīga daudzu tūkstošu skatītāju priekšā. Esam “atkoduši” kā
                                 brīvruna var kļūt par unikāli foršu pieredzi jūsu pasākumā!
                             </p>

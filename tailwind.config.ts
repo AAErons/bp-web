@@ -4,10 +4,7 @@ export default {
         extend: {
             colors: {
                 bpGreen: '#06aa94', // Custom color
-            },
-            fontFamily: {
-                shadow: ['Rubik Dirt', 'serif']
-            },
+            }
         },
     },
     plugins: [],
