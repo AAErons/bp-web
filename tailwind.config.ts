@@ -6,7 +6,7 @@ export default {
                 bpGreen: '#06aa94', // Custom color
             },
             fontFamily: {
-                marhey: ['Marhey', 'serif']
+                shadow: ['Rubik Dirt', 'serif']
             },
         },
     },
