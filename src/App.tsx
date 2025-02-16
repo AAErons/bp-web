@@ -117,7 +117,7 @@ export default function App() {
                          backgroundSize: 'cover',
                          backgroundPosition: 'center',
                      }}>
-                    <div className="bg-bpGreen w-full min-h-[150px] my-[10px] flex items-center">
+                    <div className="bg-bpGreen w-full min-h-[150px] my-[30px] flex items-center">
                         <div
                             className="text-white flex flex-col justify-center items-center py-[10px] text-center px-4">
                             <p className="text-2xl xl:text-6xl md:text-4xl font-bold">
@@ -142,7 +142,7 @@ export default function App() {
                          backgroundSize: 'cover',
                          backgroundPosition: 'center',
                      }}>
-                    <h2 className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-6">Piedāvājums</h2>
+                    <h2 className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-10">Piedāvājums</h2>
                     <div className="relative w-full h-[60vh]">
                         <div ref={scrollContainerRef}
                              className="w-full h-full flex overflow-x-auto overflow-y-hidden space-x-4 px-10 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
@@ -220,7 +220,6 @@ export default function App() {
                                                     PRIEKŠNESUMS, KO VAR BAUDĪT GAN SĒDOŠĀ,
                                                     GAN LĒKĀJOŠĀ FORMĀTĀ
                                                 </li>
-                                                <li>ĪPAŠI PIEMĒROTI AUDIO TAGI</li>
                                             </ul>
                                         </li>
                                         <li className="flex items-center gap-2 xl:text-4xl self-start">
