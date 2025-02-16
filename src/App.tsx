@@ -2,10 +2,61 @@ import backgroundImage from './assets/0.jpg';
 import whiteLogo from './assets/bp_logo_no_mwarg.png';
 import about_us from './assets/about_us_3.jpg';
 import about_us_2 from './assets/about_us_2.jpg';
-import whatwedo from './assets/what_we_do.png';
+import what_we_do_1 from './assets/what_we_do.png';
+import what_we_do_2 from './assets/18.jpg';
+import what_we_do_3 from './assets/19.jpg';
+import what_we_do_4 from './assets/20.jpg';
+import what_we_do_5 from './assets/21.jpg';
+import {useEffect, useRef, useState} from "react";
 
 
 export default function App() {
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    // List of section images
+    const sectionImages = [
+        what_we_do_1,
+        what_we_do_2,
+        what_we_do_3,
+        what_we_do_4,
+        what_we_do_5
+    ];
+
+    // State to track current background image
+    const [whatwedo, setWhatwedo] = useState(sectionImages[0]);
+
+    const scroll = (direction: "left" | "right") => {
+        if (scrollContainerRef.current) {
+            const scrollAmount = scrollContainerRef.current.clientWidth * 0.8; // Move by one section width
+            scrollContainerRef.current.scrollBy({
+                left: direction === "left" ? -scrollAmount : scrollAmount,
+                behavior: "smooth",
+            });
+        }
+    };
+
+    // Function to update background based on scroll
+    useEffect(() => {
+        const handleScroll = () => {
+            if (scrollContainerRef.current) {
+                const { scrollLeft, clientWidth } = scrollContainerRef.current;
+                const currentIndex = Math.round(scrollLeft / clientWidth);
+                setWhatwedo(sectionImages[currentIndex] || sectionImages[0]);
+            }
+        };
+
+        const container = scrollContainerRef.current;
+        if (container) {
+            container.addEventListener("scroll", handleScroll);
+        }
+
+        return () => {
+            if (container) {
+                container.removeEventListener("scroll", handleScroll);
+            }
+        };
+    }, []);
+
     return (
         <div
             className="h-screen w-screen scroll-smooth [&::-webkit-scrollbar]:hidden overflow-y-scroll scroll-snap-type-y mandatory">
@@ -85,33 +136,175 @@ export default function App() {
                     </div>
                 </div>
                 {/* New Horizontal Scrollable Section */}
-                <div className="bg-bpGreen h-screen flex flex-col justify-center items-center scroll-snap-start">
-                    <h2 className="text-white text-4xl font-bold mb-6">Mūsu Performances</h2>
-                    <div className="w-full h-[80vh] flex overflow-x-auto space-x-4 px-10 snap-x snap-mandatory">
-                        <div className="min-w-[80vw] h-full bg-blue-500 flex snap-start">
-                            <div className="w-2/3 flex justify-center items-center p-10">
-                                <p className="text-white text-3xl">First Slide Description</p>
+                <div className="h-screen flex flex-col justify-start items-center transition-all duration-500 ease-in-out"
+                     style={{
+                         backgroundImage: `url(${whatwedo})`,
+                         backgroundSize: 'cover',
+                         backgroundPosition: 'center',
+                     }}>
+                    <h2 className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-6">Piedāvājums</h2>
+                    <div className="relative w-full h-[80vh]">
+                        <div ref={scrollContainerRef}
+                             className="w-full h-[80vh] flex [&::-webkit-scrollbar]:hidden overflow-x-auto space-x-4 px-10 snap-x snap-mandatory">
+                            <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
+                                <div className="w-2/3 flex flex-col justify-start items-left p-10">
+                                    <h3 className="text-white text-4xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
+                                        Brīvrunu pāsteigums
+                                    </h3>
+                                    <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
+                                        <li className="flex items-center gap-2 xl:text-5xl">
+                                            <span className="text-transparent xl:border-14"></span>
+                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4">
+                                                <li>KORPORATĪVĀ PASĀKUMĀ</li>
+                                                <li>BALLES LEDLAUZIS</li>
+                                                <li>IEKUSTINĀTĀJS</li>
+                                                <li>IZSMĪDINĀTĀJS</li>
+                                                <li>LABĀ GARASTĀVOKĻA RADĪTĀJS (JA NU KĀDS
+                                                    GROZIŅU PAŅĒMIS, BET LABO GARASTĀVOKLI ATSTĀJIS MĀJĀS..)
+                                                </li>
+                                                <li>ĪPAŠI PIEMĒROTI AUDIO TAGI</li>
+                                            </ul>
+                                        </li>
+                                        <li className="flex items-center gap-2 xl:text-4xl self-start">
+                                            <span className="text-green-400">⏱️</span> 15-20 MINŪTES
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div className="w-1/3 flex justify-center items-center">
+                                    <img src={what_we_do_1} alt="First Slide" className="w-full h-full object-contain"/>
+                                </div>
                             </div>
-                            <div className="w-1/3 flex justify-center items-center">
-                                <img src={whatwedo} alt="First Slide" className="w-full h-full object-cover" />
+                            <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
+                                <div className="w-2/3 flex flex-col justify-start items-left p-10">
+                                    <h3 className="text-white text-4xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
+                                        Brīvrunu darbnīca
+                                    </h3>
+                                    <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
+                                        <li className="flex items-center gap-2 xl:text-5xl">
+                                            <span className="text-transparent xl:border-14"></span>
+                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4">
+                                                <li>MĀCĪBU IESTĀDES</li>
+                                                <li>PILSĒTAS SVĒTKOS</li>
+                                                <li>JAUNAS PRASMES UN
+                                                    ZINĀŠANAS KĀ AR IZTĒLI UN BALSI VEIDOT
+                                                    ASOCIĀCIJAS, STĀSTUS, JOKUS UN RĪMES
+                                                </li>
+                                                <li>IESPĒJA VIENLAIKUS IESAISTĪT LĪDZ 30
+                                                    DALĪBNIEKIEM
+                                                </li>
+                                                <li>PARAUGDEMONSTRĒJUMI NO BP</li>
+                                            </ul>
+                                        </li>
+                                        <li className="flex items-center gap-2 xl:text-4xl self-start">
+                                            <span className="text-green-400">⏱️</span> 60-90 MINŪTES
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div className="w-1/3 flex justify-center items-center">
+                                    <img src={what_we_do_2} alt="Second Slide" className="w-full h-full object-center"/>
+                                </div>
+                            </div>
+                            <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
+                                <div className="w-2/3 flex flex-col justify-start items-left p-10">
+                                    <h3 className="text-white text-4xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
+                                        Brīvrunu koncerts
+                                    </h3>
+                                    <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
+                                        <li className="flex items-center gap-2 xl:text-5xl">
+                                            <span className="text-transparent xl:border-14"></span>
+                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4">
+                                                <li>FESTIVĀLĀ</li>
+                                                <li>PILSĒTAS SVĒTKOS</li>
+                                                <li>KLUBĀ</li>
+                                                <li>ENERĢIJAS VULKĀNS - MIJIEDARBĪBĀ AR
+                                                    SKATĪTĀJIEM VEIDOTS VIENREIZĒJS MUZIKĀLS
+                                                    PRIEKŠNESUMS, KO VAR BAUDĪT GAN SĒDOŠĀ,
+                                                    GAN LĒKĀJOŠĀ FORMĀTĀ
+                                                </li>
+                                                <li>ĪPAŠI PIEMĒROTI AUDIO TAGI</li>
+                                            </ul>
+                                        </li>
+                                        <li className="flex items-center gap-2 xl:text-4xl self-start">
+                                            <span className="text-green-400">⏱️</span> 30-45 MINŪTES
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div className="w-1/3 flex justify-center items-center">
+                                    <img src={what_we_do_3} alt="Third Slide" className="w-full h-full object-fill"/>
+                                </div>
+                            </div>
+                            <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
+                                <div className="w-2/3 flex flex-col justify-start items-left p-10">
+                                    <h3 className="text-white text-4xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
+                                        Brīvrunu acoustic
+                                    </h3>
+                                    <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
+                                        <li className="flex items-center gap-2 xl:text-5xl">
+                                            <span className="text-transparent xl:border-14"></span>
+                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4">
+                                                <li>IZLAIDUMOS</li>
+                                                <li>VECPUIŠU/VECMEITU BALLĪTĒS</li>
+                                                <li>CITU INTĪMU PASĀKUMU PĀRSTEIGUMS, KURĀ
+                                                    PERSONALIZĒTAS RĪMES DOD PRIEKA LĀDIŅU
+                                                    SVINĪBĀM
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li className="flex items-center gap-2 xl:text-4xl self-start">
+                                            <span className="text-green-400">⏱️</span> 10-15 MINŪTES
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div className="w-1/3 flex justify-center items-center">
+                                    <img src={what_we_do_4} alt="Third Slide" className="w-full h-full object-fill"/>
+                                </div>
+                            </div>
+                            <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
+                                <div className="w-2/3 flex flex-col justify-start items-left p-10">
+                                    <h3 className="text-white text-4xl xl:text-6xl font-bold border-b-4 border-white pb-2 mb-4">
+                                        IESTUDĒTS PRIEKŠNESUMS
+                                    </h3>
+                                    <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
+                                        <li className="flex items-center gap-2 xl:text-5xl">
+                                            <span className="text-transparent xl:border-14"></span>
+                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4">
+                                                <li>BALVU PASNIEGŠANAS</li>
+                                                <li>PRODUKTU
+                                                    PREZENTĀCIJAS
+                                                </li>
+                                                <li>CITU AUGSTĀKĀS KLASES
+                                                    PASĀKUMU MEGA HITS - IESPĒJA IZVEIDOT
+                                                    IEPRIEKŠ IZDOMĀTU STĀSTU, TEKSTU UN
+                                                    KONCEPTU ŠOVU, KAS ATDZĪVINA HUMORU UN
+                                                    IEDVESMU
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li className="flex items-center gap-2 xl:text-4xl self-start">
+                                            <span className="text-green-400">⏱️</span> 5-30 MINŪTES
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div className="w-1/3 flex justify-center items-center">
+                                    <img src={what_we_do_5} alt="Third Slide" className="w-full h-full object-fill"/>
+                                </div>
                             </div>
                         </div>
-                        <div className="min-w-[80vw] h-full bg-red-500 flex snap-start">
-                            <div className="w-2/3 flex justify-center items-center p-10">
-                                <p className="text-white text-3xl">Second Slide Description</p>
-                            </div>
-                            <div className="w-1/3 flex justify-center items-center">
-                                <img src={whatwedo} alt="Second Slide" className="w-full h-full object-cover" />
-                            </div>
-                        </div>
-                        <div className="min-w-[80vw] h-full bg-yellow-500 flex snap-start">
-                            <div className="w-2/3 flex justify-center items-center p-10">
-                                <p className="text-white text-3xl">Third Slide Description</p>
-                            </div>
-                            <div className="w-1/3 flex justify-center items-center">
-                                <img src={whatwedo} alt="Third Slide" className="w-full h-full object-cover" />
-                            </div>
-                        </div>
+
+                        {/* Navigation Buttons (Only inside this section) */}
+                        <button
+                            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-3 rounded-full"
+                            onClick={() => scroll("left")}
+                        >
+                            ◀
+                        </button>
+                        <button
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-3 rounded-full"
+                            onClick={() => scroll("right")}
+                        >
+                            ▶
+                        </button>
                     </div>
                 </div>
             </div>
