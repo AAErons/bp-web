@@ -136,7 +136,7 @@ export default function App() {
                     </div>
                 </div>
                 {/* New Horizontal Scrollable Section */}
-                <div className="h-screen flex flex-col justify-start items-center transition-all duration-500 ease-in-out"
+                <div className="h-screen flex flex-col justify-start items-center transition-all duration-500 ease-in-out scroll-snap-start"
                      style={{
                          backgroundImage: `url(${whatwedo})`,
                          backgroundSize: 'cover',
@@ -154,7 +154,7 @@ export default function App() {
                                     <ul className="list-disc list-outside text-white text-xl pl-5 flex flex-col justify-between h-full">
                                         <li className="flex items-center gap-2 xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
-                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4">
+                                            <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
                                                 <li>KORPORATĪVĀ PASĀKUMĀ</li>
                                                 <li>BALLES LEDLAUZIS</li>
                                                 <li>IEKUSTINĀTĀJS</li>
@@ -172,7 +172,7 @@ export default function App() {
                                 </div>
 
                                 <div className="w-1/3 flex justify-center items-center">
-                                    <img src={what_we_do_1} alt="First Slide" className="w-full h-full object-contain"/>
+                                    <img src={what_we_do_1} alt="First Slide" className="w-full h-full object-left"/>
                                 </div>
                             </div>
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
@@ -306,6 +306,14 @@ export default function App() {
                             ▶
                         </button>
                     </div>
+                </div>
+                <div className="bg-bpGreen h-screen flex flex-col justify-start items-center scroll-snap-start"
+                     style={{
+                         backgroundImage: `url(${whatwedo})`,
+                         backgroundSize: 'cover',
+                         backgroundPosition: 'center',
+                     }}>
+                    <p className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-6">Dalībnieki</p>
                 </div>
             </div>
         </div>
