@@ -28,13 +28,13 @@ export default function App() {
                         <img
                             src={whiteLogo}
                             alt="Image"
-                            className="border-t-5 border-b-5 border-bpGreen w-1/3 sm:w-1/4 md:w-1/4 lg:w-1/4 h-auto max-w-full"
+                            className="border-t-5 border-b-5 border-transparent w-1/3 sm:w-1/4 md:w-1/4 lg:w-1/4 h-auto max-w-full"
                         />
                         <div className="text-white text-center sm:text-left font-bold">
-                            <p className="text-sm md:text-xl lg:text-2xl xl:text-4xl">
+                            <p className="text-xs md:text-xl lg:text-2xl xl:text-4xl">
                                 REPA IMPROVIZĀCIJAS
                             </p>
-                            <p className="text-sm md:text-xl lg:text-2xl xl:text-4xl">
+                            <p className="text-xs md:text-xl lg:text-2xl xl:text-4xl">
                                 PARSTEIGUMS JŪSU PASĀKUMĀ
                             </p>
                         </div>
