@@ -79,9 +79,9 @@ export default function App() {
                         <img
                             src={whiteLogo}
                             alt="Image"
-                            className="border-t-5 border-b-5 border-transparent w-1/3 sm:w-1/4 md:w-1/4 lg:w-1/4 h-auto max-w-full"
+                            className="border-t-5 border-b-5 border-transparent w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 h-auto max-w-full"
                         />
-                        <div className="text-white text-center sm:text-left font-bold">
+                        <div className="text-white text-center font-bold">
                             <p className="text-xs md:text-xl lg:text-2xl xl:text-4xl">
                                 REPA IMPROVIZĀCIJAS
                             </p>
@@ -143,7 +143,7 @@ export default function App() {
                          backgroundPosition: 'center',
                      }}>
                     <h2 className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-6">Piedāvājums</h2>
-                    <div className="relative w-full h-[80vh]">
+                    <div className="relative w-full h-[60vh]">
                         <div ref={scrollContainerRef}
                              className="w-full h-full flex overflow-x-auto overflow-y-hidden space-x-4 px-10 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
