@@ -7,10 +7,48 @@ import what_we_do_2 from './assets/18.jpg';
 import what_we_do_3 from './assets/19.jpg';
 import what_we_do_4 from './assets/20.jpg';
 import what_we_do_5 from './assets/21.jpg';
+
+import partner_1 from './assets/partners/28.png';
+import partner_2 from './assets/partners/29.jpg';
+import partner_3 from './assets/partners/30.png';
+import partner_4 from './assets/partners/31.png';
+import partner_5 from './assets/partners/32.png';
+import partner_6 from './assets/partners/33.jpg';
+import partner_7 from './assets/partners/34.png';
+import partner_8 from './assets/partners/35.png';
+import partner_9 from './assets/partners/36.png';
+import partner_10 from './assets/partners/37.jpg';
+import partner_11 from './assets/partners/38.png';
+import partner_12 from './assets/partners/39.png';
+import partner_13 from './assets/partners/40.jpg';
+import partner_14 from './assets/partners/41.png';
+
+import spotify from './assets/contacts/22.png';
+import instagram from './assets/contacts/23.png';
+import facebook from './assets/contacts/24.png';
+import youtube from './assets/contacts/25.png';
+
+
+import ev from './assets/ev.png';
+import zirnis from './assets/zirnis.png';
+import jeekaa from './assets/jeekaa.png';
+import sniegs from './assets/sniegs.png';
+import dj from './assets/dj.png';
+import abra from './assets/abra.png';
+
 import {useEffect, useRef, useState} from "react";
 
 
 export default function App() {
+    const teamMembers = [
+        { name: 'JeeKaa', image: jeekaa, about: 'JeeKaa ir viens no "Brīvrunu Projekts" dalībniekiem, kurš izceļas ar tehniski precīzu plūsmu un spēcīgu liriku. Viņš regulāri piedalās brīvrunu batlos, demonstrējot gan ātru domāšanu, gan asu vārdu spēli. JeeKaa ir nozīmīga Latvijas freestyle repa scēnas daļa, aktīvi iesaistoties tās attīstībā.' },
+        { name: 'Zirnis', image: zirnis, about: 'Zirnis ir viens no spilgtākajiem "Brīvrunu Projekts" dalībniekiem, pazīstams ar izcilām improvizācijas prasmēm un asprātīgu liriku. Viņš regulāri piedalās brīvrunu batlos un cīņās, demonstrējot spēju ātri reaģēt un veidot spēcīgas rindas. Zirnis ir nozīmīga figūra Latvijas freestyle repa scēnā.' },
+        { name: 'Abra', image: abra, about: 'Abra ir viens no "Brīvrunu Projekts" dalībniekiem, kurš izceļas ar spēcīgu klātbūtni un asprātīgu improvizāciju. Viņš regulāri piedalās brīvrunu batlos, demonstrējot gan radošumu, gan asu vārdu spēli. Abra ir būtiska Latvijas freestyle repa scēnas daļa, aktīvi veicinot tās attīstību.' },
+        { name: 'Sniegs', image: sniegs, about: 'Sniegs ir viens no "Brīvrunu Projekts" dalībniekiem, kurš izceļas ar daudzpusīgu plūsmu un radošu pieeju improvizācijai. Viņš regulāri piedalās brīvrunu batlos, demonstrējot gan asprātību, gan spēju ātri reaģēt. Sniegs ir nozīmīga Latvijas freestyle repa scēnas daļa, aktīvi piedaloties tās attīstībā.' },
+        { name: 'Dj Birch Please', image: dj, about: 'DJ Birch Please ir "Brīvrunu Projekts" dīdžejs, kurš nodrošina enerģisku muzikālo pavadījumu brīvrunu batliem un pasākumiem. Viņa prasme atlasīt un miksēt bītus palīdz radīt īsto atmosfēru improvizācijai. DJ Birch Please ir svarīga Latvijas freestyle repa skatuves daļa, atbalstot tās attīstību ar savu muzikālo redzējumu.' },
+        { name: 'E.V.', image: ev, about: 'E.V. ir viens no "Brīvrunu Projekts" dalībniekiem, kurš izceļas ar asu vārdu spēli un spēcīgu improvizācijas prasmi. Viņš regulāri piedalās brīvrunu batlos, demonstrējot gan radošumu, gan spēju ātri reaģēt uz pretinieka rindām. E.V. ir nozīmīga Latvijas freestyle repa scēnas daļa, aktīvi piedaloties tās attīstībā.' }
+    ];
+
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     // List of section images
@@ -142,8 +180,7 @@ export default function App() {
                          backgroundSize: 'cover',
                          backgroundPosition: 'center',
                      }}>
-                    <h2 className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-10">Piedāvājums</h2>
-                    <div className="relative w-full h-[60vh]">
+                    <div className="relative w-full h-[60vh] mt-20">
                         <div ref={scrollContainerRef}
                              className="w-full h-full flex overflow-x-auto overflow-y-hidden space-x-4 px-10 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
                             <div className="min-w-[80vw] h-full bg-bpGreen flex snap-start">
@@ -155,18 +192,18 @@ export default function App() {
                                         <li className="flex items-center xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
                                             <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
-                                                <li>KORPORATĪVĀ PASĀKUMĀ</li>
-                                                <li>BALLES LEDLAUZIS</li>
-                                                <li>IEKUSTINĀTĀJS</li>
-                                                <li>IZSMĪDINĀTĀJS</li>
-                                                <li>LABĀ GARASTĀVOKĻA RADĪTĀJS (JA NU KĀDS
-                                                    GROZIŅU PAŅĒMIS, BET LABO GARASTĀVOKLI ATSTĀJIS MĀJĀS..)
+                                                <li>Korporatīvie pasākumi</li>
+                                                <li>Balles ledlauzis</li>
+                                                <li>Iekustinātājs</li>
+                                                <li>Izsmīdinātājs</li>
+                                                <li>Labā garastāvokļa radītājs (ja nu kāds
+                                                    groziņu paņēmis, bet labo garastāvokli atstājis mājās...)
                                                 </li>
-                                                <li>ĪPAŠI PIEMĒROTI AUDIO TAGI</li>
+                                                <li>Īpaši piemērtoi audio tagi</li>
                                             </ul>
                                         </li>
                                         <li className="flex items-center gap-2 xl:text-4xl self-start">
-                                            <span className="text-green-400">⏱️</span> 15-20 MINŪTES
+                                            <span className="text-green-400">⏱️</span> 15-20 minūtes
                                         </li>
                                     </ul>
                                 </div>
@@ -184,18 +221,16 @@ export default function App() {
                                         <li className="flex items-center xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
                                             <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
-                                                <li>MĀCĪBU IESTĀDES</li>
-                                                <li>PILSĒTAS SVĒTKOS</li>
-                                                <li>JAUNAS PRASMES UN ZINĀŠANAS KĀ AR IZTĒLI UN BALSI VEIDOT ASOCIĀCIJAS, STĀSTUS, JOKUS UN RĪMES
+                                                <li>Mācību iestādēs</li>
+                                                <li>Pilsētas svētkos</li>
+                                                <li>Jaunas prasmes un zināšanas kā ar iztēli un balsi veidot asociācijas, stāstus, jokus un rīmes
                                                 </li>
-                                                <li>IESPĒJA VIENLAIKUS IESAISTĪT LĪDZ 30
-                                                    DALĪBNIEKIEM
-                                                </li>
-                                                <li>PARAUGDEMONSTRĒJUMI NO BP</li>
+                                                <li>Iespēja vienlaikus iesaistīt līdz 30 dalbībniekiem</li>
+                                                <li>Paraugdemonstrējumi no BP</li>
                                             </ul>
                                         </li>
                                         <li className="flex items-center gap-2 xl:text-4xl self-start">
-                                            <span className="text-green-400">⏱️</span> 60-90 MINŪTES
+                                            <span className="text-green-400">⏱️</span> 60-90 minūtes
                                         </li>
                                     </ul>
                                 </div>
@@ -212,18 +247,14 @@ export default function App() {
                                         <li className="flex items-center xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
                                             <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
-                                                <li>FESTIVĀLĀ</li>
-                                                <li>PILSĒTAS SVĒTKOS</li>
-                                                <li>KLUBĀ</li>
-                                                <li>ENERĢIJAS VULKĀNS - MIJIEDARBĪBĀ AR
-                                                    SKATĪTĀJIEM VEIDOTS VIENREIZĒJS MUZIKĀLS
-                                                    PRIEKŠNESUMS, KO VAR BAUDĪT GAN SĒDOŠĀ,
-                                                    GAN LĒKĀJOŠĀ FORMĀTĀ
-                                                </li>
+                                                <li>Festivālā</li>
+                                                <li>Pilsētas svētkos</li>
+                                                <li>Klubā</li>
+                                                <li>Enerģijas vulkāns - mijiedarbībā ar skatītājiem veidots vienreizējs muzikāls priekšnesums, ko var baudīt gan sēdošā, gan lēkajosā formātā</li>
                                             </ul>
                                         </li>
                                         <li className="flex items-center gap-2 xl:text-4xl self-start">
-                                            <span className="text-green-400">⏱️</span> 30-45 MINŪTES
+                                            <span className="text-green-400">⏱️</span> 30-45 minūtes
                                         </li>
                                     </ul>
                                 </div>
@@ -240,16 +271,13 @@ export default function App() {
                                         <li className="flex items-center xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
                                             <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
-                                                <li>IZLAIDUMOS</li>
-                                                <li>VECPUIŠU/VECMEITU BALLĪTĒS</li>
-                                                <li>CITU INTĪMU PASĀKUMU PĀRSTEIGUMS, KURĀ
-                                                    PERSONALIZĒTAS RĪMES DOD PRIEKA LĀDIŅU
-                                                    SVINĪBĀM
-                                                </li>
+                                                <li>Izlaidumos</li>
+                                                <li>Vecpuišu/vecmeitu ballitēs</li>
+                                                <li>Citu intīmu pasākumu pārsteigums, kurā personalziētas rīmes dod prieka lādiņu svinībām</li>
                                             </ul>
                                         </li>
                                         <li className="flex items-center gap-2 xl:text-4xl self-start">
-                                            <span className="text-green-400">⏱️</span> 10-15 MINŪTES
+                                            <span className="text-green-400">⏱️</span> 10-15 minūtes
                                         </li>
                                     </ul>
                                 </div>
@@ -266,20 +294,13 @@ export default function App() {
                                         <li className="flex items-center xl:text-5xl">
                                             <span className="text-transparent xl:border-14"></span>
                                             <ul className="list-disc list-outside text-white xl:text-4xl pl-5 xl:space-y-4 text-sm">
-                                                <li>BALVU PASNIEGŠANAS</li>
-                                                <li>PRODUKTU
-                                                    PREZENTĀCIJAS
-                                                </li>
-                                                <li>CITU AUGSTĀKĀS KLASES
-                                                    PASĀKUMU MEGA HITS - IESPĒJA IZVEIDOT
-                                                    IEPRIEKŠ IZDOMĀTU STĀSTU, TEKSTU UN
-                                                    KONCEPTU ŠOVU, KAS ATDZĪVINA HUMORU UN
-                                                    IEDVESMU
-                                                </li>
+                                                <li>Balvu pasniegšanas</li>
+                                                <li>Produktu preznetācija</li>
+                                                <li>Citu augstākās klases pasākumu mega hits - iespēja izveidot iepriekš izdomātu stāstu, tekstu un konceptu šovu, kas adzīvina humoru un iedvesmu</li>
                                             </ul>
                                         </li>
                                         <li className="flex items-center gap-2 xl:text-4xl self-start">
-                                            <span className="text-green-400">⏱️</span> 5-30 MINŪTES
+                                            <span className="text-green-400">⏱️</span> 5-30 minūtes
                                         </li>
                                     </ul>
                                 </div>
@@ -304,13 +325,121 @@ export default function App() {
                         </button>
                     </div>
                 </div>
-                <div className="bg-bpGreen h-screen flex flex-col justify-start items-center scroll-snap-start"
+                <div className="bg-bpGreen min-h-screen flex flex-col justify-start items-center scroll-snap-start overflow-hidden"
+                     style={{
+                         backgroundImage: `url(${what_we_do_2})`,
+                         backgroundSize: 'cover',
+                         backgroundPosition: 'center',
+                     }}
+                     >
+
+                    <div className="w-full max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6  mt-20">
+                        {teamMembers.map((member, index) => (
+                            <div key={index} className="bg-bpGreen p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+                                <img
+                                    src={member.image}
+                                    alt={member.name}
+                                    className="w-32 h-32 object-cover rounded-full mb-4 border-4 border-white"
+                                />
+                                <h3 className="text-xl font-semibold text-white">{member.name}</h3>
+                                <p className="text-white mt-2 text-sm">{member.about}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className="bg-bpGreen min-h-screen flex flex-col justify-start items-center scroll-snap-start overflow-hidden"
                      style={{
                          backgroundImage: `url(${whatwedo})`,
                          backgroundSize: 'cover',
                          backgroundPosition: 'center',
                      }}>
-                    <p className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-6">Dalībnieki</p>
+                    <p className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-6">Partneri</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 px-4">
+                        {/* Repeat this div for each partner icon */}
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_1} alt="Partner 1" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_2} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_3} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_4} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_5} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_6} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_7} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_8} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_9} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_10} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_11} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_12} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_13} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                        <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
+                            <img src={partner_14} alt="Partner 2" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-bpGreen min-h-screen flex flex-col justify-start items-center scroll-snap-start overflow-hidden"
+                     style={{
+                         backgroundImage: `url(${whatwedo})`,
+                         backgroundSize: 'cover',
+                         backgroundPosition: 'center',
+                     }}>
+                    <p className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-6">Meklē mūs šeit</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-10 xl:mt-30 px-4 mb-8">
+                        {/* YouTube */}
+                        <a href="https://www.youtube.com/@brivrunuprojekts8416" target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-bpGreen p-4 rounded-lg overflow-hidden bg-cover">
+                            <img src={youtube} alt="YouTube" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </a>
+                        {/* Spotify */}
+                        <a href="https://open.spotify.com/artist/0bnglFd0oM0O6ZUChuwms2" target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-bpGreen p-4 rounded-lg overflow-hidden">
+                            <img src={spotify} alt="Spotify" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </a>
+                        {/* Facebook */}
+                        <a href="https://www.facebook.com/BrivrunuProjekts" target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-bpGreen p-4 rounded-lg overflow-hidden">
+                            <img src={facebook} alt="Facebook" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </a>
+                        {/* Instagram */}
+                        <a href="https://www.instagram.com/brivrunuprojekts" target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-bpGreen p-4 rounded-lg overflow-hidden">
+                            <img src={instagram} alt="Instagram" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
+                        </a>
+                    </div>
+
+                    {/* Contact Form */}
+                    <form action="mailto:theeriksfreimanis@gmail.com" method="post" encType="multipart/form-data" className="flex flex-col items-center bg-bpGreen p-4 rounded-lg mt-auto mb-4">
+                        <label htmlFor="question" className="text-white text-xl mb-2 ml-5 mr-5">Ir kāds jautājums? Sūti šurp!</label>
+                        <textarea
+                            id="question"
+                            name="question"
+                            rows="4"
+                            className="w-64 sm:w-80 md:w-96 p-3 text-black rounded-lg mb-4"
+                            placeholder="Ievadi jautājumu šeit..."
+                        ></textarea>
+                        <button type="submit" className="bg-white text-bpGreen font-bold py-2 px-4 rounded-lg">
+                            Sūtīt
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
