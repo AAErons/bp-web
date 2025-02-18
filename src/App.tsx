@@ -432,7 +432,6 @@ export default function App() {
                         <textarea
                             id="question"
                             name="question"
-                            rows="4"
                             className="w-64 sm:w-80 md:w-96 p-3 text-black rounded-lg mb-4"
                             placeholder="Ievadi jautājumu šeit..."
                         ></textarea>
