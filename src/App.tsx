@@ -1,42 +1,4 @@
-import backgroundImage from './assets/0.jpg';
-import whiteLogo from './assets/bp_logo_no_mwarg.png';
-import about_us from './assets/about_us_3.jpg';
-import about_us_2 from './assets/about_us_2.jpg';
-import what_we_do_1 from './assets/what_we_do.png';
-import what_we_do_2 from './assets/18.jpg';
-import what_we_do_3 from './assets/19.jpg';
-import what_we_do_4 from './assets/20.jpg';
-import what_we_do_5 from './assets/21.jpg';
 
-import partner_1 from './assets/partners/28.png';
-import partner_2 from './assets/partners/29.jpg';
-import partner_3 from './assets/partners/30.png';
-import partner_4 from './assets/partners/31.png';
-import partner_5 from './assets/partners/32.png';
-import partner_6 from './assets/partners/33.jpg';
-import partner_7 from './assets/partners/34.png';
-import partner_8 from './assets/partners/35.png';
-import partner_9 from './assets/partners/36.png';
-import partner_10 from './assets/partners/37.jpg';
-import partner_11 from './assets/partners/38.png';
-import partner_12 from './assets/partners/39.png';
-import partner_13 from './assets/partners/40.jpg';
-import partner_14 from './assets/partners/41.png';
-
-import spotify from './assets/contacts/22.png';
-import instagram from './assets/contacts/23.png';
-import facebook from './assets/contacts/24.png';
-import youtube from './assets/contacts/25.png';
-
-
-import ev from './assets/ev.png';
-import zirnis from './assets/zirnis.png';
-import jeekaa from './assets/jeekaa.png';
-import sniegs from './assets/sniegs.png';
-import dj from './assets/dj.png';
-import abra from './assets/abra.png';
-
-import {useEffect, useRef, useState} from "react";
 
 export default function App() {
     return (
