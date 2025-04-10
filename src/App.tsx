@@ -38,8 +38,26 @@ import abra from './assets/abra.png';
 
 import {useEffect, useRef, useState} from "react";
 
-
 export default function App() {
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-bpGreen text-center px-4">
+            <div className="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full">
+                <h1 className="text-2xl font-bold text-yellow-600 mb-4 whitespace-nowrap">
+                    🚧 Under Construction 🚧
+                </h1>
+                <p className="text-gray-700 text-lg mb-2">
+                    Iegriezies vēlāk!
+                </p>
+                <p className="text-gray-700 text-lg mb-6">
+                    Mēs cepjam augšā ko jaudīgu!
+                </p>
+                <div className="animate-bounce text-yellow-500 text-5xl">‍👨‍🍳️</div>
+            </div>
+        </div>
+    );
+}
+
+/*export default function App() {
     const teamMembers = [
         { name: 'JeeKaa', image: jeekaa, about: 'JeeKaa ir viens no "Brīvrunu Projekts" dalībniekiem, kurš izceļas ar tehniski precīzu plūsmu un spēcīgu liriku. Viņš regulāri piedalās brīvrunu batlos, demonstrējot gan ātru domāšanu, gan asu vārdu spēli. JeeKaa ir nozīmīga Latvijas freestyle repa scēnas daļa, aktīvi iesaistoties tās attīstībā.' },
         { name: 'Zirnis', image: zirnis, about: 'Zirnis ir viens no spilgtākajiem "Brīvrunu Projekts" dalībniekiem, pazīstams ar izcilām improvizācijas prasmēm un asprātīgu liriku. Viņš regulāri piedalās brīvrunu batlos un cīņās, demonstrējot spēju ātri reaģēt un veidot spēcīgas rindas. Zirnis ir nozīmīga figūra Latvijas freestyle repa scēnā.' },
@@ -98,7 +116,7 @@ export default function App() {
     return (
         <div
             className="h-screen w-screen scroll-smooth [&::-webkit-scrollbar]:hidden overflow-y-scroll scroll-snap-type-y mandatory">
-            {/* Sections */}
+            {/!* Sections *!/}
             <div className="scroll-snap-start">
                 <div
                     className="bg-bpGreen h-screen flex flex-col justify-center items-center scroll-snap-start"
@@ -173,7 +191,7 @@ export default function App() {
                         </div>
                     </div>
                 </div>
-                {/* New Horizontal Scrollable Section */}
+                {/!* New Horizontal Scrollable Section *!/}
                 <div className="h-screen flex flex-col justify-start items-center transition-all duration-500 ease-in-out scroll-snap-start"
                      style={{
                          backgroundImage: `url(${whatwedo})`,
@@ -310,7 +328,7 @@ export default function App() {
                             </div>
                         </div>
 
-                        {/* Navigation Buttons (Only inside this section) */}
+                        {/!* Navigation Buttons (Only inside this section) *!/}
                         <button
                             className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-3 rounded-full"
                             onClick={() => scroll("left")}
@@ -355,7 +373,7 @@ export default function App() {
                      }}>
                     <p className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-6">Partneri</p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 px-4">
-                        {/* Repeat this div for each partner icon */}
+                        {/!* Repeat this div for each partner icon *!/}
                         <div className="flex justify-center items-center bg-bpGreen p-4 rounded-lg">
                             <img src={partner_1} alt="Partner 1" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
                         </div>
@@ -408,25 +426,25 @@ export default function App() {
                      }}>
                     <p className="text-white text-4xl xl:text-6xl font-bold mt-5 mb-6">Meklē mūs šeit</p>
                     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-10 xl:mt-30 px-4 mb-8">
-                        {/* YouTube */}
+                        {/!* YouTube *!/}
                         <a href="https://www.youtube.com/@brivrunuprojekts8416" target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-bpGreen p-4 rounded-lg overflow-hidden bg-cover">
                             <img src={youtube} alt="YouTube" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
                         </a>
-                        {/* Spotify */}
+                        {/!* Spotify *!/}
                         <a href="https://open.spotify.com/artist/0bnglFd0oM0O6ZUChuwms2" target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-bpGreen p-4 rounded-lg overflow-hidden">
                             <img src={spotify} alt="Spotify" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
                         </a>
-                        {/* Facebook */}
+                        {/!* Facebook *!/}
                         <a href="https://www.facebook.com/BrivrunuProjekts" target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-bpGreen p-4 rounded-lg overflow-hidden">
                             <img src={facebook} alt="Facebook" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
                         </a>
-                        {/* Instagram */}
+                        {/!* Instagram *!/}
                         <a href="https://www.instagram.com/brivrunuprojekts" target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-bpGreen p-4 rounded-lg overflow-hidden">
                             <img src={instagram} alt="Instagram" className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain" />
                         </a>
                     </div>
 
-                    {/* Contact Form */}
+                    {/!* Contact Form *!/}
                     <form action="mailto:theeriksfreimanis@gmail.com" method="post" encType="multipart/form-data" className="flex flex-col items-center bg-bpGreen p-4 rounded-lg mt-auto mb-4">
                         <label htmlFor="question" className="text-white text-xl mb-2 ml-5 mr-5">Ir kāds jautājums? Sūti šurp!</label>
                         <textarea
@@ -443,5 +461,5 @@ export default function App() {
             </div>
         </div>
     );
-}
+}*/
 
