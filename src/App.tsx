@@ -1,5 +1,6 @@
 import './index.css';
 import { useRef, useState } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
 const MAIN_SECTIONS = [
   { id: 'hero', label: 'BP' },
@@ -7,7 +8,24 @@ const MAIN_SECTIONS = [
   { id: 'atsauksmes', label: 'ATSAUKSMES' },
 ];
 
-function App() {
+function UnderConstruction() {
+  return (
+    <div className="w-full min-h-screen flex items-center justify-center bg-teal-500">
+      <div className="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center max-w-md w-full">
+        <h1 className="text-2xl font-bold text-amber-600 mb-4 flex items-center gap-2">
+          <span role="img" aria-label="construction">🚧</span>
+          Under Construction
+          <span role="img" aria-label="construction">🚧</span>
+        </h1>
+        <div className="text-center text-gray-700 mb-2">Iegriezies vēlāk!</div>
+        <div className="text-center text-gray-700 mb-4">Mēs cepjam augšā ko jaudīgu!</div>
+        <div className="text-7xl animate-bounce">👨‍🍳</div>
+      </div>
+    </div>
+  );
+}
+
+function DemoPage() {
   const [activeSection, setActiveSection] = useState('main'); // 'main', 'galerija', 'piedavajums'
   const sectionRefs = {
     hero: useRef<HTMLDivElement>(null),
@@ -146,4 +164,12 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  const location = useLocation();
+  return (
+    <Routes>
+      <Route path="/demo" element={<DemoPage />} />
+      <Route path="*" element={<UnderConstruction />} />
+    </Routes>
+  );
+}
