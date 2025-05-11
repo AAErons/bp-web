@@ -1,12 +1,7 @@
 import './index.css';
 import { useRef, useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
-const MAIN_SECTIONS = [
-  { id: 'hero', label: 'BP' },
-  { id: 'about', label: 'KOMANDA' },
-  { id: 'atsauksmes', label: 'ATSAUKSMES' },
-];
 
 function UnderConstruction() {
   return (
@@ -165,7 +160,6 @@ function DemoPage() {
 }
 
 export default function App() {
-  const location = useLocation();
   return (
     <Routes>
       <Route path="/demo" element={<DemoPage />} />
