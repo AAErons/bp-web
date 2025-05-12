@@ -36,10 +36,15 @@ export default function GalleryManagement() {
     setUploadError(null);
 
     try {
-      // Test the minimal endpoint
-      console.log('Testing minimal endpoint...');
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Upload the file
+      console.log('Uploading file...');
       const response = await fetch('/api/hello', {
-        method: 'GET', // Using GET for the test
+        method: 'POST',
+        body: formData,
       });
 
       console.log('Response status:', response.status);
@@ -51,9 +56,10 @@ export default function GalleryManagement() {
       }
 
       const data = await response.json();
-      console.log('API response:', data);
+      console.log('Upload response:', data);
 
-      // For testing, just set a dummy image URL
+      // For now, just set a dummy image URL
+      // Later we'll use the actual uploaded image URL
       setFormData(prev => ({
         ...prev,
         imageUrl: 'https://via.placeholder.com/150',
