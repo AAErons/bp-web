@@ -36,7 +36,7 @@ export default function GalleryManagement() {
     setUploadError(null);
 
     try {
-      // For testing, just send a simple POST request
+      // Test the API endpoint with a simple POST request
       console.log('Testing API endpoint...');
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -44,25 +44,18 @@ export default function GalleryManagement() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ test: true }),
-        credentials: 'include',
       });
 
       console.log('Response status:', response.status);
-      const responseText = await response.text();
-      console.log('Raw response:', responseText);
-
+      
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      let data;
-      try {
-        data = JSON.parse(responseText);
-        console.log('Parsed response:', data);
-      } catch (parseError) {
-        console.error('Failed to parse response:', parseError);
-        throw new Error('Invalid server response');
-      }
+      const data = await response.json();
+      console.log('API response:', data);
 
       // For testing, just set a dummy image URL
       setFormData(prev => ({
