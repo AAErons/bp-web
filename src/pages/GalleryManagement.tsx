@@ -36,9 +36,9 @@ export default function GalleryManagement() {
     setUploadError(null);
 
     try {
-      // Test the API endpoint with a simple POST request
-      console.log('Testing API endpoint...');
-      const response = await fetch('/api/upload', {
+      // Test the new API endpoint
+      console.log('Testing new API endpoint...');
+      const response = await fetch('/api/test', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
