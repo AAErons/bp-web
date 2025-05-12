@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGallery, type Gallery, type GalleryImage } from '../contexts/GalleryContext';
+import { useGallery, type GalleryImage } from '../contexts/GalleryContext';
 
 export default function GalleryImages() {
   const { id } = useParams<{ id: string }>();

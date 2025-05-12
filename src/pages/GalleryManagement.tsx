@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGallery, type Gallery, type GalleryImage } from '../contexts/GalleryContext';
+import { useGallery, type Gallery } from '../contexts/GalleryContext';
 
 export default function GalleryManagement() {
   const { galleries, addGallery, updateGallery, deleteGallery } = useGallery();
