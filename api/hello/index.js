@@ -1,36 +1,29 @@
-import express from 'express';
-
-// Create Express app
-const app = express();
-
-// Middleware to parse JSON bodies
-app.use(express.json());
-
-// CORS middleware
-app.use((req, res, next) => {
+// Simple Vercel serverless function
+export default function handler(req, res) {
+  // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
 
-// Test endpoint
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Hello from Express',
-    method: req.method,
-    time: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+  // Handle OPTIONS request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  // Handle GET request
+  if (req.method === 'GET') {
+    return res.status(200).json({
+      message: 'Hello from Vercel Serverless Function',
+      method: req.method,
+      time: new Date().toISOString(),
+      environment: process.env.NODE_ENV,
+      path: req.url
+    });
+  }
+
+  // Handle other methods
+  return res.status(405).json({
+    error: 'Method not allowed',
+    allowedMethods: ['GET', 'OPTIONS']
   });
-});
-
-// Handle OPTIONS requests
-app.options('*', (req, res) => {
-  res.status(200).end();
-});
-
-// Export the handler function for Vercel
-export default function handler(req, res) {
-  // Pass the request to Express
-  return app(req, res);
 } 

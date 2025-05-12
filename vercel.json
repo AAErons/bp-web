@@ -15,8 +15,12 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/api/hello",
+      "dest": "/api/hello/index.js"
+    },
+    {
+      "src": "/api/hello/(.*)",
+      "dest": "/api/hello/index.js"
     },
     {
       "handle": "filesystem"
