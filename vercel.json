@@ -4,16 +4,22 @@
     {
       "src": "api/**/*.js",
       "use": "@vercel/node@2.15.8"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
   "routes": [
     {
-      "src": "/api/hello",
-      "dest": "/api/hello.js"
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
     },
     {
-      "src": "/api/hello/(.*)",
-      "dest": "/api/hello.js"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
