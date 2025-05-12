@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 
 // Define types for mongoose cache
+interface MongooseCache {
+  conn: mongoose.Connection | null;
+  promise: Promise<mongoose.Connection> | null;
+}
+
 declare global {
-  var mongoose: {
-    conn: typeof mongoose | null;
-    promise: Promise<typeof mongoose> | null;
-  };
+  var mongoose: MongooseCache | undefined;
 }
 
 // Define the Gallery Image Schema
@@ -33,13 +35,13 @@ const GallerySchema = new mongoose.Schema({
 export const Gallery = mongoose.models.Gallery || mongoose.model('Gallery', GallerySchema);
 
 // Database connection
-let cached = global.mongoose;
+let cached: MongooseCache = global.mongoose || { conn: null, promise: null };
 
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+if (!global.mongoose) {
+  global.mongoose = cached;
 }
 
-export async function connectToDatabase(): Promise<typeof mongoose> {
+export async function connectToDatabase(): Promise<mongoose.Connection> {
   if (cached.conn) {
     return cached.conn;
   }
@@ -49,7 +51,8 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(process.env.MONGODB_URI!, opts);
+    cached.promise = mongoose.connect(process.env.MONGODB_URI!, opts)
+      .then((mongoose) => mongoose.connection);
   }
 
   try {
