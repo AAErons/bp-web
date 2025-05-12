@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGallery, type GalleryItem } from '../contexts/GalleryContext';
 
@@ -32,19 +32,33 @@ export default function GalleryManagement() {
       return;
     }
 
+    // Create a preview URL for the selected file
+    const previewUrl = URL.createObjectURL(file);
+    setFormData(prev => ({
+      ...prev,
+      imageUrl: previewUrl
+    }));
+
     setIsUploading(true);
     setUploadError(null);
 
     try {
-      // Create FormData for file upload
-      const formData = new FormData();
-      formData.append('file', file);
+      // Convert file to base64
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
 
       // Upload the file
       console.log('Uploading file...');
       const response = await fetch('/api/hello', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ file: base64 }),
       });
 
       console.log('Response status:', response.status);
@@ -58,18 +72,45 @@ export default function GalleryManagement() {
       const data = await response.json();
       console.log('Upload response:', data);
 
-      // For now, just set a dummy image URL
-      // Later we'll use the actual uploaded image URL
+      // Update the form with the Cloudinary URL
       setFormData(prev => ({
         ...prev,
-        imageUrl: 'https://via.placeholder.com/150',
+        imageUrl: data.url // Use the Cloudinary URL
       }));
+
+      // Clean up the preview URL
+      URL.revokeObjectURL(previewUrl);
 
     } catch (error) {
       console.error('Error:', error);
       setUploadError(error instanceof Error ? error.message : 'Upload failed');
+      // Clear the preview on error
+      setFormData(prev => ({
+        ...prev,
+        imageUrl: ''
+      }));
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  // Clean up the preview URL when component unmounts or when image is removed
+  useEffect(() => {
+    return () => {
+      if (formData.imageUrl && formData.imageUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(formData.imageUrl);
+      }
+    };
+  }, [formData.imageUrl]);
+
+  // Update the image removal handler
+  const handleRemoveImage = () => {
+    if (formData.imageUrl && formData.imageUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(formData.imageUrl);
+    }
+    setFormData(prev => ({ ...prev, imageUrl: '' }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -199,12 +240,7 @@ export default function GalleryManagement() {
                         />
                         <button
                           type="button"
-                          onClick={() => {
-                            setFormData(prev => ({ ...prev, imageUrl: '' }));
-                            if (fileInputRef.current) {
-                              fileInputRef.current.value = '';
-                            }
-                          }}
+                          onClick={handleRemoveImage}
                           className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
