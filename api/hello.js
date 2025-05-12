@@ -1,7 +1,7 @@
 // Edge Runtime serverless function
 export const config = {
-  runtime: 'edge',
-  regions: ['fra1'], // Frankfurt region
+  runtime: '@vercel/edge@0.1.0',
+  regions: ['iad1'], // Washington, D.C. region
 };
 
 export default async function handler(request) {
@@ -27,6 +27,7 @@ export default async function handler(request) {
         message: 'Hello from Edge Runtime',
         method: method,
         time: new Date().toISOString(),
+        region: 'iad1',
       }),
       {
         status: 200,

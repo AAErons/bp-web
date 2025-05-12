@@ -1,10 +1,18 @@
 {
   "version": 2,
-  "functions": {
-    "api/hello.js": {
-      "runtime": "edge"
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/edge@0.1.0"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build@1.0.0",
+      "config": {
+        "distDir": "dist"
+      }
     }
-  },
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
