@@ -2,7 +2,7 @@ import './index.css';
 import { useRef, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AdminProvider } from './contexts/AdminContext';
-import { GalleryProvider } from './contexts/GalleryContext';
+import { GalleryProvider, useGallery } from './contexts/GalleryContext';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import GalleryManagement from './pages/GalleryManagement';
@@ -28,11 +28,17 @@ function UnderConstruction() {
 function DemoPage() {
   const [activeSection, setActiveSection] = useState('main');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { galleries } = useGallery();
   const sectionRefs = {
     hero: useRef<HTMLDivElement>(null),
     about: useRef<HTMLDivElement>(null),
     atsauksmes: useRef<HTMLDivElement>(null),
   };
+
+  // Sort galleries by event date (newest first)
+  const sortedGalleries = [...galleries].sort((a, b) => 
+    new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime()
+  );
 
   // Handle menu clicks
   const handleMenuClick = (section: string) => {
@@ -150,14 +156,47 @@ function DemoPage() {
       {activeSection === 'galerija' && (
         <section id="galerija" className="w-full min-h-screen flex flex-col items-center justify-center py-8 border-b border-black px-4 md:px-8 pt-20 md:pt-20">
           <div className="text-center font-bold text-base md:text-lg mb-8">GALERIJA</div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 justify-items-center">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <div className="w-24 h-24 md:w-32 md:h-32 bg-black mb-2"></div>
-                <span className="text-sm md:text-base">LOREM IPSUM</span>
-              </div>
-            ))}
-          </div>
+          {sortedGalleries.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl">
+              {sortedGalleries.map((gallery) => (
+                <div key={gallery.id} className="flex flex-col items-center">
+                  {gallery.images.length > 0 ? (
+                    <div className="relative w-full aspect-w-16 aspect-h-9 mb-2">
+                      <img
+                        src={gallery.images[0].url}
+                        alt={gallery.images[0].title || gallery.name}
+                        className="object-cover w-full h-48 rounded-lg"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-full h-48 bg-gray-200 rounded-lg mb-2 flex items-center justify-center">
+                      <span className="text-gray-500">No images</span>
+                    </div>
+                  )}
+                  <div className="text-center">
+                    <h3 className="font-medium text-lg mb-1">{gallery.name}</h3>
+                    <p className="text-sm text-gray-600 mb-1">
+                      {new Date(gallery.eventDate).toLocaleDateString('lv-LV', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
+                    {gallery.description && (
+                      <p className="text-sm text-gray-600 line-clamp-2">{gallery.description}</p>
+                    )}
+                    <p className="text-sm text-gray-500 mt-1">
+                      {gallery.images.length} {gallery.images.length === 1 ? 'attēls' : 'attēli'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-500">
+              Nav pieejamu galeriju
+            </div>
+          )}
         </section>
       )}
 
