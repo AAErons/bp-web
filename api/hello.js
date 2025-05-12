@@ -1,5 +1,5 @@
-// Minimal test endpoint
-export default function handler(req: any, res: any) {
+// Minimal test endpoint in JavaScript
+module.exports = (req, res) => {
   // Basic CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -17,4 +17,4 @@ export default function handler(req: any, res: any) {
     method: req.method,
     time: new Date().toISOString()
   });
-} 
+}; 
