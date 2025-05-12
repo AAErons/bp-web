@@ -1,222 +1,58 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGallery, type GalleryItem } from '../contexts/GalleryContext';
-
-// Extend the GalleryItem type to include cloudinaryId
-interface ExtendedGalleryItem extends GalleryItem {
-  cloudinaryId?: string;
-}
+import { useGallery, type Gallery, type GalleryImage } from '../contexts/GalleryContext';
 
 export default function GalleryManagement() {
-  const { items, addItem, updateItem, deleteItem } = useGallery();
+  const { galleries, addGallery, updateGallery, deleteGallery } = useGallery();
   const navigate = useNavigate();
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [formData, setFormData] = useState<Omit<ExtendedGalleryItem, 'id'>>({
-    title: '',
-    imageUrl: '',
+  const [formData, setFormData] = useState<Omit<Gallery, 'id' | 'createdAt' | 'updatedAt' | 'images'>>({
+    name: '',
     description: '',
-    cloudinaryId: undefined,
+    eventDate: '',
   });
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      setUploadError('Please select an image file');
-      return;
-    }
-
-    // Validate file size (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError('File size must be less than 5MB');
-      return;
-    }
-
-    // Create a preview URL for the selected file
-    const previewUrl = URL.createObjectURL(file);
-    setFormData(prev => ({
-      ...prev,
-      imageUrl: previewUrl
-    }));
-
-    setIsUploading(true);
-    setUploadError(null);
-
-    try {
-      // Convert file to base64
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-
-      // Upload the file
-      console.log('Uploading file...');
-      const response = await fetch('/api/hello', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ file: base64 }),
-      });
-
-      console.log('Response status:', response.status);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log('Upload response:', data);
-
-      // Update the form with the Cloudinary URL and public_id
-      setFormData(prev => ({
-        ...prev,
-        imageUrl: data.url,
-        cloudinaryId: data.public_id
-      }));
-
-      // Clean up the preview URL
-      URL.revokeObjectURL(previewUrl);
-
-    } catch (error) {
-      console.error('Error:', error);
-      setUploadError(error instanceof Error ? error.message : 'Upload failed');
-      // Clear the preview on error
-      setFormData(prev => ({
-        ...prev,
-        imageUrl: ''
-      }));
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  // Clean up the preview URL when component unmounts or when image is removed
-  useEffect(() => {
-    return () => {
-      if (formData.imageUrl && formData.imageUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(formData.imageUrl);
-      }
-    };
-  }, [formData.imageUrl]);
-
-  // Add a function to delete image from Cloudinary
-  const deleteImageFromCloudinary = async (publicId: string) => {
-    try {
-      const response = await fetch(`/api/hello?publicId=${encodeURIComponent(publicId)}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log('Delete response:', data);
-      return true;
-    } catch (error) {
-      console.error('Error deleting image:', error);
-      return false;
-    }
-  };
-
-  // Update handleRemoveImage to delete from Cloudinary
-  const handleRemoveImage = async () => {
-    if (formData.cloudinaryId) {
-      const success = await deleteImageFromCloudinary(formData.cloudinaryId);
-      if (!success) {
-        setUploadError('Failed to delete image from storage');
-        return;
-      }
-    }
-
-    if (formData.imageUrl && formData.imageUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(formData.imageUrl);
-    }
-    
-    setFormData(prev => ({ 
-      ...prev, 
-      imageUrl: '',
-      cloudinaryId: undefined 
-    }));
-    
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  // Update handleDelete to use ExtendedGalleryItem
-  const handleDelete = async (item: ExtendedGalleryItem) => {
-    if (window.confirm('Are you sure you want to delete this item?')) {
-      // Delete the image from Cloudinary if it exists
-      if (item.cloudinaryId) {
-        const success = await deleteImageFromCloudinary(item.cloudinaryId);
-        if (!success) {
-          console.error('Failed to delete image from Cloudinary');
-          // Continue with item deletion even if image deletion fails
-        }
-      }
-      
-      // Delete the item from the gallery
-      deleteItem(item.id);
-    }
-  };
-
-  // Update handleSubmit to include cloudinaryId
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.imageUrl) {
-      setUploadError('Please upload an image');
-      return;
-    }
-
-    const itemData = {
-      title: formData.title,
-      imageUrl: formData.imageUrl,
-      description: formData.description,
-      cloudinaryId: formData.cloudinaryId,
-    };
 
     if (editingId) {
-      updateItem(editingId, itemData);
+      updateGallery(editingId, formData);
       setEditingId(null);
     } else {
-      addItem(itemData);
+      addGallery(formData);
       setIsAdding(false);
     }
 
-    setFormData({ 
-      title: '', 
-      imageUrl: '', 
+    setFormData({
+      name: '',
       description: '',
-      cloudinaryId: undefined 
+      eventDate: '',
     });
-    
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+  };
+
+  const handleEdit = (gallery: Gallery) => {
+    setEditingId(gallery.id);
+    setFormData({
+      name: gallery.name,
+      description: gallery.description,
+      eventDate: gallery.eventDate,
+    });
+  };
+
+  const handleDelete = (id: string) => {
+    if (window.confirm('Are you sure you want to delete this gallery? This will also delete all images in the gallery.')) {
+      deleteGallery(id);
     }
   };
 
-  // Update handleEdit to use ExtendedGalleryItem
-  const handleEdit = (item: ExtendedGalleryItem) => {
-    setEditingId(item.id);
+  const handleCancel = () => {
+    setEditingId(null);
+    setIsAdding(false);
     setFormData({
-      title: item.title,
-      imageUrl: item.imageUrl,
-      description: item.description,
-      cloudinaryId: item.cloudinaryId,
+      name: '',
+      description: '',
+      eventDate: '',
     });
   };
 
@@ -252,7 +88,7 @@ export default function GalleryManagement() {
                   onClick={() => setIsAdding(true)}
                   className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
                 >
-                  Add New Item
+                  Create New Gallery
                 </button>
               )}
             </div>
@@ -260,64 +96,35 @@ export default function GalleryManagement() {
             {(isAdding || editingId) && (
               <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow space-y-4">
                 <h3 className="text-lg font-medium">
-                  {editingId ? 'Edit Gallery Item' : 'Add New Gallery Item'}
+                  {editingId ? 'Edit Gallery' : 'Create New Gallery'}
                 </h3>
                 
                 <div>
-                  <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                    Title
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                    Gallery Name
                   </label>
                   <input
                     type="text"
-                    id="title"
-                    value={formData.title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Image
+                  <label htmlFor="eventDate" className="block text-sm font-medium text-gray-700">
+                    Event Date
                   </label>
-                  <div className="mt-1 flex items-center space-x-4">
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      accept="image/*"
-                      onChange={handleFileSelect}
-                      className="hidden"
-                      id="image-upload"
-                    />
-                    <label
-                      htmlFor="image-upload"
-                      className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                      {isUploading ? 'Uploading...' : 'Choose Image'}
-                    </label>
-                    {formData.imageUrl && (
-                      <div className="relative w-20 h-20">
-                        <img
-                          src={formData.imageUrl}
-                          alt="Preview"
-                          className="w-full h-full object-cover rounded"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleRemoveImage}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  {uploadError && (
-                    <p className="mt-2 text-sm text-red-600">{uploadError}</p>
-                  )}
+                  <input
+                    type="date"
+                    id="eventDate"
+                    value={formData.eventDate}
+                    onChange={(e) => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    required
+                  />
                 </div>
 
                 <div>
@@ -337,63 +144,63 @@ export default function GalleryManagement() {
                 <div className="flex justify-end space-x-3">
                   <button
                     type="button"
-                    onClick={() => {
-                      setEditingId(null);
-                      setIsAdding(false);
-                      setFormData({ title: '', imageUrl: '', description: '', cloudinaryId: undefined });
-                    }}
+                    onClick={handleCancel}
                     className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    disabled={isUploading}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                   >
-                    {editingId ? 'Save Changes' : 'Add Item'}
+                    {editingId ? 'Save Changes' : 'Create Gallery'}
                   </button>
                 </div>
               </form>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {items.map((item) => (
-                <div key={item.id} className="bg-white rounded-lg shadow overflow-hidden">
-                  <div className="aspect-w-16 aspect-h-9 bg-gray-200">
-                    {item.imageUrl && (
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title}
-                        className="object-cover w-full h-48"
-                      />
-                    )}
-                  </div>
+              {galleries.map((gallery) => (
+                <div key={gallery.id} className="bg-white rounded-lg shadow overflow-hidden">
                   <div className="p-4">
-                    <h3 className="font-medium text-lg mb-1">{item.title}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{item.description}</p>
-                    <div className="flex justify-end space-x-2">
-                      <button
-                        onClick={() => handleEdit(item as ExtendedGalleryItem)}
-                        className="text-blue-600 hover:text-blue-800"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item as ExtendedGalleryItem)}
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        Delete
-                      </button>
+                    <h3 className="font-medium text-lg mb-1">{gallery.name}</h3>
+                    <p className="text-gray-600 text-sm mb-2">
+                      Event Date: {new Date(gallery.eventDate).toLocaleDateString()}
+                    </p>
+                    <p className="text-gray-600 text-sm mb-4">{gallery.description}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">
+                        {gallery.images.length} {gallery.images.length === 1 ? 'image' : 'images'}
+                      </span>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => navigate(`/admin/gallery/${gallery.id}`)}
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          Manage Images
+                        </button>
+                        <button
+                          onClick={() => handleEdit(gallery)}
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(gallery.id)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
 
-            {items.length === 0 && !isAdding && (
+            {galleries.length === 0 && !isAdding && (
               <div className="text-center py-12 bg-gray-50 rounded-lg">
-                <p className="text-gray-500">No gallery items yet. Add your first item!</p>
+                <p className="text-gray-500">No galleries yet. Create your first gallery!</p>
               </div>
             )}
           </div>

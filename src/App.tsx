@@ -6,6 +6,7 @@ import { GalleryProvider } from './contexts/GalleryContext';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import GalleryManagement from './pages/GalleryManagement';
+import GalleryImages from './pages/GalleryImages';
 
 function UnderConstruction() {
   return (
@@ -235,6 +236,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <GalleryManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/gallery/:id"
+            element={
+              <ProtectedRoute>
+                <GalleryImages />
               </ProtectedRoute>
             }
           />

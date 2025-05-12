@@ -1,52 +1,126 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
-export interface GalleryItem {
+// Define types for our gallery structure
+export interface GalleryImage {
   id: string;
-  title: string;
-  imageUrl: string;
+  url: string;
+  cloudinaryId: string;
+  title?: string;
+  description?: string;
+  uploadedAt: string;
+}
+
+export interface Gallery {
+  id: string;
+  name: string;
   description: string;
+  eventDate: string;
+  images: GalleryImage[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface GalleryContextType {
-  items: GalleryItem[];
-  addItem: (item: Omit<GalleryItem, 'id'>) => void;
-  updateItem: (id: string, item: Partial<GalleryItem>) => void;
-  deleteItem: (id: string) => void;
+  galleries: Gallery[];
+  addGallery: (gallery: Omit<Gallery, 'id' | 'createdAt' | 'updatedAt' | 'images'>) => void;
+  updateGallery: (id: string, gallery: Partial<Omit<Gallery, 'id' | 'createdAt' | 'updatedAt'>>) => void;
+  deleteGallery: (id: string) => void;
+  addImageToGallery: (galleryId: string, image: Omit<GalleryImage, 'id' | 'uploadedAt'>) => void;
+  updateImage: (galleryId: string, imageId: string, image: Partial<Omit<GalleryImage, 'id' | 'uploadedAt'>>) => void;
+  deleteImage: (galleryId: string, imageId: string) => void;
 }
 
 const GalleryContext = createContext<GalleryContextType | undefined>(undefined);
 
-export function GalleryProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<GalleryItem[]>(() => {
-    const saved = localStorage.getItem('galleryItems');
-    return saved ? JSON.parse(saved) : [];
-  });
+export function GalleryProvider({ children }: { children: React.ReactNode }) {
+  const [galleries, setGalleries] = useState<Gallery[]>([]);
 
-  useEffect(() => {
-    localStorage.setItem('galleryItems', JSON.stringify(items));
-  }, [items]);
-
-  const addItem = (item: Omit<GalleryItem, 'id'>) => {
-    const newItem: GalleryItem = {
-      ...item,
+  const addGallery = (galleryData: Omit<Gallery, 'id' | 'createdAt' | 'updatedAt' | 'images'>) => {
+    const newGallery: Gallery = {
+      ...galleryData,
       id: crypto.randomUUID(),
+      images: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
-    setItems(prev => [...prev, newItem]);
+    setGalleries(prev => [...prev, newGallery]);
   };
 
-  const updateItem = (id: string, updates: Partial<GalleryItem>) => {
-    setItems(prev => prev.map(item => 
-      item.id === id ? { ...item, ...updates } : item
+  const updateGallery = (id: string, galleryData: Partial<Omit<Gallery, 'id' | 'createdAt' | 'updatedAt'>>) => {
+    setGalleries(prev => prev.map(gallery => 
+      gallery.id === id 
+        ? { 
+            ...gallery, 
+            ...galleryData, 
+            updatedAt: new Date().toISOString() 
+          }
+        : gallery
     ));
   };
 
-  const deleteItem = (id: string) => {
-    setItems(prev => prev.filter(item => item.id !== id));
+  const deleteGallery = (id: string) => {
+    setGalleries(prev => prev.filter(gallery => gallery.id !== id));
+  };
+
+  const addImageToGallery = (galleryId: string, imageData: Omit<GalleryImage, 'id' | 'uploadedAt'>) => {
+    const newImage: GalleryImage = {
+      ...imageData,
+      id: crypto.randomUUID(),
+      uploadedAt: new Date().toISOString(),
+    };
+
+    setGalleries(prev => prev.map(gallery => {
+      if (gallery.id === galleryId) {
+        return {
+          ...gallery,
+          images: [...gallery.images, newImage],
+          updatedAt: new Date().toISOString(),
+        };
+      }
+      return gallery;
+    }));
+  };
+
+  const updateImage = (galleryId: string, imageId: string, imageData: Partial<Omit<GalleryImage, 'id' | 'uploadedAt'>>) => {
+    setGalleries(prev => prev.map(gallery => {
+      if (gallery.id === galleryId) {
+        return {
+          ...gallery,
+          images: gallery.images.map(image =>
+            image.id === imageId
+              ? { ...image, ...imageData }
+              : image
+          ),
+          updatedAt: new Date().toISOString(),
+        };
+      }
+      return gallery;
+    }));
+  };
+
+  const deleteImage = (galleryId: string, imageId: string) => {
+    setGalleries(prev => prev.map(gallery => {
+      if (gallery.id === galleryId) {
+        return {
+          ...gallery,
+          images: gallery.images.filter(image => image.id !== imageId),
+          updatedAt: new Date().toISOString(),
+        };
+      }
+      return gallery;
+    }));
   };
 
   return (
-    <GalleryContext.Provider value={{ items, addItem, updateItem, deleteItem }}>
+    <GalleryContext.Provider value={{
+      galleries,
+      addGallery,
+      updateGallery,
+      deleteGallery,
+      addImageToGallery,
+      updateImage,
+      deleteImage,
+    }}>
       {children}
     </GalleryContext.Provider>
   );
