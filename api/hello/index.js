@@ -1,4 +1,6 @@
 import express from 'express';
+
+// Create Express app
 const app = express();
 
 // Middleware to parse JSON bodies
@@ -27,5 +29,8 @@ app.options('*', (req, res) => {
   res.status(200).end();
 });
 
-// Export the Express app
-export default app; 
+// Export the handler function for Vercel
+export default function handler(req, res) {
+  // Pass the request to Express
+  return app(req, res);
+} 
