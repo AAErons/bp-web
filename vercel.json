@@ -3,14 +3,7 @@
   "builds": [
     {
       "src": "api/**/*.js",
-      "use": "@vercel/edge@0.1.0"
-    },
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build@1.0.0",
-      "config": {
-        "distDir": "dist"
-      }
+      "use": "@vercel/node@2.15.8"
     }
   ],
   "routes": [
