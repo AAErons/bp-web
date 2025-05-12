@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGallery, type GalleryImage } from '../contexts/GalleryContext';
+import { useGallery } from '../contexts/GalleryContext';
+import type { GalleryImage } from '../types';
 
 export default function GalleryImages() {
   const { id } = useParams<{ id: string }>();
@@ -113,6 +114,7 @@ export default function GalleryImages() {
   };
 
   const handleUpdateImage = (image: GalleryImage, updates: Partial<GalleryImage>) => {
+    if (!gallery) return;
     updateImage(gallery.id, image.id, updates);
     setEditingImage(null);
   };
@@ -184,14 +186,18 @@ export default function GalleryImages() {
                       <div className="space-y-2">
                         <input
                           type="text"
-                          value={editingImage.title || ''}
-                          onChange={(e) => setEditingImage(prev => prev ? { ...prev, title: e.target.value } : null)}
+                          value={editingImage?.title ?? ''}
+                          onChange={(e) => setEditingImage((prev: GalleryImage | null) => 
+                            prev ? { ...prev, title: e.target.value } : null
+                          )}
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                           placeholder="Image title"
                         />
                         <textarea
-                          value={editingImage.description || ''}
-                          onChange={(e) => setEditingImage(prev => prev ? { ...prev, description: e.target.value } : null)}
+                          value={editingImage?.description ?? ''}
+                          onChange={(e) => setEditingImage((prev: GalleryImage | null) => 
+                            prev ? { ...prev, description: e.target.value } : null
+                          )}
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                           placeholder="Image description"
                           rows={2}

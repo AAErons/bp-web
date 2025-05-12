@@ -14,6 +14,8 @@ export interface Gallery {
 
 interface GalleryContextType {
   galleries: GalleryType[];
+  isLoading: boolean;
+  error: string | null;
   addGallery: (gallery: Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt' | 'images'>) => Promise<void>;
   updateGallery: (id: string, gallery: Partial<Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt'>>) => Promise<void>;
   deleteGallery: (id: string) => Promise<void>;
@@ -177,6 +179,8 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
   return (
     <GalleryContext.Provider value={{
       galleries,
+      isLoading,
+      error,
       addGallery,
       updateGallery,
       deleteGallery,
@@ -189,6 +193,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+export { type GalleryImage };
 export function useGallery() {
   const context = useContext(GalleryContext);
   if (context === undefined) {
