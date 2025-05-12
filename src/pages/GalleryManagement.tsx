@@ -36,14 +36,10 @@ export default function GalleryManagement() {
     setUploadError(null);
 
     try {
-      // Test the new API endpoint
-      console.log('Testing new API endpoint...');
-      const response = await fetch('/api/test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ test: true }),
+      // Test the minimal endpoint
+      console.log('Testing minimal endpoint...');
+      const response = await fetch('/api/hello', {
+        method: 'GET', // Using GET for the test
       });
 
       console.log('Response status:', response.status);
