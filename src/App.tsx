@@ -1,7 +1,11 @@
 import './index.css';
 import { useRef, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { AdminProvider } from './contexts/AdminContext';
+import { GalleryProvider } from './contexts/GalleryContext';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import GalleryManagement from './pages/GalleryManagement';
 
 function UnderConstruction() {
   return (
@@ -206,11 +210,37 @@ function DemoPage() {
   );
 }
 
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const isAuthenticated = localStorage.getItem('adminAuth') === 'true';
+  return isAuthenticated ? <>{children}</> : <Navigate to="/admin" replace />;
+}
+
 export default function App() {
   return (
-    <Routes>
-      <Route path="/demo" element={<DemoPage />} />
-      <Route path="*" element={<UnderConstruction />} />
-    </Routes>
+    <AdminProvider>
+      <GalleryProvider>
+        <Routes>
+          <Route path="/demo" element={<DemoPage />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/gallery"
+            element={
+              <ProtectedRoute>
+                <GalleryManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<UnderConstruction />} />
+        </Routes>
+      </GalleryProvider>
+    </AdminProvider>
   );
 }
