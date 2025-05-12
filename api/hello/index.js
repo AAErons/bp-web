@@ -28,11 +28,22 @@ const uploadToCloudinary = (buffer) => {
   });
 };
 
+// Helper function to delete from Cloudinary
+const deleteFromCloudinary = async (publicId) => {
+  try {
+    const result = await cloudinary.uploader.destroy(publicId);
+    return result;
+  } catch (error) {
+    console.error('Cloudinary delete error:', error);
+    throw error;
+  }
+};
+
 // Vercel serverless function with file upload support
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // Handle OPTIONS request
@@ -97,9 +108,39 @@ export default async function handler(req, res) {
     }
   }
 
+  // Handle DELETE request
+  if (req.method === 'DELETE') {
+    try {
+      const { publicId } = req.query;
+      
+      if (!publicId) {
+        return res.status(400).json({
+          error: 'Missing public_id',
+          details: 'Please provide a public_id to delete the image'
+        });
+      }
+
+      console.log('Deleting from Cloudinary:', publicId);
+      const result = await deleteFromCloudinary(publicId);
+      console.log('Delete result:', result);
+
+      return res.status(200).json({
+        message: 'Image deleted successfully',
+        result
+      });
+
+    } catch (error) {
+      console.error('Delete error:', error);
+      return res.status(500).json({
+        error: 'Image deletion failed',
+        details: error.message
+      });
+    }
+  }
+
   // Handle other methods
   return res.status(405).json({
     error: 'Method not allowed',
-    allowedMethods: ['GET', 'POST', 'OPTIONS']
+    allowedMethods: ['GET', 'POST', 'DELETE', 'OPTIONS']
   });
 } 

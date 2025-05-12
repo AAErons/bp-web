@@ -2,6 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGallery, type GalleryItem } from '../contexts/GalleryContext';
 
+// Extend the GalleryItem type to include cloudinaryId
+interface ExtendedGalleryItem extends GalleryItem {
+  cloudinaryId?: string;
+}
+
 export default function GalleryManagement() {
   const { items, addItem, updateItem, deleteItem } = useGallery();
   const navigate = useNavigate();
@@ -10,10 +15,11 @@ export default function GalleryManagement() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [formData, setFormData] = useState<Omit<GalleryItem, 'id'>>({
+  const [formData, setFormData] = useState<Omit<ExtendedGalleryItem, 'id'>>({
     title: '',
     imageUrl: '',
     description: '',
+    cloudinaryId: undefined,
   });
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,10 +78,11 @@ export default function GalleryManagement() {
       const data = await response.json();
       console.log('Upload response:', data);
 
-      // Update the form with the Cloudinary URL
+      // Update the form with the Cloudinary URL and public_id
       setFormData(prev => ({
         ...prev,
-        imageUrl: data.url // Use the Cloudinary URL
+        imageUrl: data.url,
+        cloudinaryId: data.public_id
       }));
 
       // Clean up the preview URL
@@ -103,17 +110,71 @@ export default function GalleryManagement() {
     };
   }, [formData.imageUrl]);
 
-  // Update the image removal handler
-  const handleRemoveImage = () => {
+  // Add a function to delete image from Cloudinary
+  const deleteImageFromCloudinary = async (publicId: string) => {
+    try {
+      const response = await fetch(`/api/hello?publicId=${encodeURIComponent(publicId)}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Delete response:', data);
+      return true;
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      return false;
+    }
+  };
+
+  // Update handleRemoveImage to delete from Cloudinary
+  const handleRemoveImage = async () => {
+    if (formData.cloudinaryId) {
+      const success = await deleteImageFromCloudinary(formData.cloudinaryId);
+      if (!success) {
+        setUploadError('Failed to delete image from storage');
+        return;
+      }
+    }
+
     if (formData.imageUrl && formData.imageUrl.startsWith('blob:')) {
       URL.revokeObjectURL(formData.imageUrl);
     }
-    setFormData(prev => ({ ...prev, imageUrl: '' }));
+    
+    setFormData(prev => ({ 
+      ...prev, 
+      imageUrl: '',
+      cloudinaryId: undefined 
+    }));
+    
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
+  // Update handleDelete to use ExtendedGalleryItem
+  const handleDelete = async (item: ExtendedGalleryItem) => {
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      // Delete the image from Cloudinary if it exists
+      if (item.cloudinaryId) {
+        const success = await deleteImageFromCloudinary(item.cloudinaryId);
+        if (!success) {
+          console.error('Failed to delete image from Cloudinary');
+          // Continue with item deletion even if image deletion fails
+        }
+      }
+      
+      // Delete the item from the gallery
+      deleteItem(item.id);
+    }
+  };
+
+  // Update handleSubmit to include cloudinaryId
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.imageUrl) {
@@ -121,38 +182,42 @@ export default function GalleryManagement() {
       return;
     }
 
+    const itemData = {
+      title: formData.title,
+      imageUrl: formData.imageUrl,
+      description: formData.description,
+      cloudinaryId: formData.cloudinaryId,
+    };
+
     if (editingId) {
-      updateItem(editingId, formData);
+      updateItem(editingId, itemData);
       setEditingId(null);
     } else {
-      addItem(formData);
+      addItem(itemData);
       setIsAdding(false);
     }
-    setFormData({ title: '', imageUrl: '', description: '' });
+
+    setFormData({ 
+      title: '', 
+      imageUrl: '', 
+      description: '',
+      cloudinaryId: undefined 
+    });
+    
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
-  const handleEdit = (item: GalleryItem) => {
+  // Update handleEdit to use ExtendedGalleryItem
+  const handleEdit = (item: ExtendedGalleryItem) => {
     setEditingId(item.id);
     setFormData({
       title: item.title,
       imageUrl: item.imageUrl,
       description: item.description,
+      cloudinaryId: item.cloudinaryId,
     });
-  };
-
-  const handleDelete = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this item?')) {
-      deleteItem(id);
-    }
-  };
-
-  const handleCancel = () => {
-    setEditingId(null);
-    setIsAdding(false);
-    setFormData({ title: '', imageUrl: '', description: '' });
   };
 
   return (
@@ -272,7 +337,11 @@ export default function GalleryManagement() {
                 <div className="flex justify-end space-x-3">
                   <button
                     type="button"
-                    onClick={handleCancel}
+                    onClick={() => {
+                      setEditingId(null);
+                      setIsAdding(false);
+                      setFormData({ title: '', imageUrl: '', description: '', cloudinaryId: undefined });
+                    }}
                     className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                   >
                     Cancel
@@ -305,13 +374,13 @@ export default function GalleryManagement() {
                     <p className="text-gray-600 text-sm mb-4">{item.description}</p>
                     <div className="flex justify-end space-x-2">
                       <button
-                        onClick={() => handleEdit(item)}
+                        onClick={() => handleEdit(item as ExtendedGalleryItem)}
                         className="text-blue-600 hover:text-blue-800"
                       >
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => handleDelete(item as ExtendedGalleryItem)}
                         className="text-red-600 hover:text-red-800"
                       >
                         Delete
