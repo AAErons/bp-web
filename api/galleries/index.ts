@@ -7,7 +7,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     NODE_ENV: process.env.NODE_ENV,
     MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
     VERCEL_ENV: process.env.VERCEL_ENV,
-    VERCEL_REGION: process.env.VERCEL_REGION
+    VERCEL_REGION: process.env.VERCEL_REGION,
+    VERCEL_URL: process.env.VERCEL_URL,
+    VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA
   });
   
   try {
@@ -19,19 +21,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(500).json({ 
         error: 'Database configuration error',
         details: 'MONGODB_URI environment variable is not set',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV,
+        vercelEnv: process.env.VERCEL_ENV
       });
     }
 
     try {
+      console.log('Attempting database connection...');
       await connectToDatabase();
-      console.log('Database connection established');
+      console.log('Database connection established successfully');
     } catch (dbError) {
-      console.error('Database connection error:', dbError);
+      console.error('Database connection error:', {
+        error: dbError,
+        message: dbError instanceof Error ? dbError.message : 'Unknown error',
+        stack: dbError instanceof Error ? dbError.stack : undefined,
+        timestamp: new Date().toISOString()
+      });
       return res.status(500).json({
         error: 'Database connection error',
         details: dbError instanceof Error ? dbError.message : 'Unknown database error',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV,
+        vercelEnv: process.env.VERCEL_ENV
       });
     }
 
@@ -98,12 +110,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
     }
   } catch (error) {
-    console.error('Unhandled error in /api/galleries:', error);
+    console.error('Unhandled error in /api/galleries:', {
+      error,
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      type: error instanceof Error ? error.constructor.name : typeof error,
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV,
+      vercelEnv: process.env.VERCEL_ENV
+    });
     return res.status(500).json({ 
       error: 'Internal Server Error',
       details: error instanceof Error ? error.message : 'Unknown error',
       type: error instanceof Error ? error.constructor.name : typeof error,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV,
+      vercelEnv: process.env.VERCEL_ENV
     });
   }
 } 
