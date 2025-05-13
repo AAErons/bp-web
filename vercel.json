@@ -17,15 +17,15 @@
   "routes": [
     {
       "src": "/api/galleries",
-      "dest": "/api/galleries/index.js"
+      "dest": "/api/galleries/index.ts"
     },
     {
       "src": "/api/galleries/(.*)",
-      "dest": "/api/galleries/[id].js"
+      "dest": "/api/galleries/[id].ts"
     },
     {
       "src": "/api/upload",
-      "dest": "/api/upload.js"
+      "dest": "/api/upload.ts"
     },
     {
       "handle": "filesystem"

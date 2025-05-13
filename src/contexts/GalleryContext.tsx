@@ -41,17 +41,27 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
       console.log('Fetching galleries...');
       const response = await fetch('/api/galleries');
       
+      // Log the raw response details
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      
+      // Get the raw text first
+      const rawText = await response.text();
+      console.log('Raw response:', rawText);
+      
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        console.error('Failed to fetch galleries:', {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        });
-        throw new Error(errorData?.error || `Failed to fetch galleries: ${response.status} ${response.statusText}`);
+        throw new Error(`Failed to fetch galleries: ${response.status} ${response.statusText}\nResponse: ${rawText}`);
       }
       
-      const data = await response.json();
+      // Try to parse the text as JSON
+      let data;
+      try {
+        data = JSON.parse(rawText);
+      } catch (parseError) {
+        console.error('Failed to parse response as JSON:', parseError);
+        throw new Error(`Invalid JSON response: ${rawText.substring(0, 100)}...`);
+      }
+      
       console.log('Galleries fetched successfully:', data);
       setGalleries(data);
     } catch (err) {
