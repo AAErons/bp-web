@@ -29,7 +29,7 @@ function UnderConstruction() {
 function DemoPage() {
   const [activeSection, setActiveSection] = useState('main');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { galleries, isLoading, error } = useGallery();
+  const { galleries, isLoading } = useGallery();
   const sectionRefs = {
     hero: useRef<HTMLDivElement>(null),
     about: useRef<HTMLDivElement>(null),
