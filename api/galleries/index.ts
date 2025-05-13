@@ -2,13 +2,16 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { connectToDatabase, Gallery } from '../../src/lib/db';
 import { randomUUID } from 'crypto';
 
+// Cache the database connection
+let cachedConnection: any = null;
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Log the start of the request with more details
   console.log('=== Request Start ===');
   console.log(`[${req.method}] /api/galleries`);
-  console.log('Headers:', req.headers);
-  console.log('Query:', req.query);
-  console.log('Body:', req.body);
+  console.log('Headers:', JSON.stringify(req.headers, null, 2));
+  console.log('Query:', JSON.stringify(req.query, null, 2));
+  console.log('Body:', JSON.stringify(req.body, null, 2));
   console.log('Environment:', {
     NODE_ENV: process.env.NODE_ENV,
     MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
@@ -35,8 +38,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).end();
     }
 
-    // Connect to database
-    console.log('Connecting to database...');
+    // Connect to database with connection caching
+    console.log('Checking database connection...');
     if (!process.env.MONGODB_URI) {
       console.error('MONGODB_URI is not defined');
       return res.status(500).json({ 
@@ -47,8 +50,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     try {
-      await connectToDatabase();
-      console.log('Database connection established successfully');
+      if (!cachedConnection) {
+        console.log('Establishing new database connection...');
+        cachedConnection = await connectToDatabase();
+        console.log('Database connection established successfully');
+      } else {
+        console.log('Using cached database connection');
+      }
     } catch (dbError) {
       console.error('Database connection error:', {
         error: dbError,
@@ -56,6 +64,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         stack: dbError instanceof Error ? dbError.stack : undefined,
         timestamp: new Date().toISOString()
       });
+      // Reset cached connection on error
+      cachedConnection = null;
       return res.status(500).json({
         error: 'Database connection error',
         details: dbError instanceof Error ? dbError.message : 'Unknown database error',
@@ -67,11 +77,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'GET':
         console.log('Fetching all galleries');
         try {
-          const galleries = await Gallery.find().sort({ eventDate: -1 });
+          const galleries = await Gallery.find().sort({ eventDate: -1 }).lean().exec();
           console.log(`Found ${galleries.length} galleries`);
           return res.status(200).json(galleries);
         } catch (error) {
-          console.error('Error fetching galleries:', error);
+          console.error('Error fetching galleries:', {
+            error,
+            message: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined,
+            timestamp: new Date().toISOString()
+          });
           return res.status(500).json({ 
             error: 'Database query error',
             details: error instanceof Error ? error.message : 'Unknown error while fetching galleries',
@@ -80,7 +95,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
       case 'POST':
-        console.log('Creating new gallery:', req.body);
+        console.log('Creating new gallery:', JSON.stringify(req.body, null, 2));
         try {
           // Validate required fields
           const { name, description, eventDate } = req.body;
@@ -114,10 +129,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             images: []
           });
 
-          console.log('Saving new gallery:', newGallery);
-          await newGallery.save();
-          console.log('Gallery created successfully:', newGallery.id);
-          return res.status(201).json(newGallery);
+          console.log('Saving new gallery:', JSON.stringify(newGallery.toObject(), null, 2));
+          const savedGallery = await newGallery.save();
+          console.log('Gallery created successfully:', savedGallery.id);
+          return res.status(201).json(savedGallery);
         } catch (error) {
           console.error('Error creating gallery:', {
             error,
