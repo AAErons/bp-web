@@ -38,11 +38,24 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
 
   const fetchGalleries = async () => {
     try {
+      console.log('Fetching galleries...');
       const response = await fetch('/api/galleries');
-      if (!response.ok) throw new Error('Failed to fetch galleries');
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        console.error('Failed to fetch galleries:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
+        throw new Error(errorData?.error || `Failed to fetch galleries: ${response.status} ${response.statusText}`);
+      }
+      
       const data = await response.json();
+      console.log('Galleries fetched successfully:', data);
       setGalleries(data);
     } catch (err) {
+      console.error('Error in fetchGalleries:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch galleries');
     } finally {
       setIsLoading(false);

@@ -7,6 +7,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     // Connect to database
     console.log('Connecting to database...');
+    if (!process.env.MONGODB_URI) {
+      console.error('MONGODB_URI is not defined');
+      return res.status(500).json({ 
+        error: 'Database configuration error',
+        details: 'MONGODB_URI environment variable is not set'
+      });
+    }
+
     await connectToDatabase();
     console.log('Database connection established');
 
@@ -29,31 +37,54 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     switch (req.method) {
       case 'GET':
         console.log('Fetching all galleries');
-        const galleries = await Gallery.find().sort({ eventDate: -1 });
-        console.log(`Found ${galleries.length} galleries`);
-        res.status(200).json(galleries);
+        try {
+          const galleries = await Gallery.find().sort({ eventDate: -1 });
+          console.log(`Found ${galleries.length} galleries`);
+          res.status(200).json(galleries);
+        } catch (error) {
+          console.error('Error fetching galleries:', error);
+          res.status(500).json({ 
+            error: 'Database query error',
+            details: error instanceof Error ? error.message : 'Unknown error while fetching galleries'
+          });
+        }
         break;
 
       case 'POST':
         console.log('Creating new gallery:', req.body);
-        const newGallery = new Gallery({
-          ...req.body,
-          id: crypto.randomUUID(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        });
-        await newGallery.save();
-        console.log('Gallery created successfully:', newGallery.id);
-        res.status(201).json(newGallery);
+        try {
+          const newGallery = new Gallery({
+            ...req.body,
+            id: crypto.randomUUID(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          });
+          await newGallery.save();
+          console.log('Gallery created successfully:', newGallery.id);
+          res.status(201).json(newGallery);
+        } catch (error) {
+          console.error('Error creating gallery:', error);
+          res.status(500).json({ 
+            error: 'Database operation error',
+            details: error instanceof Error ? error.message : 'Unknown error while creating gallery'
+          });
+        }
         break;
 
       default:
         console.log(`Method ${req.method} not allowed`);
         res.setHeader('Allow', ['GET', 'POST']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+        res.status(405).json({ 
+          error: 'Method not allowed',
+          details: `Method ${req.method} is not supported for this endpoint`
+        });
     }
   } catch (error) {
     console.error('Error in /api/galleries:', error);
-    res.status(500).json({ error: 'Internal Server Error', details: error instanceof Error ? error.message : 'Unknown error' });
+    res.status(500).json({ 
+      error: 'Internal Server Error',
+      details: error instanceof Error ? error.message : 'Unknown error',
+      type: error instanceof Error ? error.constructor.name : typeof error
+    });
   }
 } 
