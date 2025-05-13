@@ -42,14 +42,18 @@ if (!global.mongoose) {
 }
 
 export async function connectToDatabase(): Promise<mongoose.Connection> {
+  // If we have a cached connection, return it
   if (cached.conn) {
     console.log('Using cached database connection');
     return cached.conn;
   }
 
+  // If we don't have a connection promise, create one
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
     };
 
     console.log('Connecting to MongoDB...');
@@ -57,20 +61,24 @@ export async function connectToDatabase(): Promise<mongoose.Connection> {
       throw new Error('MONGODB_URI is not defined in environment variables');
     }
 
-    cached.promise = mongoose.connect(process.env.MONGODB_URI, opts)
-      .then((mongoose) => {
-        console.log('Successfully connected to MongoDB');
-        return mongoose.connection;
-      })
-      .catch((error) => {
-        console.error('MongoDB connection error:', error);
-        throw error;
-      });
+    try {
+      cached.promise = mongoose.connect(process.env.MONGODB_URI, opts)
+        .then((mongoose) => {
+          console.log('Successfully connected to MongoDB');
+          return mongoose.connection;
+        });
+    } catch (error) {
+      console.error('MongoDB connection error:', error);
+      cached.promise = null;
+      throw error;
+    }
   }
 
   try {
+    // Wait for the connection promise to resolve
     cached.conn = await cached.promise;
   } catch (e) {
+    // If the connection fails, clear the promise
     cached.promise = null;
     console.error('Failed to establish database connection:', e);
     throw e;

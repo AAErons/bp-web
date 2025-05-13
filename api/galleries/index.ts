@@ -1,5 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { connectToDatabase, Gallery } from '../../src/lib/db';
+import { randomUUID } from 'crypto';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(`[${req.method}] /api/galleries - Starting request handling`);
@@ -82,17 +83,47 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'POST':
         console.log('Creating new gallery:', req.body);
         try {
+          // Validate required fields
+          const { name, description, eventDate } = req.body;
+          if (!name || !description || !eventDate) {
+            return res.status(400).json({
+              error: 'Validation error',
+              details: 'Missing required fields: name, description, and eventDate are required',
+              timestamp: new Date().toISOString()
+            });
+          }
+
+          // Validate eventDate format
+          const date = new Date(eventDate);
+          if (isNaN(date.getTime())) {
+            return res.status(400).json({
+              error: 'Validation error',
+              details: 'Invalid eventDate format. Please use ISO 8601 format (YYYY-MM-DD)',
+              timestamp: new Date().toISOString()
+            });
+          }
+
           const newGallery = new Gallery({
-            ...req.body,
-            id: crypto.randomUUID(),
+            name,
+            description,
+            eventDate: date,
+            id: randomUUID(),
             createdAt: new Date(),
             updatedAt: new Date(),
+            images: []
           });
+
+          console.log('Saving new gallery:', newGallery);
           await newGallery.save();
           console.log('Gallery created successfully:', newGallery.id);
           return res.status(201).json(newGallery);
         } catch (error) {
-          console.error('Error creating gallery:', error);
+          console.error('Error creating gallery:', {
+            error,
+            message: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined,
+            timestamp: new Date().toISOString()
+          });
           return res.status(500).json({ 
             error: 'Database operation error',
             details: error instanceof Error ? error.message : 'Unknown error while creating gallery',
