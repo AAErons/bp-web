@@ -4,7 +4,7 @@ import { useGallery, type Gallery } from '../contexts/GalleryContext';
 import GalleryView from '../components/GalleryView';
 
 export default function GalleryManagement() {
-  const { galleries, addGallery, updateGallery, deleteGallery } = useGallery();
+  const { galleries, addGallery, updateGallery } = useGallery();
   const navigate = useNavigate();
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -30,21 +30,6 @@ export default function GalleryManagement() {
       description: '',
       eventDate: '',
     });
-  };
-
-  const handleEdit = (gallery: Gallery) => {
-    setEditingId(gallery.id);
-    setFormData({
-      name: gallery.name,
-      description: gallery.description,
-      eventDate: gallery.eventDate,
-    });
-  };
-
-  const handleDelete = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this gallery? This will also delete all images in the gallery.')) {
-      deleteGallery(id);
-    }
   };
 
   const handleGalleryClick = (gallery: Gallery) => {

@@ -29,17 +29,12 @@ function UnderConstruction() {
 function DemoPage() {
   const [activeSection, setActiveSection] = useState('main');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { galleries } = useGallery();
+  const { galleries, isLoading, error } = useGallery();
   const sectionRefs = {
     hero: useRef<HTMLDivElement>(null),
     about: useRef<HTMLDivElement>(null),
     atsauksmes: useRef<HTMLDivElement>(null),
   };
-
-  // Sort galleries by event date (newest first)
-  const sortedGalleries = [...galleries].sort((a, b) => 
-    new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime()
-  );
 
   // Handle menu clicks
   const handleMenuClick = (section: string) => {
@@ -56,6 +51,10 @@ function DemoPage() {
     }
     setIsMenuOpen(false); // Close menu after click on mobile
   };
+
+  if (isLoading) {
+    // ... existing code ...
+  }
 
   return (
     <div className="w-full min-h-screen bg-white text-black flex flex-col">

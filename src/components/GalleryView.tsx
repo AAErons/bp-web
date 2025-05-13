@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import type { Gallery, GalleryImage } from '../types';
+import type { Gallery } from '../types';
 
 interface GalleryViewProps {
   galleries: Gallery[];
@@ -10,7 +9,6 @@ interface GalleryViewProps {
 export default function GalleryView({ galleries, onGalleryClick }: GalleryViewProps) {
   const [selectedGallery, setSelectedGallery] = useState<Gallery | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const navigate = useNavigate();
 
   const handleGalleryClick = (gallery: Gallery) => {
     if (onGalleryClick) {
