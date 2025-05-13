@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/**/*.ts",
+      "src": "dist/api/**/*.js",
       "use": "@vercel/node@2.15.8"
     },
     {
@@ -17,15 +17,15 @@
   "routes": [
     {
       "src": "/api/galleries",
-      "dest": "/api/galleries/index.ts"
+      "dest": "/dist/api/galleries/index.js"
     },
     {
       "src": "/api/galleries/(.*)",
-      "dest": "/api/galleries/[id].ts"
+      "dest": "/dist/api/galleries/[id].js"
     },
     {
       "src": "/api/upload",
-      "dest": "/api/upload.ts"
+      "dest": "/dist/api/upload.js"
     },
     {
       "handle": "filesystem"

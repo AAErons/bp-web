@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run build:api && npm run build:app",
+    "build:api": "tsc -p tsconfig.api.json",
+    "build:app": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "api": "cross-env NODE_ENV=development tsx watch server.ts"
