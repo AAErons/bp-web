@@ -1,5 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { connectToDatabase, Gallery } from '../../src/lib/db';
+import type { Document } from 'mongoose';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
@@ -26,7 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     switch (req.method) {
       case 'GET':
         // Get single gallery
-        const gallery = await Gallery.findOne({ id });
+        const gallery = await Gallery.findOne({ id: id as string }).exec();
         if (!gallery) {
           return res.status(404).json({ error: 'Gallery not found' });
         }
@@ -43,10 +44,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           : { $set: updateData }; // Otherwise, wrap in $set
 
         const updatedGallery = await Gallery.findOneAndUpdate(
-          { id },
+          { id: id as string },
           updateDoc,
           { new: true }
-        );
+        ).exec();
+
         if (!updatedGallery) {
           return res.status(404).json({ error: 'Gallery not found' });
         }
@@ -55,7 +57,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       case 'DELETE':
         // Delete gallery
-        const deletedGallery = await Gallery.findOneAndDelete({ id });
+        const deletedGallery = await Gallery.findOneAndDelete({ id: id as string }).exec();
         if (!deletedGallery) {
           return res.status(404).json({ error: 'Gallery not found' });
         }
@@ -67,7 +69,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {
-    console.error('Database error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Database error:', {
+      error,
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString()
+    });
+    res.status(500).json({ 
+      error: 'Internal Server Error',
+      details: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
+    });
   }
 } 

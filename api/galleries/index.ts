@@ -2,12 +2,6 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { connectToDatabase, Gallery } from '../../src/lib/db';
 import { randomUUID } from 'crypto';
 
-// Add runtime configuration
-export const config = {
-  runtime: 'nodejs18.x',
-  maxDuration: 10, // Maximum execution time in seconds
-};
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Log the start of the request with more details
   console.log('=== Request Start ===');
