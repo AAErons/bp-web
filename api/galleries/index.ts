@@ -2,34 +2,57 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { connectToDatabase, Gallery } from '../../src/lib/db';
 import { randomUUID } from 'crypto';
 
+// Add runtime configuration
+export const config = {
+  runtime: 'nodejs18.x',
+  maxDuration: 10, // Maximum execution time in seconds
+};
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  console.log(`[${req.method}] /api/galleries - Starting request handling`);
+  // Log the start of the request with more details
+  console.log('=== Request Start ===');
+  console.log(`[${req.method}] /api/galleries`);
+  console.log('Headers:', req.headers);
+  console.log('Query:', req.query);
+  console.log('Body:', req.body);
   console.log('Environment:', {
     NODE_ENV: process.env.NODE_ENV,
     MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
     VERCEL_ENV: process.env.VERCEL_ENV,
     VERCEL_REGION: process.env.VERCEL_REGION,
     VERCEL_URL: process.env.VERCEL_URL,
-    VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA
+    VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+    NODE_VERSION: process.version
   });
   
   try {
+    // Set CORS headers first
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
+    // Handle preflight
+    if (req.method === 'OPTIONS') {
+      console.log('Handling OPTIONS request');
+      return res.status(200).end();
+    }
+
     // Connect to database
     console.log('Connecting to database...');
     if (!process.env.MONGODB_URI) {
-      const error = new Error('MONGODB_URI is not defined');
-      console.error('Database configuration error:', error);
+      console.error('MONGODB_URI is not defined');
       return res.status(500).json({ 
         error: 'Database configuration error',
         details: 'MONGODB_URI environment variable is not set',
-        timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV,
-        vercelEnv: process.env.VERCEL_ENV
+        timestamp: new Date().toISOString()
       });
     }
 
     try {
-      console.log('Attempting database connection...');
       await connectToDatabase();
       console.log('Database connection established successfully');
     } catch (dbError) {
@@ -42,26 +65,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(500).json({
         error: 'Database connection error',
         details: dbError instanceof Error ? dbError.message : 'Unknown database error',
-        timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV,
-        vercelEnv: process.env.VERCEL_ENV
+        timestamp: new Date().toISOString()
       });
-    }
-
-    // Set CORS headers
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-    res.setHeader(
-      'Access-Control-Allow-Headers',
-      'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-    );
-
-    // Handle preflight
-    if (req.method === 'OPTIONS') {
-      console.log('Handling OPTIONS request');
-      res.status(200).end();
-      return;
     }
 
     switch (req.method) {
@@ -86,6 +91,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           // Validate required fields
           const { name, description, eventDate } = req.body;
           if (!name || !description || !eventDate) {
+            console.error('Missing required fields:', { name, description, eventDate });
             return res.status(400).json({
               error: 'Validation error',
               details: 'Missing required fields: name, description, and eventDate are required',
@@ -96,6 +102,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           // Validate eventDate format
           const date = new Date(eventDate);
           if (isNaN(date.getTime())) {
+            console.error('Invalid eventDate format:', eventDate);
             return res.status(400).json({
               error: 'Validation error',
               details: 'Invalid eventDate format. Please use ISO 8601 format (YYYY-MM-DD)',
@@ -146,17 +153,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
       type: error instanceof Error ? error.constructor.name : typeof error,
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV,
-      vercelEnv: process.env.VERCEL_ENV
+      timestamp: new Date().toISOString()
     });
     return res.status(500).json({ 
       error: 'Internal Server Error',
       details: error instanceof Error ? error.message : 'Unknown error',
       type: error instanceof Error ? error.constructor.name : typeof error,
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV,
-      vercelEnv: process.env.VERCEL_ENV
+      timestamp: new Date().toISOString()
     });
+  } finally {
+    console.log('=== Request End ===');
   }
 } 
