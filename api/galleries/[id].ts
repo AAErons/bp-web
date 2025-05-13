@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { connectToDatabase, Gallery } from '../../src/lib/db';
+import { connectToDatabase, Gallery } from '../../src/lib/db.js';
 import type { Document } from 'mongoose';
 
 // Cache the database connection

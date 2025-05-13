@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { connectToDatabase, Gallery } from '../../src/lib/db';
-import { randomUUID } from 'crypto';
+import { connectToDatabase, Gallery } from '../../src/lib/db.js';
+import { randomUUID } from 'node:crypto';
 
 // Cache the database connection
 let cachedConnection: any = null;
