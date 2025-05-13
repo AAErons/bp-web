@@ -2,25 +2,30 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/**/*.js",
+      "src": "api/**/*.ts",
       "use": "@vercel/node@2.15.8"
     },
     {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist",
+        "buildCommand": "npm run build"
       }
     }
   ],
   "routes": [
     {
-      "src": "/api/hello",
-      "dest": "/api/hello/index.js"
+      "src": "/api/galleries",
+      "dest": "/api/galleries/index.js"
     },
     {
-      "src": "/api/hello/(.*)",
-      "dest": "/api/hello/index.js"
+      "src": "/api/galleries/(.*)",
+      "dest": "/api/galleries/[id].js"
+    },
+    {
+      "src": "/api/upload",
+      "dest": "/api/upload.js"
     },
     {
       "handle": "filesystem"

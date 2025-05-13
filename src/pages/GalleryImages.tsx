@@ -34,55 +34,66 @@ export default function GalleryImages() {
     setUploadError(null);
 
     try {
+      // Process files sequentially to avoid race conditions
       for (const file of Array.from(files)) {
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-          setUploadError(`Skipped ${file.name}: Not an image file`);
-          continue;
+        try {
+          // Validate file type
+          if (!file.type.startsWith('image/')) {
+            console.warn(`Skipping ${file.name}: Not an image file`);
+            continue;
+          }
+
+          // Validate file size (5MB)
+          if (file.size > 5 * 1024 * 1024) {
+            console.warn(`Skipping ${file.name}: File size must be less than 5MB`);
+            continue;
+          }
+
+          console.log('Processing file:', file.name);
+
+          // Convert file to base64
+          const base64 = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+
+          // Upload the file
+          console.log('Uploading file:', file.name);
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ file: base64 }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => null);
+            console.error('Error response for', file.name, ':', errorData);
+            throw new Error(errorData?.error || `HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log('Upload response for', file.name, ':', data);
+
+          // Add the image to the gallery
+          console.log('Adding image to gallery:', file.name);
+          await addImageToGallery(gallery.id, {
+            url: data.url,
+            cloudinaryId: data.public_id,
+            title: file.name,
+          });
+          console.log('Successfully added image to gallery:', file.name);
+        } catch (error) {
+          console.error('Error processing file', file.name, ':', error);
+          setUploadError(error instanceof Error ? error.message : `Failed to process ${file.name}`);
+          // Continue with next file even if this one failed
         }
-
-        // Validate file size (5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          setUploadError(`Skipped ${file.name}: File size must be less than 5MB`);
-          continue;
-        }
-
-        // Convert file to base64
-        const base64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-
-        // Upload the file
-        console.log('Uploading file:', file.name);
-        const response = await fetch('/api/hello', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ file: base64 }),
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Error response:', errorText);
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Upload response:', data);
-
-        // Add the image to the gallery
-        addImageToGallery(gallery.id, {
-          url: data.url,
-          cloudinaryId: data.public_id,
-          title: file.name,
-        });
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error in handleFileSelect:', error);
       setUploadError(error instanceof Error ? error.message : 'Upload failed');
     } finally {
       setIsUploading(false);

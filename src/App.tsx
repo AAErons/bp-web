@@ -7,6 +7,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import GalleryManagement from './pages/GalleryManagement';
 import GalleryImages from './pages/GalleryImages';
+import GalleryView from './components/GalleryView';
 
 function UnderConstruction() {
   return (
@@ -155,48 +156,9 @@ function DemoPage() {
       {/* Gallery Section */}
       {activeSection === 'galerija' && (
         <section id="galerija" className="w-full min-h-screen flex flex-col items-center justify-center py-8 border-b border-black px-4 md:px-8 pt-20 md:pt-20">
-          <div className="text-center font-bold text-base md:text-lg mb-8">GALERIJA</div>
-          {sortedGalleries.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl">
-              {sortedGalleries.map((gallery) => (
-                <div key={gallery.id} className="flex flex-col items-center">
-                  {gallery.images.length > 0 ? (
-                    <div className="relative w-full aspect-w-16 aspect-h-9 mb-2">
-                      <img
-                        src={gallery.images[0].url}
-                        alt={gallery.images[0].title || gallery.name}
-                        className="object-cover w-full h-48 rounded-lg"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-full h-48 bg-gray-200 rounded-lg mb-2 flex items-center justify-center">
-                      <span className="text-gray-500">No images</span>
-                    </div>
-                  )}
-                  <div className="text-center">
-                    <h3 className="font-medium text-lg mb-1">{gallery.name}</h3>
-                    <p className="text-sm text-gray-600 mb-1">
-                      {new Date(gallery.eventDate).toLocaleDateString('lv-LV', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </p>
-                    {gallery.description && (
-                      <p className="text-sm text-gray-600 line-clamp-2">{gallery.description}</p>
-                    )}
-                    <p className="text-sm text-gray-500 mt-1">
-                      {gallery.images.length} {gallery.images.length === 1 ? 'attēls' : 'attēli'}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-gray-500">
-              Nav pieejamu galeriju
-            </div>
-          )}
+          <div className="w-full max-w-7xl">
+            <GalleryView galleries={galleries} />
+          </div>
         </section>
       )}
 

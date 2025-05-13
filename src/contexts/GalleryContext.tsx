@@ -51,15 +51,28 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
 
   const addGallery = async (galleryData: Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt' | 'images'>) => {
     try {
+      console.log('Attempting to create gallery with data:', galleryData);
       const response = await fetch('/api/galleries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(galleryData),
       });
-      if (!response.ok) throw new Error('Failed to create gallery');
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        console.error('Server response:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
+        throw new Error(errorData?.details || `Failed to create gallery: ${response.status} ${response.statusText}`);
+      }
+      
       const newGallery = await response.json();
+      console.log('Gallery created successfully:', newGallery);
       setGalleries(prev => [...prev, newGallery]);
     } catch (err) {
+      console.error('Error creating gallery:', err);
       setError(err instanceof Error ? err.message : 'Failed to create gallery');
       throw err;
     }
@@ -101,15 +114,15 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
       const gallery = galleries.find(g => g.id === galleryId);
       if (!gallery) throw new Error('Gallery not found');
 
-      const updatedGallery = {
-        ...gallery,
-        images: [...gallery.images, { ...imageData, id: crypto.randomUUID(), uploadedAt: new Date().toISOString() }],
-      };
-
+      const newImage = { ...imageData, id: crypto.randomUUID(), uploadedAt: new Date().toISOString() };
+      
       const response = await fetch(`/api/galleries/${galleryId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedGallery),
+        body: JSON.stringify({
+          $push: { images: newImage },
+          updatedAt: new Date().toISOString()
+        }),
       });
       if (!response.ok) throw new Error('Failed to add image');
       const updated = await response.json();

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGallery, type Gallery } from '../contexts/GalleryContext';
+import GalleryView from '../components/GalleryView';
 
 export default function GalleryManagement() {
   const { galleries, addGallery, updateGallery, deleteGallery } = useGallery();
@@ -46,14 +47,8 @@ export default function GalleryManagement() {
     }
   };
 
-  const handleCancel = () => {
-    setEditingId(null);
-    setIsAdding(false);
-    setFormData({
-      name: '',
-      description: '',
-      eventDate: '',
-    });
+  const handleGalleryClick = (gallery: Gallery) => {
+    navigate(`/admin/gallery/${gallery.id}`);
   };
 
   return (
@@ -144,7 +139,15 @@ export default function GalleryManagement() {
                 <div className="flex justify-end space-x-3">
                   <button
                     type="button"
-                    onClick={handleCancel}
+                    onClick={() => {
+                      setEditingId(null);
+                      setIsAdding(false);
+                      setFormData({
+                        name: '',
+                        description: '',
+                        eventDate: '',
+                      });
+                    }}
                     className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                   >
                     Cancel
@@ -159,44 +162,11 @@ export default function GalleryManagement() {
               </form>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {galleries.map((gallery) => (
-                <div key={gallery.id} className="bg-white rounded-lg shadow overflow-hidden">
-                  <div className="p-4">
-                    <h3 className="font-medium text-lg mb-1">{gallery.name}</h3>
-                    <p className="text-gray-600 text-sm mb-2">
-                      Event Date: {new Date(gallery.eventDate).toLocaleDateString()}
-                    </p>
-                    <p className="text-gray-600 text-sm mb-4">{gallery.description}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-500">
-                        {gallery.images.length} {gallery.images.length === 1 ? 'image' : 'images'}
-                      </span>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => navigate(`/admin/gallery/${gallery.id}`)}
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          Manage Images
-                        </button>
-                        <button
-                          onClick={() => handleEdit(gallery)}
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(gallery.id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* Gallery Grid */}
+            <GalleryView
+              galleries={galleries}
+              onGalleryClick={handleGalleryClick}
+            />
 
             {galleries.length === 0 && !isAdding && (
               <div className="text-center py-12 bg-gray-50 rounded-lg">

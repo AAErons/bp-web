@@ -35,9 +35,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       case 'PUT':
         // Update gallery
+        const updateData = { ...req.body };
+        // Remove MongoDB operators from the update data
+        const operators = Object.keys(updateData).filter(key => key.startsWith('$'));
+        const updateDoc = operators.length > 0 
+          ? updateData  // If we have operators, use the data as is
+          : { $set: updateData }; // Otherwise, wrap in $set
+
         const updatedGallery = await Gallery.findOneAndUpdate(
           { id },
-          { ...req.body, updatedAt: new Date() },
+          updateDoc,
           { new: true }
         );
         if (!updatedGallery) {

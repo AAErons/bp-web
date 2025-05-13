@@ -43,6 +43,7 @@ if (!global.mongoose) {
 
 export async function connectToDatabase(): Promise<mongoose.Connection> {
   if (cached.conn) {
+    console.log('Using cached database connection');
     return cached.conn;
   }
 
@@ -51,14 +52,27 @@ export async function connectToDatabase(): Promise<mongoose.Connection> {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(process.env.MONGODB_URI!, opts)
-      .then((mongoose) => mongoose.connection);
+    console.log('Connecting to MongoDB...');
+    if (!process.env.MONGODB_URI) {
+      throw new Error('MONGODB_URI is not defined in environment variables');
+    }
+
+    cached.promise = mongoose.connect(process.env.MONGODB_URI, opts)
+      .then((mongoose) => {
+        console.log('Successfully connected to MongoDB');
+        return mongoose.connection;
+      })
+      .catch((error) => {
+        console.error('MongoDB connection error:', error);
+        throw error;
+      });
   }
 
   try {
     cached.conn = await cached.promise;
   } catch (e) {
     cached.promise = null;
+    console.error('Failed to establish database connection:', e);
     throw e;
   }
 
