@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Gallery as GalleryType, GalleryImage } from '../types';
 
+// API base URL configuration
+const API_BASE_URL = import.meta.env.DEV 
+  ? 'http://localhost:3000'  // Development: use the Express server
+  : '';                      // Production: use relative URLs for Vercel serverless functions
+
 // Define types for our gallery structure
 export interface Gallery {
   id: string;
@@ -39,11 +44,12 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
   const fetchGalleries = async () => {
     try {
       console.log('Fetching galleries...');
-      const response = await fetch('/api/galleries');
+      const response = await fetch(`${API_BASE_URL}/api/galleries`);
       
       // Log the raw response details
       console.log('Response status:', response.status);
       console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      console.log('API URL:', `${API_BASE_URL}/api/galleries`);
       
       // Get the raw text first
       const rawText = await response.text();
@@ -75,7 +81,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
   const addGallery = async (galleryData: Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt' | 'images'>) => {
     try {
       console.log('Attempting to create gallery with data:', galleryData);
-      const response = await fetch('/api/galleries', {
+      const response = await fetch(`${API_BASE_URL}/api/galleries`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(galleryData),
@@ -103,7 +109,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
 
   const updateGallery = async (id: string, galleryData: Partial<Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt'>>) => {
     try {
-      const response = await fetch(`/api/galleries/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/galleries/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(galleryData),
@@ -121,7 +127,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
 
   const deleteGallery = async (id: string) => {
     try {
-      const response = await fetch(`/api/galleries/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/galleries/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Failed to delete gallery');
@@ -139,7 +145,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
 
       const newImage = { ...imageData, id: crypto.randomUUID(), uploadedAt: new Date().toISOString() };
       
-      const response = await fetch(`/api/galleries/${galleryId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/galleries/${galleryId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -170,7 +176,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
         ),
       };
 
-      const response = await fetch(`/api/galleries/${galleryId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/galleries/${galleryId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedGallery),
@@ -196,7 +202,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
         images: gallery.images.filter((image: GalleryImage) => image.id !== imageId),
       };
 
-      const response = await fetch(`/api/galleries/${galleryId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/galleries/${galleryId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedGallery),

@@ -3,6 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useGallery } from '../contexts/GalleryContext';
 import type { GalleryImage } from '../types';
 
+// API base URL configuration
+const API_BASE_URL = import.meta.env.DEV 
+  ? 'http://localhost:3000'  // Development: use the Express server
+  : '';                      // Production: use relative URLs for Vercel serverless functions
+
 export default function GalleryImages() {
   const { id } = useParams<{ id: string }>();
   const { galleries, addImageToGallery, updateImage, deleteImage } = useGallery();
@@ -61,7 +66,7 @@ export default function GalleryImages() {
 
           // Upload the file
           console.log('Uploading file:', file.name);
-          const response = await fetch('/api/upload', {
+          const response = await fetch(`${API_BASE_URL}/api/upload`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -107,7 +112,7 @@ export default function GalleryImages() {
     if (window.confirm('Are you sure you want to delete this image?')) {
       try {
         // Delete from Cloudinary
-        const response = await fetch(`/api/hello?publicId=${encodeURIComponent(image.cloudinaryId)}`, {
+        const response = await fetch(`${API_BASE_URL}/api/hello?publicId=${encodeURIComponent(image.cloudinaryId)}`, {
           method: 'DELETE',
         });
 
@@ -124,10 +129,23 @@ export default function GalleryImages() {
     }
   };
 
-  const handleUpdateImage = (image: GalleryImage, updates: Partial<GalleryImage>) => {
-    if (!gallery) return;
-    updateImage(gallery.id, image.id, updates);
-    setEditingImage(null);
+  const handleSaveEdit = async () => {
+    if (!editingImage) return; // Early return if no image is being edited
+
+    try {
+      await updateImage(gallery.id, editingImage.id, {
+        title: editingImage.title,
+        description: editingImage.description,
+      });
+      setEditingImage(null);
+    } catch (error) {
+      console.error('Error updating image:', error);
+      setUploadError(error instanceof Error ? error.message : 'Failed to update image');
+    }
+  };
+
+  const handleEditImage = (image: GalleryImage) => {
+    setEditingImage({ ...image });
   };
 
   return (
@@ -221,10 +239,7 @@ export default function GalleryImages() {
                             Cancel
                           </button>
                           <button
-                            onClick={() => handleUpdateImage(image, {
-                              title: editingImage.title,
-                              description: editingImage.description,
-                            })}
+                            onClick={handleSaveEdit}
                             className="text-blue-600 hover:text-blue-800"
                           >
                             Save
@@ -239,7 +254,7 @@ export default function GalleryImages() {
                         )}
                         <div className="flex justify-end space-x-2">
                           <button
-                            onClick={() => setEditingImage(image)}
+                            onClick={() => handleEditImage(image)}
                             className="text-blue-600 hover:text-blue-800"
                           >
                             Edit
