@@ -3,20 +3,37 @@ import { connectToDatabase, Gallery } from '../../src/lib/db';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(`[${req.method}] /api/galleries - Starting request handling`);
+  console.log('Environment:', {
+    NODE_ENV: process.env.NODE_ENV,
+    MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    VERCEL_REGION: process.env.VERCEL_REGION
+  });
   
   try {
     // Connect to database
     console.log('Connecting to database...');
     if (!process.env.MONGODB_URI) {
-      console.error('MONGODB_URI is not defined');
+      const error = new Error('MONGODB_URI is not defined');
+      console.error('Database configuration error:', error);
       return res.status(500).json({ 
         error: 'Database configuration error',
-        details: 'MONGODB_URI environment variable is not set'
+        details: 'MONGODB_URI environment variable is not set',
+        timestamp: new Date().toISOString()
       });
     }
 
-    await connectToDatabase();
-    console.log('Database connection established');
+    try {
+      await connectToDatabase();
+      console.log('Database connection established');
+    } catch (dbError) {
+      console.error('Database connection error:', dbError);
+      return res.status(500).json({
+        error: 'Database connection error',
+        details: dbError instanceof Error ? dbError.message : 'Unknown database error',
+        timestamp: new Date().toISOString()
+      });
+    }
 
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -40,15 +57,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         try {
           const galleries = await Gallery.find().sort({ eventDate: -1 });
           console.log(`Found ${galleries.length} galleries`);
-          res.status(200).json(galleries);
+          return res.status(200).json(galleries);
         } catch (error) {
           console.error('Error fetching galleries:', error);
-          res.status(500).json({ 
+          return res.status(500).json({ 
             error: 'Database query error',
-            details: error instanceof Error ? error.message : 'Unknown error while fetching galleries'
+            details: error instanceof Error ? error.message : 'Unknown error while fetching galleries',
+            timestamp: new Date().toISOString()
           });
         }
-        break;
 
       case 'POST':
         console.log('Creating new gallery:', req.body);
@@ -61,30 +78,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           });
           await newGallery.save();
           console.log('Gallery created successfully:', newGallery.id);
-          res.status(201).json(newGallery);
+          return res.status(201).json(newGallery);
         } catch (error) {
           console.error('Error creating gallery:', error);
-          res.status(500).json({ 
+          return res.status(500).json({ 
             error: 'Database operation error',
-            details: error instanceof Error ? error.message : 'Unknown error while creating gallery'
+            details: error instanceof Error ? error.message : 'Unknown error while creating gallery',
+            timestamp: new Date().toISOString()
           });
         }
-        break;
 
       default:
         console.log(`Method ${req.method} not allowed`);
         res.setHeader('Allow', ['GET', 'POST']);
-        res.status(405).json({ 
+        return res.status(405).json({ 
           error: 'Method not allowed',
-          details: `Method ${req.method} is not supported for this endpoint`
+          details: `Method ${req.method} is not supported for this endpoint`,
+          timestamp: new Date().toISOString()
         });
     }
   } catch (error) {
-    console.error('Error in /api/galleries:', error);
-    res.status(500).json({ 
+    console.error('Unhandled error in /api/galleries:', error);
+    return res.status(500).json({ 
       error: 'Internal Server Error',
       details: error instanceof Error ? error.message : 'Unknown error',
-      type: error instanceof Error ? error.constructor.name : typeof error
+      type: error instanceof Error ? error.constructor.name : typeof error,
+      timestamp: new Date().toISOString()
     });
   }
 } 
