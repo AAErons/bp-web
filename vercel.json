@@ -16,26 +16,23 @@
   ],
   "routes": [
     {
-      "src": "/api/galleries",
-      "dest": "/dist/api/galleries/index.js"
+      "src": "^/api/galleries$",
+      "dest": "/api/galleries/index.js"
     },
     {
-      "src": "/api/galleries/(.*)",
-      "dest": "/dist/api/galleries/[id].js"
+      "src": "^/api/galleries/([^/]+)$",
+      "dest": "/api/galleries/[id].js"
     },
     {
-      "src": "/api/upload",
-      "dest": "/dist/api/upload.js"
+      "src": "^/api/upload$",
+      "dest": "/api/upload.js"
     },
     {
-      "src": "/assets/(.*)",
+      "src": "^/assets/(.*)",
       "dest": "/assets/$1"
     },
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
+      "src": "^/(.*)",
       "dest": "/index.html"
     }
   ],
