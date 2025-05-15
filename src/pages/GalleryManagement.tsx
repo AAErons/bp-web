@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGallery } from '../contexts/GalleryContext';
-import type { Gallery, GalleryImage } from '../types';
+import type { Gallery } from '../types';
 import GalleryView from '../components/GalleryView';
 
 export default function GalleryManagement() {
