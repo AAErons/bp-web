@@ -2,9 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Gallery as GalleryType, GalleryImage } from '../types';
 
 // API base URL configuration
-const API_BASE_URL = import.meta.env.DEV 
-  ? 'http://localhost:3000'  // Development: use the Express server
-  : '';                      // Production: use relative URLs for Vercel serverless functions
+const API_BASE_URL = 'https://bp-web-api.vercel.app';
 
 // Define types for our gallery structure
 export interface Gallery {
