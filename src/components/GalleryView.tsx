@@ -4,9 +4,10 @@ import type { Gallery } from '../types';
 interface GalleryViewProps {
   galleries: Gallery[];
   onGalleryClick?: (gallery: Gallery) => void;
+  onDeleteGallery?: (id: string) => void;
 }
 
-export default function GalleryView({ galleries, onGalleryClick }: GalleryViewProps) {
+export default function GalleryView({ galleries, onGalleryClick, onDeleteGallery }: GalleryViewProps) {
   const [selectedGallery, setSelectedGallery] = useState<Gallery | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -48,7 +49,7 @@ export default function GalleryView({ galleries, onGalleryClick }: GalleryViewPr
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {galleries.map((gallery) => (
           <div
-            key={gallery.id}
+            key={gallery._id || gallery.id}
             className="group relative bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
             onClick={() => handleGalleryClick(gallery)}
           >
@@ -56,7 +57,7 @@ export default function GalleryView({ galleries, onGalleryClick }: GalleryViewPr
             <div className="aspect-w-16 aspect-h-9 bg-gray-200 relative">
               {gallery.images.length > 0 ? (
                 <img
-                  src={gallery.images[0].url}
+                  src={gallery.images.find(img => img.titleImage)?.url || gallery.images[0].url}
                   alt={gallery.name}
                   className="object-cover w-full h-64"
                 />
@@ -71,7 +72,6 @@ export default function GalleryView({ galleries, onGalleryClick }: GalleryViewPr
             {/* Gallery Info */}
             <div className="p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-2">{gallery.name}</h3>
-              <p className="text-gray-600 text-sm mb-4 line-clamp-2">{gallery.description}</p>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">
                   {new Date(gallery.eventDate).toLocaleDateString()}
@@ -80,6 +80,17 @@ export default function GalleryView({ galleries, onGalleryClick }: GalleryViewPr
                   {gallery.images.length} {gallery.images.length === 1 ? 'image' : 'images'}
                 </span>
               </div>
+              {onDeleteGallery && (
+                <button
+                  className="mt-4 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                  onClick={e => {
+                    e.stopPropagation();
+                    onDeleteGallery(gallery._id);
+                  }}
+                >
+                  Delete
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -161,7 +172,7 @@ export default function GalleryView({ galleries, onGalleryClick }: GalleryViewPr
                 <div className="flex space-x-2 overflow-x-auto pb-2">
                   {selectedGallery.images.map((image, index) => (
                     <button
-                      key={image.id}
+                      key={image.id || image._id || index}
                       onClick={() => handleImageClick(index)}
                       className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                         index === selectedImageIndex

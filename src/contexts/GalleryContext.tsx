@@ -15,11 +15,18 @@ export interface Gallery {
   updatedAt: string;
 }
 
+interface GalleryCreatePayload {
+  name: string;
+  description: string;
+  eventDate: string;
+  images?: string[];
+}
+
 interface GalleryContextType {
   galleries: GalleryType[];
   isLoading: boolean;
   error: string | null;
-  addGallery: (gallery: Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt' | 'images'>) => Promise<void>;
+  addGallery: (gallery: GalleryCreatePayload) => Promise<any>;
   updateGallery: (id: string, gallery: Partial<Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt'>>) => Promise<void>;
   deleteGallery: (id: string) => Promise<void>;
   addImageToGallery: (galleryId: string, image: Omit<GalleryImage, 'id' | 'uploadedAt'>) => Promise<void>;
@@ -76,7 +83,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const addGallery = async (galleryData: Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt' | 'images'>) => {
+  const addGallery = async (galleryData: GalleryCreatePayload) => {
     try {
       console.log('Attempting to create gallery with data:', galleryData);
       const response = await fetch(`${API_BASE_URL}/api/galleries`, {
@@ -98,6 +105,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
       const newGallery = await response.json();
       console.log('Gallery created successfully:', newGallery);
       setGalleries(prev => [...prev, newGallery]);
+      return newGallery;
     } catch (err) {
       console.error('Error creating gallery:', err);
       setError(err instanceof Error ? err.message : 'Failed to create gallery');
@@ -129,7 +137,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Failed to delete gallery');
-      setGalleries(prev => prev.filter(gallery => gallery.id !== id));
+      await fetchGalleries(); // Reload galleries from backend
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete gallery');
       throw err;

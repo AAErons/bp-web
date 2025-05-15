@@ -5,12 +5,14 @@ export interface GalleryImage {
   title?: string;
   description?: string;
   uploadedAt: string;
+  titleImage?: boolean;
+  _id?: string;
 }
 
 export interface Gallery {
+  _id: string;
   id: string;
   name: string;
-  description: string;
   eventDate: string;
   images: GalleryImage[];
   createdAt: string;
