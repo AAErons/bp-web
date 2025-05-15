@@ -25,7 +25,7 @@ export default function GalleryManagement() {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectedTitleImageIndex, setSelectedTitleImageIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 
   const handleSetTitleImage = (imageId: string | number) => {
     if (typeof imageId === 'string') {
@@ -54,7 +54,7 @@ export default function GalleryManagement() {
         errors.push(`${file.name} is not an image file`);
       }
       if (file.size > MAX_FILE_SIZE) {
-        errors.push(`${file.name} is too large. Maximum size is 5MB`);
+        errors.push(`${file.name} is too large. Maximum size is 20MB`);
       }
     });
     return errors;
@@ -89,7 +89,7 @@ export default function GalleryManagement() {
           
           if (!res.ok) {
             if (res.status === 413) {
-              throw new Error(`File ${file.name} is too large. Maximum size is 5MB`);
+              throw new Error(`File ${file.name} is too large. Maximum size is 20MB`);
             } else if (res.status === 0) {
               throw new Error('Network error: Unable to connect to the server. Please check your internet connection.');
             } else {
@@ -356,7 +356,7 @@ export default function GalleryManagement() {
                     {editingId ? 'Add More Images' : 'Images'}
                   </label>
                   <p className="text-sm text-gray-500 mb-2">
-                    Maximum file size: 5MB. Supported formats: JPG, PNG, GIF
+                    Maximum file size: 20MB. Supported formats: JPG, PNG, GIF
                   </p>
                   <input
                     ref={fileInputRef}
