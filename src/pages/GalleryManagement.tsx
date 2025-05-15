@@ -12,6 +12,7 @@ export default function GalleryManagement() {
   const [editingGallery, setEditingGallery] = useState<Gallery | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number }>({ current: 0, total: 0 });
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [formData, setFormData] = useState<{
     name: string;
     eventDate: string;
@@ -24,6 +25,7 @@ export default function GalleryManagement() {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectedTitleImageIndex, setSelectedTitleImageIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
   const handleSetTitleImage = (imageId: string | number) => {
     if (typeof imageId === 'string') {
@@ -45,10 +47,32 @@ export default function GalleryManagement() {
     }
   };
 
+  const validateFiles = (files: File[]): string[] => {
+    const errors: string[] = [];
+    files.forEach(file => {
+      if (!file.type.startsWith('image/')) {
+        errors.push(`${file.name} is not an image file`);
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        errors.push(`${file.name} is too large. Maximum size is 5MB`);
+      }
+    });
+    return errors;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUploadError(null);
     setIsSubmitting(true);
     setUploadProgress({ current: 0, total: selectedImages.length });
+
+    // Validate files before upload
+    const validationErrors = validateFiles(selectedImages);
+    if (validationErrors.length > 0) {
+      setUploadError(validationErrors.join('\n'));
+      setIsSubmitting(false);
+      return;
+    }
 
     let uploadedImages: { id: string; titleImage: boolean }[] = [];
     
@@ -62,17 +86,30 @@ export default function GalleryManagement() {
             method: 'POST',
             body: formData,
           });
-          if (res.ok) {
-            const data = await res.json();
-            if (data._id) {
-              uploadedImages.push({
-                id: data._id,
-                titleImage: i === selectedTitleImageIndex
-              });
+          
+          if (!res.ok) {
+            if (res.status === 413) {
+              throw new Error(`File ${file.name} is too large. Maximum size is 5MB`);
+            } else if (res.status === 0) {
+              throw new Error('Network error: Unable to connect to the server. Please check your internet connection.');
+            } else {
+              const errorData = await res.json().catch(() => null);
+              throw new Error(errorData?.message || `Failed to upload ${file.name}: ${res.statusText}`);
             }
+          }
+
+          const data = await res.json();
+          if (data._id) {
+            uploadedImages.push({
+              id: data._id,
+              titleImage: i === selectedTitleImageIndex
+            });
           }
         } catch (error) {
           console.error('Error uploading image:', error);
+          setUploadError(error instanceof Error ? error.message : `Failed to upload ${file.name}`);
+          setIsSubmitting(false);
+          return;
         } finally {
           setUploadProgress(prev => ({ ...prev, current: prev.current + 1 }));
         }
@@ -213,6 +250,13 @@ export default function GalleryManagement() {
                   </div>
                 )}
                 
+                {uploadError && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative mb-4">
+                    <strong className="font-bold">Error: </strong>
+                    <span className="block sm:inline whitespace-pre-line">{uploadError}</span>
+                  </div>
+                )}
+                
                 <h3 className="text-lg font-medium">
                   {editingId ? 'Edit Gallery' : 'Create New Gallery'}
                 </h3>
@@ -311,6 +355,9 @@ export default function GalleryManagement() {
                   <label htmlFor="images" className="block text-sm font-medium text-gray-700">
                     {editingId ? 'Add More Images' : 'Images'}
                   </label>
+                  <p className="text-sm text-gray-500 mb-2">
+                    Maximum file size: 5MB. Supported formats: JPG, PNG, GIF
+                  </p>
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -318,8 +365,16 @@ export default function GalleryManagement() {
                     multiple
                     accept="image/*"
                     onChange={e => {
-                      setSelectedImages(Array.from(e.target.files || []));
-                      setSelectedTitleImageIndex(null); // Reset title image selection when new images are selected
+                      const files = Array.from(e.target.files || []);
+                      const errors = validateFiles(files);
+                      if (errors.length > 0) {
+                        setUploadError(errors.join('\n'));
+                        if (fileInputRef.current) fileInputRef.current.value = '';
+                        return;
+                      }
+                      setSelectedImages(files);
+                      setSelectedTitleImageIndex(null);
+                      setUploadError(null);
                     }}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   />
