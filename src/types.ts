@@ -14,6 +14,7 @@ export interface Gallery {
   id: string;
   name: string;
   eventDate: string;
+  description?: string;
   images: GalleryImage[];
   createdAt: string;
   updatedAt: string;

@@ -5,21 +5,13 @@ import type { Gallery as GalleryType, GalleryImage } from '../types';
 const API_BASE_URL = 'https://bp-web-api.vercel.app';
 
 // Define types for our gallery structure
-export interface Gallery {
-  id: string;
-  name: string;
-  description: string;
-  eventDate: string;
-  images: GalleryImage[];
-  createdAt: string;
-  updatedAt: string;
-}
+export type Gallery = GalleryType;
 
 interface GalleryCreatePayload {
   name: string;
-  description: string;
   eventDate: string;
   images?: string[];
+  description?: string;  // Make description optional
 }
 
 interface GalleryContextType {
@@ -27,7 +19,7 @@ interface GalleryContextType {
   isLoading: boolean;
   error: string | null;
   addGallery: (gallery: GalleryCreatePayload) => Promise<any>;
-  updateGallery: (id: string, gallery: Partial<Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt'>>) => Promise<void>;
+  updateGallery: (id: string, gallery: Partial<Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt' | 'images'>> & { images?: string[] }) => Promise<void>;
   deleteGallery: (id: string) => Promise<void>;
   addImageToGallery: (galleryId: string, image: Omit<GalleryImage, 'id' | 'uploadedAt'>) => Promise<void>;
   updateImage: (galleryId: string, imageId: string, image: Partial<Omit<GalleryImage, 'id' | 'uploadedAt'>>) => Promise<void>;
@@ -113,7 +105,7 @@ export function GalleryProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const updateGallery = async (id: string, galleryData: Partial<Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt'>>) => {
+  const updateGallery = async (id: string, galleryData: Partial<Omit<GalleryType, 'id' | 'createdAt' | 'updatedAt' | 'images'>> & { images?: string[] }) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/galleries/${id}`, {
         method: 'PUT',

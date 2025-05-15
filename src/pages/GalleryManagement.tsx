@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGallery, type Gallery } from '../contexts/GalleryContext';
+import { useGallery } from '../contexts/GalleryContext';
+import type { Gallery, GalleryImage } from '../types';
 import GalleryView from '../components/GalleryView';
 
 export default function GalleryManagement() {
@@ -11,9 +12,14 @@ export default function GalleryManagement() {
   const [editingGallery, setEditingGallery] = useState<Gallery | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number }>({ current: 0, total: 0 });
-  const [formData, setFormData] = useState<Omit<Gallery, 'id' | 'createdAt' | 'updatedAt' | 'images'>>({
+  const [formData, setFormData] = useState<{
+    name: string;
+    eventDate: string;
+    description?: string;
+  }>({
     name: '',
     eventDate: '',
+    description: '',
   });
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectedTitleImageIndex, setSelectedTitleImageIndex] = useState<number | null>(null);
@@ -86,20 +92,14 @@ export default function GalleryManagement() {
       if (editingId) {
         await updateGallery(editingId, { 
           ...formData, 
-          images: allImages.map(img => ({
-            id: img.id,
-            titleImage: img.titleImage
-          }))
+          images: allImages.map(img => img.id)  // Send just the image IDs
         });
         setEditingId(null);
         setEditingGallery(null);
       } else {
         await addGallery({ 
           ...formData, 
-          images: allImages.map(img => ({
-            id: img.id,
-            titleImage: img.titleImage
-          }))
+          images: allImages.map(img => img.id)  // Send just the image IDs
         });
         setIsAdding(false);
       }
@@ -107,6 +107,7 @@ export default function GalleryManagement() {
       setFormData({
         name: '',
         eventDate: '',
+        description: '',
       });
       setSelectedImages([]);
       setSelectedTitleImageIndex(null);
@@ -126,6 +127,7 @@ export default function GalleryManagement() {
     setFormData({
       name: gallery.name,
       eventDate: formattedDate,
+      description: gallery.description || '',
     });
   };
 
@@ -240,6 +242,19 @@ export default function GalleryManagement() {
                     onChange={(e) => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                    Description (Optional)
+                  </label>
+                  <textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    rows={3}
                   />
                 </div>
 
@@ -368,6 +383,7 @@ export default function GalleryManagement() {
                       setFormData({
                         name: '',
                         eventDate: '',
+                        description: '',
                       });
                       setSelectedImages([]);
                     }}
