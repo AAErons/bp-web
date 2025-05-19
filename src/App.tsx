@@ -8,6 +8,19 @@ import AdminDashboard from './pages/AdminDashboard';
 import GalleryManagement from './pages/GalleryManagement';
 import GalleryImages from './pages/GalleryImages';
 import GalleryView from './components/GalleryView';
+import Hero from './pages/Hero';
+import evSmall from './assets/team/small/ev_small.jpg';
+import evFull from './assets/team/full/ev_full.jpg';
+import zirnisSmall from './assets/team/small/zirnis_small.jpg';
+import zirnisFull from './assets/team/full/zirnis_full.jpg';
+import jeekaaSmall from './assets/team/small/jeekaa_small.jpg';
+import jeekaaFull from './assets/team/full/jeekaa_full.jpg';
+import sniegsSmall from './assets/team/small/sniegs_small.jpg';
+import sniegsFull from './assets/team/full/sniegs_full.jpg';
+import abraSmall from './assets/team/small/abra_small.jpg';
+import abraFull from './assets/team/full/abra_full.jpg';
+import birchSmall from './assets/team/small/birch_small.jpg';
+import birchFull from './assets/team/full/birch_full.jpg';
 
 function UnderConstruction() {
   return (
@@ -29,12 +42,22 @@ function UnderConstruction() {
 function DemoPage() {
   const [activeSection, setActiveSection] = useState('main');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedTeamMember, setSelectedTeamMember] = useState<{ name: string; description: string; smallImage: string; fullImage: string } | null>(null);
   const { galleries, isLoading } = useGallery();
   const sectionRefs = {
     hero: useRef<HTMLDivElement>(null),
     about: useRef<HTMLDivElement>(null),
     atsauksmes: useRef<HTMLDivElement>(null),
   };
+
+  const teamMembers = [
+    { name: 'E.V.', description: 'DJ un bītmeikeris ar 10 gadu pieredzi. BP aisbergs, kuru pasākumos var redzēt kā DJ, taču neredzamā daļa ir saklausāma priekšnesumos, jo katra iznāciena pavadījums ir Birch Please autordarbs. Improvizācija ir klātesoša arī Birch esencē - scratch, kas bagātina šovu.', smallImage: evSmall, fullImage: evFull },
+    { name: 'Zirrnis', description: 'Divkartējs "Ghetto Games" brīvrunu batla "Štuka par bazaru" uzvarētājs. BP radošais dzinējs un pulksteņmeistars. Zirnim vienmēr ir plāns un pēc vārda kabatā nav jāmeklē, jo viņš spēj uzburt reālu frīstailu jebkurā laikā un vietā.', smallImage: zirnisSmall, fullImage: zirnisFull },
+    { name: 'Jeekaa', description: '"Kreisais Krasts" vecbiedrs ar aptuveni 20 gadu bagāžu brīvrunā! Viņa stils? Mierīga plūsma, asi joki, pašironija un spēja pielāgoties jebkādiem apstākļiem. No mazām skatuvēm līdz lielām hallēm - JeeKaa vienmēr ienes īstu vārdu spēles garšu!', smallImage: jeekaaSmall, fullImage: jeekaaFull },
+    { name: 'Sniegs', description: 'Latvijas brīvrunas scēnas lielāko pasākumu veidotājs un vadītājs, kurš arī pēc 25 gadiem brīvrunā joprojām to dara ar aizrautību. Pieredze, radošums un spēja uzrunāt savus vienaudžus ir Sniega stiprā puse un ieguvums pasākuma kopējam skanējumam.', smallImage: sniegsSmall, fullImage: sniegsFull },
+    { name: 'Abra', description: '"Brīvrunu Projekta" aizsācējs un četrkārtējs "Ghetto Games" brīvrunu battla "Štuka par bazaru" čempions. Abras superspēja ir brīvrunā izmantot improvizācijas teātrī gūto pieredzi, tādējādi apvienojot dažādas mākslas formas vienā un regulāri sniedzot radošus risinājumus "ārpus kastes".', smallImage: abraSmall, fullImage: abraFull },
+    { name: 'Dj Birch', description: '"Kreisais Krasts" biedrs, kurš prot performēt divās valodās: latviešu un angļu. Ne tikai harizmātisks ceremoniju meistars, bet arī skatuves magnēts, kas apvieno psiholoģijas gudrības ar skanīgām vārdu vārsmām.', smallImage: birchSmall, fullImage: birchFull },
+  ];
 
   // Handle menu clicks
   const handleMenuClick = (section: string) => {
@@ -94,27 +117,71 @@ function DemoPage() {
       {activeSection === 'main' && (
         <main className="flex-1 w-full pt-20 md:pt-20 snap-y snap-mandatory overflow-y-auto">
           {/* Hero Section */}
-          <section ref={sectionRefs.hero} id="bp" className="w-full min-h-screen flex flex-col items-center justify-center py-8 md:py-12 border-b border-black px-4 md:px-8 snap-start">
-            <div className="w-full flex flex-col items-center justify-center">
-              <div className="w-full h-32 md:h-48 bg-gray-200 flex items-center justify-center mb-4 md:mb-6">
-                <span className="text-lg md:text-2xl font-bold text-center px-4">BILDE AR SAUKLI UN <a href="#piedavajums" className="underline">LINKU UZ PIEDĀVĀJUMU</a></span>
-              </div>
-            </div>
+          <section ref={sectionRefs.hero} className="w-full min-h-screen snap-start">
+            <Hero onSectionChange={handleMenuClick} />
           </section>
-
           {/* About & Team Section */}
           <section ref={sectionRefs.about} id="komanda" className="w-full min-h-screen flex flex-col items-center justify-center py-8 border-b border-black px-4 md:px-8 snap-start">
-            <h2 className="text-center text-lg md:text-xl font-bold mb-2">BP VIENĀ TEIKUMĀ</h2>
-            <div className="text-center mb-8 md:mb-12">Apraksts vienā teikumā šeit.</div>
-            <h3 className="text-center text-base md:text-lg font-bold mb-6">KOMANDA</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mb-6 justify-items-center">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="flex flex-col items-center">
-                  <div className="w-24 h-24 md:w-32 md:h-32 bg-black mb-3"></div>
-                  <span className="text-sm md:text-base text-center">KOMANDAS LOČEKLIS {i + 1}</span>
-                </div>
-              ))}
+            <div className="text-center mb-8 md:mb-12 max-w-4xl mx-auto text-lg md:text-xl lg:text-2xl leading-relaxed">
+              "Brīvrunu Projekts" ir pirmais un vienīgais repa improvizācijas kolektīvs
+              Latvijā. Skatītāju ieteikumus, vidi un notikuma tematiku "Brīvrunu
+              Projekts" pārvērš repa improvizācijas etīdēs, kas rada pacilājošas emocijas
+              un pasākuma pievienoto vērtību. Astoņu gadu laikā izkoptie formāti
+              uzrunā plašu auditoriju, neatkarīgi no vecuma vai izpratnes par repu.
             </div>
+            
+            {/* Team Members Grid */}
+            <div className="w-full max-w-6xl">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto">
+                {teamMembers.map((member, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col items-center cursor-pointer group"
+                    onClick={() => setSelectedTeamMember(member)}
+                  >
+                    <div className="relative w-36 h-36 sm:w-40 sm:h-40 md:w-56 md:h-56 mb-3 overflow-hidden">
+                      <img
+                        src={member.smallImage}
+                        alt={member.name}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <span className="text-sm md:text-base text-center font-medium">{member.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Team Member Modal */}
+            {selectedTeamMember && (
+              <div 
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 p-4 overflow-y-auto"
+                onClick={() => setSelectedTeamMember(null)}
+              >
+                <div 
+                  className="relative max-w-4xl w-full bg-white p-4 md:p-6 my-8"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <button
+                    onClick={() => setSelectedTeamMember(null)}
+                    className="absolute top-2 right-2 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                  <div className="w-full mb-4">
+                    <img
+                      src={selectedTeamMember.fullImage}
+                      alt={selectedTeamMember.name}
+                      className="w-full h-auto max-h-[80vh] object-contain"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{selectedTeamMember.name}</h3>
+                  <p className="text-gray-700">{selectedTeamMember.description}</p>
+                </div>
+              </div>
+            )}
           </section>
 
           {/* Testimonials Section */}
@@ -220,8 +287,8 @@ export default function App() {
   return (
     <AdminProvider>
       <GalleryProvider>
-        <Routes>
-          <Route path="/demo" element={<DemoPage />} />
+    <Routes>
+      <Route path="/demo" element={<DemoPage />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route
             path="/admin/dashboard"
@@ -247,8 +314,8 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<UnderConstruction />} />
-        </Routes>
+      <Route path="*" element={<UnderConstruction />} />
+    </Routes>
       </GalleryProvider>
     </AdminProvider>
   );
