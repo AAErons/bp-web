@@ -81,7 +81,12 @@ function DemoPage() {
   const handleMenuClick = (section: string) => {
     if (section === 'galerija' || section === 'piedavajums') {
       setActiveSection(section);
+      // Force scroll to top of the page
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Additional timeout to ensure scroll happens after section change
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
     } else {
       setActiveSection('main');
       setTimeout(() => {
@@ -141,14 +146,32 @@ function DemoPage() {
   return (
     <div className="w-full min-h-screen bg-white text-black flex flex-col">
       {/* Mobile Navigation Toggle */}
-      <button 
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="md:hidden fixed top-4 right-4 z-50 p-2 bg-white border border-black rounded-lg"
-      >
-        <div className="w-6 h-0.5 bg-black mb-1.5"></div>
-        <div className="w-6 h-0.5 bg-black mb-1.5"></div>
-        <div className="w-6 h-0.5 bg-black"></div>
-      </button>
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-black flex items-center justify-between px-4 h-16">
+        <button 
+          onClick={() => handleMenuClick('hero')}
+          className="font-bold text-xl hover:opacity-80 transition-opacity"
+        >
+          BP
+        </button>
+        <button 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="p-2 bg-white border border-black rounded-lg"
+        >
+          <div className="w-6 h-0.5 bg-black mb-1.5"></div>
+          <div className="w-6 h-0.5 bg-black mb-1.5"></div>
+          <div className="w-6 h-0.5 bg-black"></div>
+        </button>
+      </div>
+
+      {/* Mobile Navigation Menu */}
+      <nav className={`md:hidden fixed top-16 left-0 w-full z-40 bg-white border-b border-black transition-transform duration-300 ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
+        <ul className="flex flex-col w-full">
+          <li className={`text-center py-4 border-b border-black cursor-pointer`} onClick={() => handleMenuClick('about')}>KOMANDA</li>
+          <li className={`text-center py-4 border-b border-black cursor-pointer`} onClick={() => handleMenuClick('piedavajums')}>PIEDĀVĀJUMS</li>
+          <li className={`text-center py-4 border-b border-black cursor-pointer`} onClick={() => handleMenuClick('galerija')}>GALERIJA</li>
+          <li className={`text-center py-4 cursor-pointer`} onClick={() => handleMenuClick('atsauksmes')}>ATSAUKSMES</li>
+        </ul>
+      </nav>
 
       {/* Navigation Bar - Desktop */}
       <nav className="hidden md:flex fixed top-0 left-0 w-full z-40 border-b border-black bg-white justify-center px-4 md:px-8 h-20 flex-shrink-0">
@@ -158,17 +181,6 @@ function DemoPage() {
           <li className={`flex-1 text-center py-4 border-r border-black cursor-pointer`} onClick={() => handleMenuClick('piedavajums')}>PIEDĀVĀJUMS</li>
           <li className={`flex-1 text-center py-4 border-r border-black cursor-pointer`} onClick={() => handleMenuClick('galerija')}>GALERIJA</li>
           <li className={`flex-1 text-center py-4 cursor-pointer`} onClick={() => handleMenuClick('atsauksmes')}>ATSAUKSMES</li>
-        </ul>
-      </nav>
-
-      {/* Mobile Navigation Menu */}
-      <nav className={`md:hidden fixed top-0 left-0 w-full z-40 bg-white border-b border-black transition-transform duration-300 ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
-        <ul className="flex flex-col w-full">
-          <li className={`text-center py-4 border-b border-black font-bold cursor-pointer`} onClick={() => handleMenuClick('hero')}>BP</li>
-          <li className={`text-center py-4 border-b border-black cursor-pointer`} onClick={() => handleMenuClick('about')}>KOMANDA</li>
-          <li className={`text-center py-4 border-b border-black cursor-pointer`} onClick={() => handleMenuClick('piedavajums')}>PIEDĀVĀJUMS</li>
-          <li className={`text-center py-4 border-b border-black cursor-pointer`} onClick={() => handleMenuClick('galerija')}>GALERIJA</li>
-          <li className={`text-center py-4 cursor-pointer`} onClick={() => handleMenuClick('atsauksmes')}>ATSAUKSMES</li>
         </ul>
       </nav>
 
