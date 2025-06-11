@@ -162,13 +162,6 @@ function MainPage() {
     about: useRef<HTMLDivElement>(null),
     atsauksmes: useRef<HTMLDivElement>(null)
   };
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: ''
-  });
-  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
   const teamMembers: TeamMember[] = [
     { 
@@ -227,47 +220,6 @@ function MainPage() {
         top: offsetPosition,
         behavior: 'smooth'
       });
-    }
-  };
-
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormStatus('sending');
-
-    try {
-      const response = await fetch('https://formspree.io/f/mblobqbr', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          _replyto: 'eriksfreimanis@gmail.com',
-          _subject: 'Jauns jautājums no BP mājaslapas',
-        }),
-      });
-
-      if (response.ok) {
-        setFormStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          message: ''
-        });
-      } else {
-        setFormStatus('error');
-      }
-    } catch (error) {
-      setFormStatus('error');
     }
   };
 
@@ -566,14 +518,6 @@ function PiedavajumsPage() {
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
-  const handleMenuClick = (section: string) => {
-    if (section === 'galerija' || section === 'piedavajums') {
-      navigate(`/demo/${section}`);
-      return;
-    }
-    navigate(`/demo#${section}`);
-  };
-
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -584,9 +528,36 @@ function PiedavajumsPage() {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting form");
     setFormStatus('sending');
-    // ... rest of form submission logic ...
+    try {
+      const response = await fetch('https://formspree.io/f/mblobqbr', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          _replyto: 'eriksfreimanis@gmail.com',
+          _subject: 'Jauns jautājums no BP mājaslapas',
+        }),
+      });
+      if (response.ok) {
+        setFormStatus('success');
+        setFormData({ name: '', email: '', phone: '', message: '' });
+      } else {
+        setFormStatus('error');
+      }
+    } catch (error) {
+      setFormStatus('error');
+    }
+  };
+
+  const handleMenuClick = (section: string) => {
+    if (section === 'galerija' || section === 'piedavajums') {
+      navigate(`/demo/${section}`);
+      return;
+    }
+    navigate(`/demo#${section}`);
   };
 
   return (
