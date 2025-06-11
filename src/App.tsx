@@ -4,11 +4,8 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import { AdminProvider } from './contexts/AdminContext';
 import { GalleryProvider, useGallery } from './contexts/GalleryContext';
 import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
 import GalleryManagement from './pages/GalleryManagement';
-import GalleryImages from './pages/GalleryImages';
 import GalleryView from './components/GalleryView';
-import Hero from './pages/Hero';
 import bpLogo from './assets/bp_logo.png';
 import evSmall from './assets/team/small/ev_small.jpg';
 import evFull from './assets/team/full/ev_full.jpg';
@@ -158,7 +155,6 @@ function MainPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeSection, setActiveSection] = useState('hero');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { galleries, isLoading } = useGallery();
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -218,7 +214,6 @@ function MainPage() {
   const handleMenuClick = (section: string) => {
     if (section === 'galerija' || section === 'piedavajums') {
       navigate(`/demo/${section}`);
-      setIsMenuOpen(false);
       return;
     }
 
@@ -234,7 +229,6 @@ function MainPage() {
         behavior: 'smooth'
       });
     }
-    setIsMenuOpen(false);
   };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
