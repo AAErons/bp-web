@@ -31,7 +31,6 @@ import publicConcert from './assets/howItWorks/public.jpg';
 import closedEvent from './assets/howItWorks/closed.jpg';
 import presentation from './assets/howItWorks/presentation.jpg';
 import heroBg from './assets/title.jpg';
-import bpLogoPattern from './assets/bp-logo-black.png';
 
 // Define TeamMember type
 interface TeamMember {
@@ -155,7 +154,7 @@ function MainPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeSection, setActiveSection] = useState('hero');
-  const { galleries, isLoading } = useGallery();
+  const { isLoading } = useGallery();
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRefs = {
@@ -293,8 +292,6 @@ function MainPage() {
     };
 
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100; // Add offset for better detection
-
       // Find which section is currently in view
       Object.entries(sectionRefs).forEach(([section, ref]) => {
         if (ref.current) {
@@ -528,7 +525,7 @@ function GalleryPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { galleries, isLoading } = useGallery();
-  const [activeSection, setActiveSection] = useState('galerija');
+  const [activeSection] = useState('galerija');
 
   const handleMenuClick = (section: string) => {
     if (section === 'galerija' || section === 'piedavajums') {
@@ -560,7 +557,7 @@ function GalleryPage() {
 function PiedavajumsPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeSection, setActiveSection] = useState('piedavajums');
+  const [activeSection] = useState('piedavajums');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -587,6 +584,7 @@ function PiedavajumsPage() {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Submitting form");
     setFormStatus('sending');
     // ... rest of form submission logic ...
   };
