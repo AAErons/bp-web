@@ -1,6 +1,6 @@
 import './index.css';
-import { useRef, useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { useRef, useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AdminProvider } from './contexts/AdminContext';
 import { GalleryProvider, useGallery } from './contexts/GalleryContext';
 import AdminLogin from './pages/AdminLogin';
@@ -9,6 +9,7 @@ import GalleryManagement from './pages/GalleryManagement';
 import GalleryImages from './pages/GalleryImages';
 import GalleryView from './components/GalleryView';
 import Hero from './pages/Hero';
+import bpLogo from './assets/bp_logo.png';
 import evSmall from './assets/team/small/ev_small.jpg';
 import evFull from './assets/team/full/ev_full.jpg';
 import zirnisSmall from './assets/team/small/zirnis_small.jpg';
@@ -32,6 +33,16 @@ import spilvaLogo from './assets/partners/spilva.png';
 import publicConcert from './assets/howItWorks/public.jpg';
 import closedEvent from './assets/howItWorks/closed.jpg';
 import presentation from './assets/howItWorks/presentation.jpg';
+import heroBg from './assets/title.jpg';
+import bpLogoPattern from './assets/bp-logo-black.png';
+
+// Define TeamMember type
+interface TeamMember {
+  name: string;
+  description: string;
+  smallImage: string;
+  fullImage: string;
+}
 
 function UnderConstruction() {
   return (
@@ -50,15 +61,111 @@ function UnderConstruction() {
   );
 }
 
-function DemoPage() {
-  const [activeSection, setActiveSection] = useState('main');
+function Navigation({ activeSection, onMenuClick, location }: { 
+  activeSection: string; 
+  onMenuClick: (section: string) => void;
+  location: any;
+}) {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedTeamMember, setSelectedTeamMember] = useState<{ name: string; description: string; smallImage: string; fullImage: string } | null>(null);
+
+  // Determine active state based on both activeSection and location
+  const getActiveState = (section: string) => {
+    // For main page sections
+    if (location.pathname === '/demo') {
+      return activeSection === section;
+    }
+    // For galerija and piedavajums pages
+    if (location.pathname === '/demo/galerija') {
+      return section === 'galerija';
+    }
+    if (location.pathname === '/demo/piedavajums') {
+      return section === 'piedavajums';
+    }
+    return false;
+  };
+
+  const activeClass = "text-[#CCB399] font-bold text-lg";
+  const inactiveClass = "text-white";
+
+  // Handle BP logo click
+  const handleLogoClick = () => {
+    if (location.pathname === '/demo') {
+      // If already on /demo, scroll to hero
+      onMenuClick('hero');
+    } else {
+      // If not, navigate to /demo#hero
+      navigate('/demo#hero');
+    }
+    setIsMenuOpen(false);
+  };
+
+  return (
+    <>
+      {/* Mobile Navigation Toggle */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-black border-b border-white flex items-center justify-between px-4 h-16">
+        <div 
+          onClick={handleLogoClick}
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+        >
+          <img src={bpLogo} alt="BP Logo" className="h-12 w-auto" />
+        </div>
+        <button 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="p-2 bg-black border border-white rounded-lg"
+        >
+          <div className="w-6 h-0.5 bg-white mb-1.5"></div>
+          <div className="w-6 h-0.5 bg-white mb-1.5"></div>
+          <div className="w-6 h-0.5 bg-white"></div>
+        </button>
+      </div>
+
+      {/* Mobile Navigation Menu */}
+      <nav className={`md:hidden fixed top-16 left-0 w-full z-40 bg-black border-b border-white transition-transform duration-300 ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
+        <ul className="flex flex-col w-full">
+          <li className={`text-center py-4 border-b border-white cursor-pointer hover:bg-gray-900 ${getActiveState('about') ? activeClass : inactiveClass}`} onClick={() => onMenuClick('about')}>KOMANDA</li>
+          <li className={`text-center py-4 border-b border-white cursor-pointer hover:bg-gray-900 ${getActiveState('piedavajums') ? activeClass : inactiveClass}`} onClick={() => onMenuClick('piedavajums')}>PIEDĀVĀJUMS</li>
+          <li className={`text-center py-4 border-b border-white cursor-pointer hover:bg-gray-900 ${getActiveState('galerija') ? activeClass : inactiveClass}`} onClick={() => onMenuClick('galerija')}>GALERIJA</li>
+          <li className={`text-center py-4 cursor-pointer hover:bg-gray-900 ${getActiveState('atsauksmes') ? activeClass : inactiveClass}`} onClick={() => onMenuClick('atsauksmes')}>ATSAUKSMES</li>
+        </ul>
+      </nav>
+
+      {/* Navigation Bar - Desktop */}
+      <nav className="hidden md:flex fixed top-0 left-0 right-0 z-40 bg-black border-b border-white justify-center px-4 md:px-8 h-20">
+        <ul className="flex w-full max-w-screen-2xl h-full items-center">
+          <li className={`flex-1 text-center py-4 border-r border-white cursor-pointer hover:opacity-80 transition-opacity ${getActiveState('hero') ? activeClass : inactiveClass}`} onClick={handleLogoClick}>
+            <img src={bpLogo} alt="BP Logo" className="h-12 w-auto mx-auto" />
+          </li>
+          <li className={`flex-1 text-center py-4 border-r border-white cursor-pointer hover:opacity-80 transition-opacity ${getActiveState('about') ? activeClass : inactiveClass}`} onClick={() => onMenuClick('about')}>KOMANDA</li>
+          <li className={`flex-1 text-center py-4 border-r border-white cursor-pointer hover:opacity-80 transition-opacity ${getActiveState('piedavajums') ? activeClass : inactiveClass}`} onClick={() => onMenuClick('piedavajums')}>PIEDĀVĀJUMS</li>
+          <li className={`flex-1 text-center py-4 border-r border-white cursor-pointer hover:opacity-80 transition-opacity ${getActiveState('galerija') ? activeClass : inactiveClass}`} onClick={() => onMenuClick('galerija')}>GALERIJA</li>
+          <li className={`flex-1 text-center py-4 cursor-pointer hover:opacity-80 transition-opacity ${getActiveState('atsauksmes') ? activeClass : inactiveClass}`} onClick={() => onMenuClick('atsauksmes')}>ATSAUKSMES</li>
+        </ul>
+      </nav>
+    </>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="w-full text-center py-6 text-white text-sm border-t border-white bg-black">
+      © {new Date().getFullYear()} Brīvrunu Projekts. All rights reserved.
+    </footer>
+  );
+}
+
+function MainPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeSection, setActiveSection] = useState('hero');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { galleries, isLoading } = useGallery();
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRefs = {
     hero: useRef<HTMLDivElement>(null),
     about: useRef<HTMLDivElement>(null),
-    atsauksmes: useRef<HTMLDivElement>(null),
+    atsauksmes: useRef<HTMLDivElement>(null)
   };
   const [formData, setFormData] = useState({
     name: '',
@@ -68,34 +175,66 @@ function DemoPage() {
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
-  const teamMembers = [
-    { name: 'E.V.', description: '"Kreisais Krasts" biedrs, kurš prot performēt divās valodās: latviešu un angļu. Ne tikai harizmātisks ceremoniju meistars, bet arī skatuves magnēts, kas apvieno psiholoģijas gudrības ar skanīgām vārdu vārsmām.', smallImage: evSmall, fullImage: evFull },
-    { name: 'Zirnis', description: 'Divkartējs "Ghetto Games" brīvrunu batla "Štuka par bazaru" uzvarētājs. BP radošais dzinējs un pulksteņmeistars. Zirnim vienmēr ir plāns un pēc vārda kabatā nav jāmeklē, jo viņš spēj uzburt reālu frīstailu jebkurā laikā un vietā.', smallImage: zirnisSmall, fullImage: zirnisFull },
-    { name: 'JeeKaa', description: '"Kreisais Krasts" vecbiedrs ar aptuveni 20 gadu bagāžu brīvrunā! Viņa stils? Mierīga plūsma, asi joki, pašironija un spēja pielāgoties jebkādiem apstākļiem. No mazām skatuvēm līdz lielām hallēm - JeeKaa vienmēr ienes īstu vārdu spēles garšu!', smallImage: jeekaaSmall, fullImage: jeekaaFull },
-    { name: 'Sniegs', description: 'Latvijas brīvrunas scēnas lielāko pasākumu veidotājs un vadītājs, kurš arī pēc 25 gadiem brīvrunā joprojām to dara ar aizrautību. Pieredze, radošums un spēja uzrunāt savus vienaudžus ir Sniega stiprā puse un ieguvums pasākuma kopējam skanējumam.', smallImage: sniegsSmall, fullImage: sniegsFull },
-    { name: 'Abra', description: '"Brīvrunu Projekta" aizsācējs un četrkārtējs "Ghetto Games" brīvrunu battla "Štuka par bazaru" čempions. Abras superspēja ir brīvrunā izmantot improvizācijas teātrī gūto pieredzi, tādējādi apvienojot dažādas mākslas formas vienā un regulāri sniedzot radošus risinājumus "ārpus kastes".', smallImage: abraSmall, fullImage: abraFull },
-    { name: 'Birch Please', description: 'DJ un bītmeikeris ar 10 gadu pieredzi. BP aisbergs, kuru pasākumos var redzēt kā DJ, taču neredzamā daļa ir saklausāma priekšnesumos, jo katra iznāciena pavadījums ir Birch Please autordarbs. Improvizācija ir klātesoša arī Birch esencē - scratch, kas bagātina šovu.', smallImage: birchSmall, fullImage: birchFull },
+  const teamMembers: TeamMember[] = [
+    { 
+      name: 'E.V.', 
+      description: '"Kreisais Krasts" biedrs, kurš prot performēt divās valodās: latviešu un angļu. Ne tikai harizmātisks ceremoniju meistars, bet arī skatuves magnēts, kas apvieno psiholoģijas gudrības ar skanīgām vārdu vārsmām.', 
+      smallImage: evSmall, 
+      fullImage: evFull 
+    },
+    { 
+      name: 'Zirnis', 
+      description: 'Divkartējs "Ghetto Games" brīvrunu batla "Štuka par bazaru" uzvarētājs. BP radošais dzinējs un pulksteņmeistars. Zirnim vienmēr ir plāns un pēc vārda kabatā nav jāmeklē, jo viņš spēj uzburt reālu frīstailu jebkurā laikā un vietā.', 
+      smallImage: zirnisSmall, 
+      fullImage: zirnisFull 
+    },
+    { 
+      name: 'JeeKaa', 
+      description: '"Kreisais Krasts" vecbiedrs ar aptuveni 20 gadu bagāžu brīvrunā! Viņa stils? Mierīga plūsma, asi joki, pašironija un spēja pielāgoties jebkādiem apstākļiem. No mazām skatuvēm līdz lielām hallēm - JeeKaa vienmēr ienes īstu vārdu spēles garšu!', 
+      smallImage: jeekaaSmall, 
+      fullImage: jeekaaFull 
+    },
+    { 
+      name: 'Sniegs', 
+      description: 'Latvijas brīvrunas scēnas lielāko pasākumu veidotājs un vadītājs, kurš arī pēc 25 gadiem brīvrunā joprojām to dara ar aizrautību. Pieredze, radošums un spēja uzrunāt savus vienaudžus ir Sniega stiprā puse un ieguvums pasākuma kopējam skanējumam.', 
+      smallImage: sniegsSmall, 
+      fullImage: sniegsFull 
+    },
+    { 
+      name: 'Abra', 
+      description: '"Brīvrunu Projekta" aizsācējs un četrkārtējs "Ghetto Games" brīvrunu battla "Štuka par bazaru" čempions. Abras superspēja ir brīvrunā izmantot improvizācijas teātrī gūto pieredzi, tādējādi apvienojot dažādas mākslas formas vienā un regulāri sniedzot radošus risinājumus "ārpus kastes".', 
+      smallImage: abraSmall, 
+      fullImage: abraFull 
+    },
+    { 
+      name: 'Birch Please', 
+      description: 'DJ un bītmeikeris ar 10 gadu pieredzi. BP aisbergs, kuru pasākumos var redzēt kā DJ, taču neredzamā daļa ir saklausāma priekšnesumos, jo katra iznāciena pavadījums ir Birch Please autordarbs. Improvizācija ir klātesoša arī Birch esencē - scratch, kas bagātina šovu.', 
+      smallImage: birchSmall, 
+      fullImage: birchFull 
+    },
   ];
 
   // Handle menu clicks
   const handleMenuClick = (section: string) => {
     if (section === 'galerija' || section === 'piedavajums') {
-      setActiveSection(section);
-      // Force scroll to top of the page
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Additional timeout to ensure scroll happens after section change
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 100);
-    } else {
-      setActiveSection('main');
-      setTimeout(() => {
-        if (sectionRefs[section as keyof typeof sectionRefs]?.current) {
-          sectionRefs[section as keyof typeof sectionRefs].current?.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 50);
+      navigate(`/demo/${section}`);
+      setIsMenuOpen(false);
+      return;
     }
-    setIsMenuOpen(false); // Close menu after click on mobile
+
+    setActiveSection(section);
+    const element = sectionRefs[section as keyof typeof sectionRefs]?.current;
+    if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+    setIsMenuOpen(false);
   };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -139,149 +278,151 @@ function DemoPage() {
     }
   };
 
+  const handleMemberClick = (member: TeamMember) => {
+    setSelectedMember(member);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedMember(null);
+  };
+
+  // Handle hash changes and scroll position
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1);
+      if (hash && sectionRefs[hash as keyof typeof sectionRefs]) {
+        setActiveSection(hash);
+        handleMenuClick(hash);
+      }
+    };
+
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 100; // Add offset for better detection
+
+      // Find which section is currently in view
+      Object.entries(sectionRefs).forEach(([section, ref]) => {
+        if (ref.current) {
+          const { top, bottom } = ref.current.getBoundingClientRect();
+          if (top <= 100 && bottom >= 100) {
+            setActiveSection(section);
+          }
+        }
+      });
+    };
+
+    // Handle initial hash
+    handleHashChange();
+
+    // Listen for hash changes and scroll
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   if (isLoading) {
-    // ... existing code ...
+    return (
+      <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#CCB399]"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="w-full min-h-screen bg-white text-black flex flex-col">
-      {/* Mobile Navigation Toggle */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-black flex items-center justify-between px-4 h-16">
-        <button 
-          onClick={() => handleMenuClick('hero')}
-          className="font-bold text-xl hover:opacity-80 transition-opacity"
-        >
-          BP
-        </button>
-        <button 
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="p-2 bg-white border border-black rounded-lg"
-        >
-          <div className="w-6 h-0.5 bg-black mb-1.5"></div>
-          <div className="w-6 h-0.5 bg-black mb-1.5"></div>
-          <div className="w-6 h-0.5 bg-black"></div>
-        </button>
-      </div>
+    <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex flex-col">
+      <Navigation activeSection={activeSection} onMenuClick={handleMenuClick} location={location} />
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section ref={sectionRefs.hero} className="w-full min-h-screen flex items-stretch justify-center bg-black">
+          <div
+            className="relative flex flex-col justify-end items-center w-full min-h-screen"
+            style={{
+              backgroundImage: `url(${heroBg})`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              backgroundSize: 'contain',
+            }}
+          >
+            <div className="w-full flex flex-col items-center pb-12">
+              <h1 className="text-2xl md:text-5xl lg:text-8xl font-extrabold uppercase text-white text-center drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] mb-6">
+                TAS IR BRĪVRUNU KAS?
+              </h1>
+              <button
+                className="bg-black text-white uppercase px-6 py-3 text-sm md:text-lg font-semibold tracking-wider mt-2 shadow-lg"
+                onClick={() => navigate('/demo/piedavajums')}
+              >
+                UZZINĀT VAIRĀK
+              </button>
+            </div>
+          </div>
+        </section>
 
-      {/* Mobile Navigation Menu */}
-      <nav className={`md:hidden fixed top-16 left-0 w-full z-40 bg-white border-b border-black transition-transform duration-300 ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
-        <ul className="flex flex-col w-full">
-          <li className={`text-center py-4 border-b border-black cursor-pointer`} onClick={() => handleMenuClick('about')}>KOMANDA</li>
-          <li className={`text-center py-4 border-b border-black cursor-pointer`} onClick={() => handleMenuClick('piedavajums')}>PIEDĀVĀJUMS</li>
-          <li className={`text-center py-4 border-b border-black cursor-pointer`} onClick={() => handleMenuClick('galerija')}>GALERIJA</li>
-          <li className={`text-center py-4 cursor-pointer`} onClick={() => handleMenuClick('atsauksmes')}>ATSAUKSMES</li>
-        </ul>
-      </nav>
-
-      {/* Navigation Bar - Desktop */}
-      <nav className="hidden md:flex fixed top-0 left-0 w-full z-40 border-b border-black bg-white justify-center px-4 md:px-8 h-20 flex-shrink-0">
-        <ul className="flex w-full max-w-screen-2xl h-full items-center">
-          <li className={`flex-1 text-center py-4 border-r border-black font-bold cursor-pointer`} onClick={() => handleMenuClick('hero')}>BP</li>
-          <li className={`flex-1 text-center py-4 border-r border-black cursor-pointer`} onClick={() => handleMenuClick('about')}>KOMANDA</li>
-          <li className={`flex-1 text-center py-4 border-r border-black cursor-pointer`} onClick={() => handleMenuClick('piedavajums')}>PIEDĀVĀJUMS</li>
-          <li className={`flex-1 text-center py-4 border-r border-black cursor-pointer`} onClick={() => handleMenuClick('galerija')}>GALERIJA</li>
-          <li className={`flex-1 text-center py-4 cursor-pointer`} onClick={() => handleMenuClick('atsauksmes')}>ATSAUKSMES</li>
-        </ul>
-      </nav>
-
-      {/* Main Scrollable Slides */}
-      {activeSection === 'main' && (
-        <main className="flex-1 w-full pt-20 md:pt-20 snap-y snap-mandatory overflow-y-auto">
-          {/* Hero Section */}
-          <section ref={sectionRefs.hero} className="w-full min-h-screen snap-start">
-            <Hero onSectionChange={handleMenuClick} />
-          </section>
-          {/* About & Team Section */}
-          <section ref={sectionRefs.about} id="komanda" className="w-full min-h-screen flex flex-col items-center justify-center py-8 border-b border-black px-4 md:px-8 snap-start">
-            <div className="text-center mb-8 md:mb-12 max-w-4xl mx-auto text-lg md:text-xl lg:text-2xl leading-relaxed">
-              "Brīvrunu Projekts" ir pirmais un vienīgais repa improvizācijas kolektīvs
-              Latvijā. Skatītāju ieteikumus, vidi un notikuma tematiku "Brīvrunu
-              Projekts" pārvērš repa improvizācijas etīdēs, kas rada pacilājošas emocijas
-              un pasākuma pievienoto vērtību. Astoņu gadu laikā izkoptie formāti
-              uzrunā plašu auditoriju, neatkarīgi no vecuma vai izpratnes par repu.
+        {/* About Section */}
+        <section ref={sectionRefs.about} className="min-h-screen py-20">
+          <div className="w-full max-w-4xl mx-auto px-4">
+            <div className="text-center mb-8 md:mb-12 max-w-4xl mx-auto text-lg md:text-xl lg:text-2xl leading-relaxed font-bold">
+            "Brīvrunu Projekts" ir pirmais un vienīgais repa improvizācijas kolektīvs Latvijā. Skatītāju ieteikumus, vidi un notikuma tematiku "Brīvrunu Projekts" pārvērš repa improvizācijas etīdēs, kas rada pacilājošas emocijas un pasākuma pievienoto vērtību. Astoņu gadu laikā izkoptie formāti uzrunā plašu auditoriju, neatkarīgi no vecuma vai izpratnes par repu.
             </div>
             
             {/* Team Members Grid */}
             <div className="w-full max-w-6xl">
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto">
                 {teamMembers.map((member, index) => (
-                  <div
+                  <div 
                     key={index}
                     className="flex flex-col items-center cursor-pointer group"
-                    onClick={() => setSelectedTeamMember(member)}
+                    onClick={() => handleMemberClick(member)}
                   >
                     <div className="relative w-36 h-36 sm:w-40 sm:h-40 md:w-56 md:h-56 mb-3 overflow-hidden">
-                      <img
+                      <img 
                         src={member.smallImage}
-                        alt={member.name}
+                        alt={member.name} 
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
-                    <span className="text-sm md:text-base text-center font-medium">{member.name}</span>
+                    <span className="text-sm md:text-base text-center font-medium transition-colors duration-200 group-hover:font-bold group-hover:text-[#CCB399]">{member.name}</span>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
+        </section>
 
-            {/* Team Member Modal */}
-            {selectedTeamMember && (
-              <div 
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 p-4 overflow-y-auto"
-                onClick={() => setSelectedTeamMember(null)}
-              >
-                <div 
-                  className="relative max-w-4xl w-full bg-white p-4 md:p-6 my-8"
-                  onClick={e => e.stopPropagation()}
-                >
-                  <button
-                    onClick={() => setSelectedTeamMember(null)}
-                    className="absolute top-2 right-2 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                  <div className="w-full mb-4">
-                    <img
-                      src={selectedTeamMember.fullImage}
-                      alt={selectedTeamMember.name}
-                      className="w-full h-auto max-h-[80vh] object-contain"
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{selectedTeamMember.name}</h3>
-                  <p className="text-gray-700">{selectedTeamMember.description}</p>
-                </div>
-              </div>
-            )}
-          </section>
-
-          {/* Testimonials Section */}
-          <section ref={sectionRefs.atsauksmes} id="atsauksmes" className="w-full min-h-screen flex flex-col items-center justify-center py-8 border-b border-black px-4 md:px-8 snap-start">
-            <div className="w-full max-w-6xl">
-              <div className="text-center mb-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {[
-                    { company: 'SWEDBANK', logo: 'SWED' },
-                    { company: 'STRAUME', logo: 'STRAUME' },
-                    { company: 'LĪVĀNI', logo: 'LĪVĀNI' },
-                    { company: 'IDEJU INSTITŪTS', logo: 'IDEJU INSTITŪTS' }
-                  ].map((item, index) => (
-                    <div key={index} className="bg-white border border-black p-6 md:p-8 relative">
-                      <div className="absolute -top-4 left-6 bg-white px-4 font-bold text-sm md:text-base">
-                        {item.logo}
-                      </div>
-                      <div className="text-sm md:text-base lg:text-lg leading-relaxed mb-6">
-                        "Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai."
-                      </div>
-                      <div className="text-right font-medium">
-                        — {item.company}
-                      </div>
+        {/* Testimonials Section */}
+        <section ref={sectionRefs.atsauksmes} className="min-h-screen py-20">
+          <div className="w-full max-w-6xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">ATSAUKSMES</h2>
+              <p className="text-lg md:text-xl max-w-3xl mx-auto mb-12">
+                Ko saka mūsu klienti par "Brīvrunu projektu"?
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                {[
+                  { company: 'SWEDBANK', logo: 'SWED' },
+                  { company: 'STRAUME', logo: 'STRAUME' },
+                  { company: 'LĪVĀNI', logo: 'LĪVĀNI' },
+                  { company: 'IDEJU INSTITŪTS', logo: 'IDEJU INSTITŪTS' }
+                ].map((item, index) => (
+                  <div key={index} className="bg-white border border-black p-6 md:p-8 relative">
+                    <div className="absolute -top-4 left-6 bg-white px-4 font-bold text-sm md:text-base">
+                      {item.logo}
                     </div>
-                  ))}
-                </div>
+                    <div className="text-sm md:text-base lg:text-lg leading-relaxed mb-6">
+                      "Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai."
+                    </div>
+                    <div className="text-right font-medium">
+                      — {item.company}
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              <div className="text-center mb-8">
+              <div className="text-center mb-16">
                 <div className="font-bold text-sm md:text-base mb-6">MŪSU PARTNERI</div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 justify-items-center items-center">
                   {[
@@ -308,12 +449,12 @@ function DemoPage() {
                 </div>
               </div>
 
-              <div className="relative my-12">
+              <div className="relative mb-16">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-black"></div>
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-white px-4 text-sm md:text-base font-medium">Seko mums</span>
+                  <span className="bg-[#FAF8F8] px-4 text-sm md:text-base font-medium">Seko mums</span>
                 </div>
               </div>
 
@@ -352,22 +493,115 @@ function DemoPage() {
                 </div>
               </div>
             </div>
-          </section>
-        </main>
-      )}
-
-      {/* Gallery Section */}
-      {activeSection === 'galerija' && (
-        <section id="galerija" className="w-full min-h-screen flex flex-col items-center justify-center py-8 border-b border-black px-4 md:px-8 pt-20 md:pt-20">
-          <div className="w-full max-w-7xl">
-            <GalleryView galleries={galleries} />
           </div>
         </section>
-      )}
+      </main>
+      <Footer />
 
-      {/* How It Works Section */}
-      {activeSection === 'piedavajums' && (
-        <section id="piedavajums" className="w-full min-h-screen flex flex-col items-center justify-start py-4 border-b border-black px-4 md:px-8 pt-24 md:pt-28">
+      {/* Team Member Modal */}
+      {isModalOpen && selectedMember && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-4xl overflow-hidden flex flex-col md:flex-row shadow-2xl">
+            {/* Left: Image */}
+            <div className="md:w-auto w-full flex items-center justify-start">
+              <img 
+                src={selectedMember.fullImage} 
+                alt={selectedMember.name} 
+                className="max-h-[80vh] w-auto h-auto object-contain"
+              />
+            </div>
+            {/* Right: Info */}
+            <div className="flex-1 w-full min-w-[320px] md:min-w-[400px] bg-[#FFF7F3] flex flex-col justify-center p-8 md:p-12 relative">
+              <button 
+                onClick={closeModal}
+                className="absolute top-4 right-4 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-opacity z-10"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">{selectedMember.name}</h2>
+              <div className="text-lg md:text-2xl text-gray-700 leading-relaxed whitespace-pre-line">{selectedMember.description}</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function GalleryPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { galleries, isLoading } = useGallery();
+  const [activeSection, setActiveSection] = useState('galerija');
+
+  const handleMenuClick = (section: string) => {
+    if (section === 'galerija' || section === 'piedavajums') {
+      navigate(`/demo/${section}`);
+      return;
+    }
+    navigate(`/demo#${section}`);
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex flex-col">
+      <Navigation activeSection={activeSection} onMenuClick={handleMenuClick} location={location} />
+      <main className="flex-grow pt-20">
+        <section className="min-h-screen py-20">
+          <div className="w-full max-w-7xl mx-auto px-4">
+            {isLoading ? (
+              <div className="text-center">Loading...</div>
+            ) : (
+              <GalleryView galleries={galleries} />
+            )}
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function PiedavajumsPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeSection, setActiveSection] = useState('piedavajums');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+
+  const handleMenuClick = (section: string) => {
+    if (section === 'galerija' || section === 'piedavajums') {
+      navigate(`/demo/${section}`);
+      return;
+    }
+    navigate(`/demo#${section}`);
+  };
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormStatus('sending');
+    // ... rest of form submission logic ...
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex flex-col">
+      <Navigation activeSection={activeSection} onMenuClick={handleMenuClick} location={location} />
+      <main className="flex-grow pt-20">
+        <section className="min-h-screen py-20">
           <div className="w-full max-w-4xl mx-auto mb-8 mt-4">
             <h2 className="text-center text-xl md:text-2xl font-bold mb-4">TAS IR "BRĪVRUNU PROJEKTS"!</h2>
             <div className="text-center text-base md:text-lg lg:text-xl leading-relaxed space-y-3">
@@ -558,12 +792,8 @@ function DemoPage() {
             </div>
           </div>
         </section>
-      )}
-
-      {/* Footer */}
-      <footer className="w-full py-4 border-t border-black text-center text-sm md:text-base">
-        © {new Date().getFullYear()} Brīvrunu Projekts. All rights reserved.
-      </footer>
+      </main>
+      <Footer />
     </div>
   );
 }
@@ -573,21 +803,33 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return isAuthenticated ? <>{children}</> : <Navigate to="/admin" replace />;
 }
 
-export default function App() {
+function AppWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        backgroundImage: 'url(https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png)',
+      }}
+      className="relative min-h-screen w-full"
+    >
+      {/* Overlay for subtlety */}
+      <div className="pointer-events-none absolute inset-0 z-0" style={{ background: 'rgba(255,255,255,0.6)' }} />
+      <div className="relative z-10">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function App() {
   return (
     <AdminProvider>
       <GalleryProvider>
-    <Routes>
-      <Route path="/demo" element={<DemoPage />} />
+        <Routes>
+          <Route path="/" element={<UnderConstruction />} />
+          <Route path="/demo/*" element={<MainPage />} />
+          <Route path="/demo/galerija" element={<GalleryPage />} />
+          <Route path="/demo/piedavajums" element={<PiedavajumsPage />} />
           <Route path="/admin" element={<AdminLogin />} />
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
           <Route
             path="/admin/gallery"
             element={
@@ -596,17 +838,12 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/admin/gallery/:id"
-            element={
-              <ProtectedRoute>
-                <GalleryImages />
-              </ProtectedRoute>
-            }
-          />
-      <Route path="*" element={<UnderConstruction />} />
-    </Routes>
+        </Routes>
       </GalleryProvider>
     </AdminProvider>
   );
+}
+
+export default function WrappedApp() {
+  return <AppWrapper><App /></AppWrapper>;
 }
