@@ -7,6 +7,7 @@ import AdminLogin from './pages/AdminLogin';
 import GalleryManagement from './pages/GalleryManagement';
 import GalleryView from './components/GalleryView';
 import bpLogo from './assets/bp_logo.png';
+import bpLogoBlack from './assets/bp-logo-black.png';
 import evSmall from './assets/team/small/ev_small.jpg';
 import evFull from './assets/team/full/ev_full.jpg';
 import zirnisSmall from './assets/team/small/zirnis_small.jpg';
@@ -42,7 +43,7 @@ interface TeamMember {
 
 function UnderConstruction() {
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-teal-500">
+    <div className="w-full min-h-screen flex items-center justify-center bg-green-500">
       <div className="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center max-w-md w-full">
         <h1 className="text-2xl font-bold text-amber-600 mb-4 flex items-center gap-2">
           <span role="img" aria-label="construction">🚧</span>
@@ -277,30 +278,40 @@ function MainPage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex flex-col">
+    <div className="w-full min-h-screen text-black flex flex-col">
       <Navigation activeSection={activeSection} onMenuClick={handleMenuClick} location={location} />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section ref={sectionRefs.hero} className="w-full min-h-screen flex items-stretch justify-center bg-black">
-          <div
-            className="relative flex flex-col justify-end items-center w-full min-h-screen"
-            style={{
-              backgroundImage: `url(${heroBg})`,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              backgroundSize: 'contain',
-            }}
-          >
-            <div className="w-full flex flex-col items-center pb-12">
-              <h1 className="text-2xl md:text-5xl lg:text-8xl font-extrabold uppercase text-white text-center drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] mb-6">
-                TAS IR BRĪVRUNU KAS?
-              </h1>
-              <button
-                className="bg-black text-white uppercase px-6 py-3 text-sm md:text-lg font-semibold tracking-wider mt-2 shadow-lg"
-                onClick={() => navigate('/demo/piedavajums')}
-              >
-                UZZINĀT VAIRĀK
-              </button>
+        <section ref={sectionRefs.hero} className="relative w-full flex flex-col pt-16 md:pt-20">
+          <div className="relative w-full">
+            <div className="relative">
+              <img
+                src={heroBg}
+                alt="Brīvrunu Projekts"
+                className="w-full max-h-[calc(100vh-4rem)] md:max-h-[calc(100vh-5rem)] h-auto object-contain object-top"
+                style={{ display: 'block' }}
+              />
+              <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center mb-12 z-10">
+                <h1 
+                  className="font-extrabold uppercase text-white text-center drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] mb-6"
+                  style={{
+                    fontSize: 'clamp(1.5rem, 4vw + 1rem, 6rem)',
+                    lineHeight: '1.1'
+                  }}
+                >
+                  TAS IR BRĪVRUNU KAS?
+                </h1>
+                <button
+                  className="bg-black text-white uppercase font-semibold tracking-wider mt-2 shadow-lg"
+                  style={{
+                    fontSize: 'clamp(0.875rem, 1.5vw + 0.5rem, 1.125rem)',
+                    padding: 'clamp(0.75rem, 1.5vw + 0.5rem, 1rem) clamp(1.5rem, 2vw + 1rem, 2rem)'
+                  }}
+                  onClick={() => navigate('/demo/piedavajums')}
+                >
+                  UZZINĀT VAIRĀK
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -488,7 +499,7 @@ function GalleryPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex flex-col">
+    <div className="w-full min-h-screen text-black flex flex-col">
       <Navigation activeSection={activeSection} onMenuClick={handleMenuClick} location={location} />
       <main className="flex-grow pt-20">
         <section className="min-h-screen py-20">
@@ -561,7 +572,7 @@ function PiedavajumsPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex flex-col">
+    <div className="w-full min-h-screen text-black flex flex-col">
       <Navigation activeSection={activeSection} onMenuClick={handleMenuClick} location={location} />
       <main className="flex-grow pt-20">
         <section className="min-h-screen py-20">
@@ -770,12 +781,27 @@ function AppWrapper({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        backgroundImage: 'url(https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png)',
+        backgroundImage: `url(${bpLogoBlack})`,
+        backgroundSize: '60px 60px',
+        backgroundRepeat: 'repeat',
+        backgroundPosition: '120px 120px',
+        backgroundAttachment: 'fixed',
       }}
       className="relative min-h-screen w-full"
     >
+      {/* Second layer with offset pattern for misalignment */}
+      <div
+        style={{
+          backgroundImage: `url(${bpLogoBlack})`,
+          backgroundSize: '60px 60px',
+          backgroundRepeat: 'repeat',
+          backgroundPosition: '180px 180px',
+          backgroundAttachment: 'fixed',
+        }}
+        className="absolute inset-0 pointer-events-none"
+      />
       {/* Overlay for subtlety */}
-      <div className="pointer-events-none absolute inset-0 z-0" style={{ background: 'rgba(255,255,255,0.6)' }} />
+      <div className="pointer-events-none absolute inset-0 z-0" style={{ background: 'rgba(255,255,255,0.85)' }} />
       <div className="relative z-10">
         {children}
       </div>
