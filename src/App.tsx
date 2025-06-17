@@ -291,21 +291,21 @@ function MainPage() {
                 className="w-full max-h-[calc(100vh-4rem)] md:max-h-[calc(100vh-5rem)] h-auto object-contain object-top"
                 style={{ display: 'block' }}
               />
-              <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center mb-12 z-10">
+              <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center mb-4 md:mb-12 z-10 px-4">
                 <h1 
-                  className="font-extrabold uppercase text-white text-center drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] mb-6"
+                  className="font-extrabold uppercase text-white text-center drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] mb-3 md:mb-6"
                   style={{
-                    fontSize: 'clamp(1.5rem, 4vw + 1rem, 6rem)',
+                    fontSize: 'clamp(1rem, 3vw + 0.5rem, 6rem)',
                     lineHeight: '1.1'
                   }}
                 >
                   TAS IR BRĪVRUNU KAS?
                 </h1>
                 <button
-                  className="bg-black text-white uppercase font-semibold tracking-wider mt-2 shadow-lg"
+                  className="bg-black text-white uppercase font-semibold tracking-wider mt-1 md:mt-2 shadow-lg"
                   style={{
-                    fontSize: 'clamp(0.875rem, 1.5vw + 0.5rem, 1.125rem)',
-                    padding: 'clamp(0.75rem, 1.5vw + 0.5rem, 1rem) clamp(1.5rem, 2vw + 1rem, 2rem)'
+                    fontSize: 'clamp(0.75rem, 1.2vw + 0.3rem, 1.125rem)',
+                    padding: 'clamp(0.5rem, 1vw + 0.3rem, 1rem) clamp(1rem, 1.5vw + 0.5rem, 2rem)'
                   }}
                   onClick={() => navigate('/demo/piedavajums')}
                 >
