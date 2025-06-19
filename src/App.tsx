@@ -291,9 +291,9 @@ function MainPage() {
                 className="w-full max-h-[calc(100vh-4rem)] md:max-h-[calc(100vh-5rem)] h-auto object-contain object-top"
                 style={{ display: 'block' }}
               />
-              <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center mb-4 md:mb-12 z-10 px-4">
+              <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center -mb-2 md:mb-12 z-10 px-4">
                 <h1 
-                  className="font-extrabold uppercase text-white text-center drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] mb-3 md:mb-6"
+                  className="font-extrabold uppercase text-white text-center bg-black bg-opacity-50 px-4 py-3 md:px-8 md:py-4 rounded-lg shadow-2xl drop-shadow-[0_8px_32px_rgba(0,0,0,0.9)] mb-2 md:mb-6"
                   style={{
                     fontSize: 'clamp(1rem, 3vw + 0.5rem, 6rem)',
                     lineHeight: '1.1'
@@ -305,7 +305,7 @@ function MainPage() {
                   className="bg-black text-white uppercase font-semibold tracking-wider mt-1 md:mt-2 shadow-lg"
                   style={{
                     fontSize: 'clamp(0.75rem, 1.2vw + 0.3rem, 1.125rem)',
-                    padding: 'clamp(0.5rem, 1vw + 0.3rem, 1rem) clamp(1rem, 1.5vw + 0.5rem, 2rem)'
+                    padding: 'clamp(0.75rem, 1.2vw + 0.4rem, 1rem) clamp(1.5rem, 2vw + 0.8rem, 2rem)'
                   }}
                   onClick={() => navigate('/demo/piedavajums')}
                 >
@@ -357,8 +357,8 @@ function MainPage() {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                 {[
-                  { company: 'SWEDBANK', logo: 'SWED' },
-                  { company: 'STRAUME', logo: 'STRAUME' },
+                  { company: 'GULBENES NOVADA JAUNIEŠU CENTRS "BĀZE"', logo: 'GULBENES NOVADA JAUNIEŠU CENTRS "BĀZE"' },
+                  { company: 'VSIA "LATVIJAS KONCERTI"', logo: 'VSIA "LATVIJAS KONCERTI"' },
                   { company: 'LĪVĀNI', logo: 'LĪVĀNI' },
                   { company: 'IDEJU INSTITŪTS', logo: 'IDEJU INSTITŪTS' }
                 ].map((item, index) => (
@@ -367,10 +367,35 @@ function MainPage() {
                       {item.logo}
                     </div>
                     <div className="text-sm md:text-base lg:text-lg leading-relaxed mb-6">
-                      "Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai."
+                      {index === 0 ? (
+                        <>
+                          "Sadarbība ar "Brīvrunu Projektu" mūsu pasākumā "Gada atsitiens 2024" ietvaros bija patiesi iedvesmojoša un profesionāla. Iepriekš izrunātas detaļas un velmes tika realizētas ar uzviju. Brīvrunu projekts mūs pārsteidza ar unikāliem un spēcīgiem tekstiem par visiem pasākuma nominantiem, ko viņi izpildīja savā īpašajā stilā – ar harismu, dinamiku un lielisku savstarpējo saspēli. Mūzika, enerģija un kustība – viss kopā radīja neaizmirstamu pieredzi. Skatitāji, nominanti, organizātori palika sajūma par "Brīvrunu projekta" izpildījumu. No sirds iesakām šo komandu arī citiem!"
+                        </>
+                      ) : index === 1 ? (
+                        <>
+                          "2025.gada 20.martā VEF KP izskanēja VSIA "Latvijas Koncerti" veidotā cikla "Mūzika Tev" pēdējais koncerts 7.-12.klasēm. Parasti šo koncertu veidojam demokrātiskāku, aicinot tajā piedalīties solistus un grupas, kuru muzikālie žanri un izpausmes mūsu jauniešiem ir tuvāki. Pirmo reizi iepazinām "Brīvrunu projektu", grupu, kam bija jānoslēdz visa koncertprogramma. Patiess bija mūsu- koncertu rīkotāju un, protams, arī publikas atzinums- "Brīvrunu projekts" bija tieši tas, kas jauniešiem bija vajadzīgs. Grupas uzstāšanās bija tik aizrautīga, tik enerģijas pārpilna, ka nav šaubu- visi koncerta apmeklētāji aizgāja no koncerta absolūti uzlādēti. Pārsteidza gan "Brīvrunu projekta" dalībnieku augstā profesionālā meistarība, lieliskā savstarpējā ansambļa izjūta, kur katrs zināja savu uzdevumu un radīja iespaidu, cik tas viņiem viegli. Pārsteidz ne tikai viņu lieliskās repošanas prasmes, elektronikas izmantojums, bet arī asprātība un humors savos priekšnesumos iesaistot jauniešus no klausītāju rindām. Īpaši gribētos izcelt arī "Brīvrunu projekta" dalībnieku pieklājību, vienkāršību un sirsnību saskarē ar mums, koncerta veidotājiem. Noteikti pie izdevības turpināsim sadarbību ar "Brīvrunu projektu" arī nākotnē"
+                        </>
+                      ) : (
+                        '"Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai."'
+                      )}
                     </div>
                     <div className="text-right font-medium">
-                      — {item.company}
+                      {index === 0 ? (
+                        <>
+                          — Cieņā,<br />
+                          Valērija Stībele<br />
+                          Gulbenes novada jauniešu centrs "Bāze" vadītāja
+                        </>
+                      ) : index === 1 ? (
+                        <>
+                          — Ar cieņu,<br />
+                          Karina Bērziņa<br />
+                          VSIA Latvijas Koncerti<br />
+                          Izglītības programmas vadītāja, producente
+                        </>
+                      ) : (
+                        `— ${item.company}`
+                      )}
                     </div>
                   </div>
                 ))}
@@ -576,7 +601,7 @@ function PiedavajumsPage() {
       <Navigation activeSection={activeSection} onMenuClick={handleMenuClick} location={location} />
       <main className="flex-grow pt-20">
         <section className="min-h-screen py-20">
-          <div className="w-full max-w-4xl mx-auto mb-8 mt-4">
+          <div className="w-full max-w-4xl mx-auto mb-8 mt-4 px-4">
             <h2 className="text-center text-xl md:text-2xl font-bold mb-4">TAS IR "BRĪVRUNU PROJEKTS"!</h2>
             <div className="text-center text-base md:text-lg lg:text-xl leading-relaxed space-y-3">
               <p>
@@ -592,7 +617,7 @@ function PiedavajumsPage() {
             </div>
           </div>
 
-          <div className="w-full max-w-6xl mx-auto space-y-16">
+          <div className="w-full max-w-6xl mx-auto space-y-16 px-4">
             {/* Section 1 */}
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden">
@@ -779,27 +804,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function AppWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      style={{
-        backgroundImage: `url(${bpLogoBlack})`,
-        backgroundSize: '60px 60px',
-        backgroundRepeat: 'repeat',
-        backgroundPosition: '120px 120px',
-        backgroundAttachment: 'fixed',
-      }}
-      className="relative min-h-screen w-full"
-    >
-      {/* Second layer with offset pattern for misalignment */}
-      <div
-        style={{
-          backgroundImage: `url(${bpLogoBlack})`,
-          backgroundSize: '60px 60px',
-          backgroundRepeat: 'repeat',
-          backgroundPosition: '180px 180px',
-          backgroundAttachment: 'fixed',
-        }}
-        className="absolute inset-0 pointer-events-none"
-      />
+    <div className="relative min-h-screen w-full">
       {/* Overlay for subtlety */}
       <div className="pointer-events-none absolute inset-0 z-0" style={{ background: 'rgba(255,255,255,0.85)' }} />
       <div className="relative z-10">
