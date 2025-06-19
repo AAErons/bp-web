@@ -7,7 +7,6 @@ import AdminLogin from './pages/AdminLogin';
 import GalleryManagement from './pages/GalleryManagement';
 import GalleryView from './components/GalleryView';
 import bpLogo from './assets/bp_logo.png';
-import bpLogoBlack from './assets/bp-logo-black.png';
 import evSmall from './assets/team/small/ev_small.jpg';
 import evFull from './assets/team/full/ev_full.jpg';
 import zirnisSmall from './assets/team/small/zirnis_small.jpg';
