@@ -19,14 +19,20 @@ import abraSmall from './assets/team/small/abra_small.jpg';
 import abraFull from './assets/team/full/abra_full.jpg';
 import birchSmall from './assets/team/small/birch_small.jpg';
 import birchFull from './assets/team/full/birch_full.jpg';
-import swedbankLogo from './assets/partners/swedbank.png';
-import jagermeisterLogo from './assets/partners/jagermeister.png';
-import ghettoGamesLogo from './assets/partners/ghetto_games.png';
-import vefLogo from './assets/partners/vef.png';
-import ventspilsNaftaLogo from './assets/partners/ventspils_nafta.png';
 import theBronxsLogo from './assets/partners/thebronxs.jpeg';
-import dzinatrsLogo from './assets/partners/dzinatrs.png';
-import spilvaLogo from './assets/partners/spilva.png';
+import tioKaussLogo from './assets/partners/tio-kauss.png';
+import straumeLogo from './assets/partners/straume.jpeg';
+import spiediensLogo from './assets/partners/spiediens.png';
+import siguldaLogo from './assets/partners/sigulda.png';
+import rigaLogo from './assets/partners/riga.png';
+import scaniaLogo from './assets/partners/scania.png';
+import positvisLogo from './assets/partners/positvis.png';
+import lmtLogo from './assets/partners/lmt.jpg';
+import investmentAgencyLogo from './assets/partners/investment-agency.png';
+import idejuKaussLogo from './assets/partners/ideju-kauss.png';
+import ikeaLogo from './assets/partners/ikea.png';
+import feeLogo from './assets/partners/fee.png';
+import dienasBiznessLogo from './assets/partners/dienas_bizness.jpeg';
 import publicConcert from './assets/howItWorks/public.jpg';
 import closedEvent from './assets/howItWorks/closed.jpg';
 import presentation from './assets/howItWorks/presentation.jpg';
@@ -402,16 +408,22 @@ function MainPage() {
 
               <div className="text-center mb-16">
                 <div className="font-bold text-sm md:text-base mb-6">MŪSU PARTNERI</div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 justify-items-center items-center">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8 justify-items-center items-center">
                   {[
-                    { logo: swedbankLogo, name: 'Swedbank' },
-                    { logo: jagermeisterLogo, name: 'Jägermeister' },
-                    { logo: ghettoGamesLogo, name: 'Ghetto Games' },
-                    { logo: vefLogo, name: 'VEF' },
-                    { logo: ventspilsNaftaLogo, name: 'Ventspils Nafta' },
-                    { logo: theBronxsLogo, name: 'The Bronxs' },
-                    { logo: dzinatrsLogo, name: 'Dzinātŗs' },
-                    { logo: spilvaLogo, name: 'Spilva' }
+                    { logo: tioKaussLogo, name: 'Tio Kauss' },
+                    { logo: straumeLogo, name: 'Straume' },
+                    { logo: spiediensLogo, name: 'Spiediens' },
+                    { logo: siguldaLogo, name: 'Sigulda' },
+                    { logo: rigaLogo, name: 'Riga' },
+                    { logo: scaniaLogo, name: 'Scania' },
+                    { logo: positvisLogo, name: 'Positvis' },
+                    { logo: lmtLogo, name: 'LMT' },
+                    { logo: investmentAgencyLogo, name: 'Investment Agency' },
+                    { logo: idejuKaussLogo, name: 'Ideju Kauss' },
+                    { logo: ikeaLogo, name: 'IKEA' },
+                    { logo: feeLogo, name: 'Fee' },
+                    { logo: dienasBiznessLogo, name: 'Dienas Bizness' },
+                    { logo: theBronxsLogo, name: 'The Bronxs' }
                   ].map((partner, index) => (
                     <div 
                       key={index} 
@@ -468,6 +480,16 @@ function MainPage() {
                       <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                     </svg>
                   </a>
+                  <a 
+                    href="https://open.spotify.com/artist/0bnglFd0oM0O6ZUChuwms2" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:opacity-80 transition-opacity"
+                  >
+                    <svg className="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -479,17 +501,17 @@ function MainPage() {
       {/* Team Member Modal */}
       {isModalOpen && selectedMember && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-4xl overflow-hidden flex flex-col md:flex-row shadow-2xl">
+          <div className="bg-white w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl">
             {/* Left: Image */}
-            <div className="md:w-auto w-full flex items-center justify-start">
+            <div className="md:w-auto w-full flex items-center justify-start md:max-h-[90vh]">
               <img 
                 src={selectedMember.fullImage} 
                 alt={selectedMember.name} 
-                className="max-h-[80vh] w-auto h-auto object-contain"
+                className="max-h-[40vh] md:max-h-[90vh] w-auto h-auto object-contain"
               />
             </div>
             {/* Right: Info */}
-            <div className="flex-1 w-full min-w-[320px] md:min-w-[400px] bg-[#FFF7F3] flex flex-col justify-center p-8 md:p-12 relative">
+            <div className="flex-1 w-full min-w-[320px] md:min-w-[400px] bg-[#FFF7F3] flex flex-col justify-start p-6 md:p-12 relative overflow-y-auto max-h-[50vh] md:max-h-[90vh]">
               <button 
                 onClick={closeModal}
                 className="absolute top-4 right-4 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-opacity z-10"
@@ -498,8 +520,8 @@ function MainPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">{selectedMember.name}</h2>
-              <div className="text-lg md:text-2xl text-gray-700 leading-relaxed whitespace-pre-line">{selectedMember.description}</div>
+              <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 text-black pr-12">{selectedMember.name}</h2>
+              <div className="text-base md:text-2xl text-gray-700 leading-relaxed whitespace-pre-line pb-4">{selectedMember.description}</div>
             </div>
           </div>
         </div>
