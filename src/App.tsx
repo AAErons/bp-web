@@ -369,7 +369,7 @@ function MainPage() {
                   { company: 'IDEJU INSTITŪTS', logo: 'IDEJU INSTITŪTS' }
                 ].map((item, index) => (
                   <div key={index} className="bg-white border border-black p-6 md:p-8 relative">
-                    <div className="absolute -top-4 left-6 bg-white px-4 font-bold text-sm md:text-base">
+                    <div className="absolute -top-4 left-6 bg-black text-white px-4 font-bold text-sm md:text-base">
                       {item.logo}
                     </div>
                     <div className="text-sm md:text-base lg:text-lg leading-relaxed mb-6">
@@ -379,10 +379,7 @@ function MainPage() {
                         </>
                       ) : index === 1 ? (
                         <>
-                          — Ar cieņu,<br />
-                          Karina Bērziņa<br />
-                          VSIA Latvijas Koncerti<br />
-                          Izglītības programmas vadītāja, producente
+                          "2025.gada 20.martā VEF KP izskanēja VSIA "Latvijas Koncerti" veidotā cikla "Mūzika Tev" pēdējais koncerts 7.-12.klasēm. Parasti šo koncertu veidojam demokrātiskāku, aicinot tajā piedalīties solistus un grupas, kuru muzikālie žanri un izpausmes mūsu jauniešiem ir tuvāki. Pirmo reizi iepazinām "Brīvrunu projektu", grupu, kam bija jānoslēdz visa koncertprogramma. Patiess bija mūsu- koncertu rīkotāju un, protams, arī publikas atzinums- "Brīvrunu projekts" bija tieši tas, kas jauniešiem bija vajadzīgs. Grupas uzstāšanās bija tik aizrautīga, tik enerģijas pārpilna, ka nav šaubu- visi koncerta apmeklētāji aizgāja no koncerta absolūti uzlādēti. Pārsteidz ne tikai viņu lieliskās repošanas prasmes, elektronikas izmantojums, bet arī asprātība un humors savos priekšnesumos iesaistot jauniešus no klausītāju rindām. Īpaši gribētos izcelt arī "Brīvrunu projekta" dalībnieku pieklājību, vienkāršību un sirsnību saskarē ar mums, koncerta veidotājiem. Noteikti pie izdevības turpināsim sadarbību ar "Brīvrunu projektu" arī nākotnē"
                         </>
                       ) : (
                         '"Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai."'
