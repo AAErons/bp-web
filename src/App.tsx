@@ -19,7 +19,7 @@ import abraSmall from './assets/team/small/abra_small.jpg';
 import abraFull from './assets/team/full/abra_full.jpg';
 import birchSmall from './assets/team/small/birch_small.jpg';
 import birchFull from './assets/team/full/birch_full.jpg';
-import theBronxsLogo from './assets/partners/thebronxs.jpeg';
+import swedbankLogo from './assets/partners/swedbank.png';
 import tioKaussLogo from './assets/partners/tio-kauss.png';
 import straumeLogo from './assets/partners/straume.jpeg';
 import spiediensLogo from './assets/partners/spiediens.png';
@@ -37,6 +37,7 @@ import publicConcert from './assets/howItWorks/public.jpg';
 import closedEvent from './assets/howItWorks/closed.jpg';
 import presentation from './assets/howItWorks/presentation.jpg';
 import heroBg from './assets/title.jpg';
+import theBronxsLogo from './assets/partners/thebronxs.jpeg';
 
 // Define TeamMember type
 interface TeamMember {
@@ -364,7 +365,7 @@ function MainPage() {
                 {[
                   { company: 'GULBENES NOVADA JAUNIEŠU CENTRS "BĀZE"', logo: 'GULBENES NOVADA JAUNIEŠU CENTRS "BĀZE"' },
                   { company: 'VSIA "LATVIJAS KONCERTI"', logo: 'VSIA "LATVIJAS KONCERTI"' },
-                  { company: 'LĪVĀNI', logo: 'LĪVĀNI' },
+                  { company: 'SWEDBANK', logo: 'SWEDBANK' },
                   { company: 'IDEJU INSTITŪTS', logo: 'IDEJU INSTITŪTS' }
                 ].map((item, index) => (
                   <div key={index} className="bg-white border border-black p-6 md:p-8 relative">
@@ -423,7 +424,8 @@ function MainPage() {
                     { logo: ikeaLogo, name: 'IKEA' },
                     { logo: feeLogo, name: 'Fee' },
                     { logo: dienasBiznessLogo, name: 'Dienas Bizness' },
-                    { logo: theBronxsLogo, name: 'The Bronxs' }
+                    { logo: theBronxsLogo, name: 'The Bronxs' },
+                    { logo: swedbankLogo, name: 'Swedbank' }
                   ].map((partner, index) => (
                     <div 
                       key={index} 
