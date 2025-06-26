@@ -12,9 +12,6 @@ import AdminLogin from './pages/AdminLogin';
 import GalleryManagement from './pages/GalleryManagement';
 import GalleryView from './components/GalleryView';
 import bpLogo from './assets/bp_logo.png';
-import publicConcert from './assets/howItWorks/public.jpg';
-import closedEvent from './assets/howItWorks/closed.jpg';
-import presentation from './assets/howItWorks/presentation.jpg';
 import heroBg from './assets/title.jpg';
 
 // Define TeamMember type
@@ -144,7 +141,7 @@ function MainPage() {
   const { aboutText, isLoading: isLoadingAboutText } = useAbout();
   const { testimonials } = useTestimonials();
   const { partners } = usePartners();
-  const { isLoading: isLoadingPiedavajums } = usePiedavajums();
+  const { piedavajumsSections, piedavajumsHeader, isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRefs = {
@@ -247,25 +244,24 @@ function MainPage() {
                 style={{ display: 'block' }}
               />
               <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center -mb-2 md:mb-12 z-10 px-4">
-                <h1 
-                  className="font-extrabold uppercase text-white text-center bg-black bg-opacity-50 px-4 py-3 md:px-8 md:py-4 rounded-lg shadow-2xl drop-shadow-[0_8px_32px_rgba(0,0,0,0.9)] mb-2 md:mb-6"
-                  style={{
-                    fontSize: 'clamp(1rem, 3vw + 0.5rem, 6rem)',
-                    lineHeight: '1.1'
-                  }}
-                >
-                  TAS IR BRĪVRUNU KAS?
-                </h1>
-                <button
-                  className="bg-black text-white uppercase font-semibold tracking-wider mt-1 md:mt-2 shadow-lg"
-                  style={{
-                    fontSize: 'clamp(0.75rem, 1.2vw + 0.3rem, 1.125rem)',
-                    padding: 'clamp(0.75rem, 1.2vw + 0.4rem, 1rem) clamp(1.5rem, 2vw + 0.8rem, 2rem)'
-                  }}
-                  onClick={() => navigate('/demo/piedavajums')}
-                >
-                  UZZINĀT VAIRĀK
-                </button>
+                <div className="bg-black/70 px-2 md:px-4 py-3 md:py-5 flex flex-col items-center">
+                  <h1 
+                    className="font-extrabold uppercase text-white text-center text-3xl md:text-6xl tracking-tight"
+                    style={{
+                      lineHeight: '1.1',
+                      letterSpacing: '-0.03em',
+                      wordSpacing: '0.2em'
+                    }}
+                  >
+                    TAS IR BRĪVRUNU KAS?
+                  </h1>
+                  <span
+                    className="block text-white text-base md:text-xl font-semibold uppercase tracking-wider mt-2 cursor-pointer hover:underline"
+                    onClick={() => navigate('/demo/piedavajums')}
+                  >
+                    UZZINĀT VAIRĀK
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -355,7 +351,7 @@ function MainPage() {
                   <div className="w-full border-t border-black"></div>
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-[#FAF8F8] px-4 text-sm md:text-base font-medium">Seko mums</span>
+                  <span className="bg-white px-4 text-sm md:text-base font-medium">Seko mums</span>
                 </div>
               </div>
 
@@ -367,7 +363,7 @@ function MainPage() {
                     rel="noopener noreferrer"
                     className="hover:opacity-80 transition-opacity"
                   >
-                    <svg className="w-10 h-10 md:w-12 md:h-12 text-[#B3A066]" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="w-10 h-10 md:w-12 md:h-12 text-[#CCB399]" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                     </svg>
                   </a>
@@ -377,7 +373,7 @@ function MainPage() {
                     rel="noopener noreferrer"
                     className="hover:opacity-80 transition-opacity"
                   >
-                    <svg className="w-10 h-10 md:w-12 md:h-12 text-[#B3A066]" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="w-10 h-10 md:w-12 md:h-12 text-[#CCB399]" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                   </a>
@@ -387,7 +383,7 @@ function MainPage() {
                     rel="noopener noreferrer"
                     className="hover:opacity-80 transition-opacity"
                   >
-                    <svg className="w-10 h-10 md:w-12 md:h-12 text-[#B3A066]" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="w-10 h-10 md:w-12 md:h-12 text-[#CCB399]" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                     </svg>
                   </a>
@@ -397,7 +393,7 @@ function MainPage() {
                     rel="noopener noreferrer"
                     className="hover:opacity-80 transition-opacity"
                   >
-                    <svg className="w-10 h-10 md:w-12 md:h-12 text-[#B3A066]" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="w-10 h-10 md:w-12 md:h-12 text-[#CCB399]" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
                     </svg>
                   </a>
@@ -414,15 +410,18 @@ function MainPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl">
             {/* Left: Image */}
-            <div className="md:w-auto w-full flex items-center justify-center md:justify-start md:max-h-[90vh]">
+            <div className="w-full md:w-1/2 h-64 md:h-full">
               <img 
                 src={selectedMember.fullImage} 
                 alt={selectedMember.name} 
-                className="max-h-[40vh] md:max-h-[90vh] w-auto h-auto object-contain"
+                className="w-full h-full object-contain"
               />
             </div>
+            {/* Separator line - horizontal for mobile, vertical for desktop */}
+            <div className="block md:hidden w-full h-px bg-black"></div>
+            <div className="hidden md:block w-px bg-black"></div>
             {/* Right: Info */}
-            <div className="flex-1 w-full min-w-[320px] md:min-w-[400px] bg-[#FFF7F3] flex flex-col justify-start p-6 md:p-12 relative overflow-y-auto max-h-[50vh] md:max-h-[90vh]">
+            <div className="flex-1 w-full min-w-[320px] md:min-w-[400px] bg-[#FFF7F3] flex flex-col justify-start p-6 md:p-12 relative overflow-y-auto max-h-[calc(90vh-12rem)] md:max-h-[90vh]">
               <button 
                 onClick={closeModal}
                 className="absolute top-4 right-4 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-opacity z-10"
@@ -432,6 +431,7 @@ function MainPage() {
                 </svg>
               </button>
               <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 text-black pr-12">{selectedMember.name}</h2>
+              <div className="border-t border-black mb-4 md:mb-6"></div>
               <div className="text-base md:text-2xl text-gray-700 leading-relaxed whitespace-pre-line pb-4">{selectedMember.description}</div>
             </div>
           </div>
@@ -478,6 +478,7 @@ function PiedavajumsPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeSection] = useState('piedavajums');
+  const { piedavajumsSections, piedavajumsHeader, addPiedavajumsSection, updatePiedavajumsSection, deletePiedavajumsSection, updatePiedavajumsHeader, reorderPiedavajumsSections, movePiedavajumsSection, isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -528,110 +529,81 @@ function PiedavajumsPage() {
     navigate(`/demo#${section}`);
   };
 
+  if (isLoadingPiedavajums) {
+    return (
+      <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#CCB399]"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full min-h-screen text-black flex flex-col">
       <Navigation activeSection={activeSection} onMenuClick={handleMenuClick} location={location} />
       <main className="flex-grow pt-20">
         <section className="min-h-screen py-20">
           <div className="w-full max-w-4xl mx-auto mb-8 mt-4 px-4">
-            <h2 className="text-center text-xl md:text-2xl font-bold mb-4">TAS IR "BRĪVRUNU PROJEKTS"!</h2>
+            <h2 className="text-center text-xl md:text-2xl lg:text-3xl font-black mb-4">
+              {piedavajumsHeader?.header || 'TAS IR "BRĪVRUNU PROJEKTS"!'}
+            </h2>
             <div className="text-center text-base md:text-lg lg:text-xl leading-relaxed space-y-3">
-              <p>
-                Mūsu arsenālā ir vairāk nekā 15 dažādas idejas, kā pāris minūtēs jūsu
-                pasākums var iegūt unikālu skanējumu un radīt apmeklētājiem emocijas.
+              <p className="font-bold">
+                {piedavajumsHeader?.introParagraph1 || 
+                  'Mūsu arsenālā ir vairāk nekā 15 dažādas idejas, kā pāris minūtēs jūsu pasākums var iegūt unikālu skanējumu un radīt apmeklētājiem emocijas.'
+                }
               </p>
-              <p>
-                Mēs spējam gan izveidot notikumu no nulles, gan izcelt un paspilgtināt
-                jūsu ideju vai stāstu. Tāpēc mūs atkārtoti aicina uzstāties pilsētas svētkos,
-                korporatīvās ballēs, festivālos un citos notikumos, jo katra performance ir
-                vienreizēja un unikāla.
+              <p className="font-bold">
+                {piedavajumsHeader?.introParagraph2 || 
+                  'Mēs spējam gan izveidot notikumu no nulles, gan izcelt un paspilgtināt jūsu ideju vai stāstu. Tāpēc mūs atkārtoti aicina uzstāties pilsētas svētkos, korporatīvās ballēs, festivālos un citos notikumos, jo katra performance ir vienreizēja un unikāla.'
+                }
               </p>
             </div>
           </div>
 
           <div className="w-full max-w-6xl mx-auto space-y-16 px-4">
-            {/* Section 1 */}
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden">
-                <img 
-                  src={publicConcert} 
-                  alt="Publisks koncerts" 
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
+            {piedavajumsSections.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-gray-500 text-lg">No piedavajums sections available</div>
               </div>
-              <div className="w-full md:w-1/2 space-y-4">
-                <div className="border-b border-black pb-2">
-                  <h3 className="text-lg md:text-xl font-bold">PUBLISKS KONCERTS</h3>
-                  <div className="text-sm md:text-base font-medium text-gray-700">15 I 30 I 45 minūtes</div>
+            ) : (
+              piedavajumsSections.map((section, index) => (
+                <div 
+                  key={section._id} 
+                  className={`flex flex-col md:flex-row gap-8 items-start ${
+                    index % 2 === 1 ? 'md:flex-row-reverse' : ''
+                  }`}
+                >
+                  <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden" style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)' }}>
+                    <img 
+                      src={section.image} 
+                      alt={section.title} 
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="w-full md:w-1/2 space-y-4">
+                    <div>
+                      <div className="inline-block bg-black text-white px-3 py-2">
+                        <h3 className="text-xl md:text-2xl font-bold">{section.title}</h3>
+                      </div>
+                      {section.duration && (
+                        <div className="text-base md:text-lg font-medium text-gray-700 mt-2">{section.duration}</div>
+                      )}
+                    </div>
+                    <p className="text-base md:text-lg leading-relaxed">
+                      {section.description}
+                    </p>
+                    {section.additionalTitle && section.additionalDescription && (
+                      <div>
+                        <h4 className="font-bold text-sm md:text-base mb-1">{section.additionalTitle}</h4>
+                        <p className="text-sm md:text-base leading-relaxed">
+                          {section.additionalDescription}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <p className="text-sm md:text-base leading-relaxed">
-                  Garākā uzstāšanās forma no 15 līdz 45 minūtēm. Tā ietver vairāk nekā 10
-                  dažādas repa improvizācijas etīdes, kas kopumā veido pilnvērtīgu
-                  koncerta pieredzi.
-                </p>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-bold text-sm md:text-base mb-2">PAPILDUS PIEREDZE – REPA IMPROVIZĀCIJAS DARBNĪCA</h4>
-                  <p className="text-sm md:text-base leading-relaxed">
-                    60-90 minūšu laikā dalībniekiem ir iespēja uzzināt un praktiski pamēģināt
-                    iztēles iekustināšanas, dīdžejošanas un repa vingrinājumus, kas ir svarīgi,
-                    lai veidotu brīvrunu. Iegūtās prasmes noder ikdienas dzīvē, ne tikai repā.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Section 2 */}
-            <div className="flex flex-col md:flex-row-reverse gap-8 items-start">
-              <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden">
-                <img 
-                  src={closedEvent} 
-                  alt="Notikums slēgtā vidē" 
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <div className="w-full md:w-1/2 space-y-4">
-                <div className="border-b border-black pb-2">
-                  <h3 className="text-lg md:text-xl font-bold">NOTIKUMS SLĒGTĀ VIDĒ</h3>
-                  <div className="text-sm md:text-base font-medium text-gray-700">15 I 20 minūtes</div>
-                </div>
-                <p className="text-sm md:text-base leading-relaxed">
-                  Īpaši izveidota programma no BP uzdevumu "zelta repertuāra", kas 15 līdz
-                  20 minūšu šovā iekustina un izklaidē, radot neaizmirstamas emocijas. Šī ir
-                  iespēja priekšnesumā iesaistīt īpašus cilvēkus, produktus vai
-                  pakalpojumus.
-                </p>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-bold text-sm md:text-base mb-2">ĻOTI PERSONĪGA PIEREDZE – RAKSTĪTI TEKSTI</h4>
-                  <p className="text-sm md:text-base leading-relaxed">
-                    Brīvrunas improvizācija ir gaisīga, taču reizēm ir nepieciešama īpaša
-                    detalizācija, lai kādu cilvēku, produktu vai pakalpojumu noliktu pasākuma
-                    centrā. Šādos gadījumos ir iespēja sagatavot iepriekš iestudētu
-                    priekšnesumu ar iepriekš sagatavotu tekstu.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Section 3 */}
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden">
-                <img 
-                  src={presentation} 
-                  alt="Produktu vai pakalpojumu popularizēšana" 
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <div className="w-full md:w-1/2 space-y-4">
-                <div className="border-b border-black pb-2">
-                  <h3 className="text-lg md:text-xl font-bold">PRODUKTU VAI PAKALPOJUMU POPULARIZĒŠANA</h3>
-                </div>
-                <p className="text-sm md:text-base leading-relaxed">
-                  Ja produkts vai pakalpojums saskan ar BP komandas vērtībām, esam
-                  atvērti arī reklāmas sadarbībām, piedāvājot teksta rakstīšanas
-                  pakalpojumu, audio ierakstīšanu, kā arī BP dalībnieku izmantošanu saturā.
-                </p>
-              </div>
-            </div>
+              ))
+            )}
           </div>
 
           {/* Contact Form */}
@@ -753,24 +725,31 @@ function ContentManagement() {
   const { aboutText, updateAboutText } = useAbout();
   const { testimonials, addTestimonial, updateTestimonial, deleteTestimonial } = useTestimonials();
   const { partners, addPartner, updatePartner, deletePartner } = usePartners();
-  const { piedavajumsSections, addPiedavajumsSection, updatePiedavajumsSection, deletePiedavajumsSection, isLoading: isLoadingPiedavajums } = usePiedavajums();
+  const { piedavajumsSections, piedavajumsHeader, addPiedavajumsSection, updatePiedavajumsSection, deletePiedavajumsSection, updatePiedavajumsHeader, reorderPiedavajumsSections, movePiedavajumsSection, isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [activeTab, setActiveTab] = useState('team');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [localAboutText, setLocalAboutText] = useState(aboutText);
-  // const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const sectionRefs = {
-  //   hero: useRef<HTMLDivElement>(null),
-  //   about: useRef<HTMLDivElement>(null),
-  //   atsauksmes: useRef<HTMLDivElement>(null)
-  // };
+  const [localPiedavajumsHeader, setLocalPiedavajumsHeader] = useState(piedavajumsHeader?.header || 'TAS IR "BRĪVRUNU PROJEKTS"!');
+  const [localPiedavajumsIntro, setLocalPiedavajumsIntro] = useState([
+    piedavajumsHeader?.introParagraph1 || 'Mūsu arsenālā ir vairāk nekā 15 dažādas idejas, kā pāris minūtēs jūsu pasākums var iegūt unikālu skanējumu un radīt apmeklētājiem emocijas.',
+    piedavajumsHeader?.introParagraph2 || 'Mēs spējam gan izveidot notikumu no nulles, gan izcelt un paspilgtināt jūsu ideju vai stāstu. Tāpēc mūs atkārtoti aicina uzstāties pilsētas svētkos, korporatīvās ballēs, festivālos un citos notikumos, jo katra performance ir vienreizēja un unikāla.'
+  ]);
+  const [isReordering, setIsReordering] = useState(false);
 
   // Update local state when context changes
   useEffect(() => {
     setLocalAboutText(aboutText);
   }, [aboutText]);
+
+  useEffect(() => {
+    setLocalPiedavajumsHeader(piedavajumsHeader?.header || 'TAS IR "BRĪVRUNU PROJEKTS"!');
+    setLocalPiedavajumsIntro([
+      piedavajumsHeader?.introParagraph1 || 'Mūsu arsenālā ir vairāk nekā 15 dažādas idejas, kā pāris minūtēs jūsu pasākums var iegūt unikālu skanējumu un radīt apmeklētājiem emocijas.',
+      piedavajumsHeader?.introParagraph2 || 'Mēs spējam gan izveidot notikumu no nulles, gan izcelt un paspilgtināt jūsu ideju vai stāstu. Tāpēc mūs atkārtoti aicina uzstāties pilsētas svētkos, korporatīvās ballēs, festivālos un citos notikumos, jo katra performance ir vienreizēja un unikāla.'
+    ]);
+  }, [piedavajumsHeader]);
 
   // Team Member Form State
   const [showTeamMemberForm, setShowTeamMemberForm] = useState(false);
@@ -818,13 +797,6 @@ function ContentManagement() {
   });
   const [selectedPiedavajumsImage, setSelectedPiedavajumsImage] = useState<File | null>(null);
   const piedavajumsImageInputRef = useRef<HTMLInputElement>(null);
-
-  // Piedavajums State
-  const [piedavajumsHeader, setPiedavajumsHeader] = useState('TAS IR "BRĪVRUNU PROJEKTS"!');
-  const [piedavajumsIntro, setPiedavajumsIntro] = useState([
-    'Mūsu arsenālā ir vairāk nekā 15 dažādas idejas, kā pāris minūtēs jūsu pasākums var iegūt unikālu skanējumu un radīt apmeklētājiem emocijas.',
-    'Mēs spējam gan izveidot notikumu no nulles, gan izcelt un paspilgtināt jūsu ideju vai stāstu. Tāpēc mūs atkārtoti aicina uzstāties pilsētas svētkos, korporatīvās ballēs, festivālos un citos notikumos, jo katra performance ir vienreizēja un unikāla.'
-  ]);
 
   const handleLogout = () => {
     logout();
@@ -888,6 +860,21 @@ function ContentManagement() {
       } catch (error) {
         console.error('Error saving about text:', error);
         alert('Failed to save about text');
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else if (section === 'Piedavajums header and intro') {
+      try {
+        setIsSubmitting(true);
+        await updatePiedavajumsHeader({
+          header: localPiedavajumsHeader,
+          introParagraph1: localPiedavajumsIntro[0],
+          introParagraph2: localPiedavajumsIntro[1]
+        });
+        alert('Piedavajums header and intro saved successfully!');
+      } catch (error) {
+        console.error('Error saving piedavajums header:', error);
+        alert('Failed to save piedavajums header and intro');
       } finally {
         setIsSubmitting(false);
       }
@@ -1214,6 +1201,21 @@ function ContentManagement() {
   const handleSavePiedavajums = async () => {
     try {
       setUploadError(null);
+      
+      // Validate required fields
+      if (!piedavajumsForm.title.trim()) {
+        setUploadError('Title is required');
+        return;
+      }
+      if (!piedavajumsForm.description.trim()) {
+        setUploadError('Description is required');
+        return;
+      }
+      if (!piedavajumsForm.image && !selectedPiedavajumsImage) {
+        setUploadError('Image is required');
+        return;
+      }
+      
       setIsSubmitting(true);
       
       let imageUrl = piedavajumsForm.image;
@@ -1226,11 +1228,11 @@ function ContentManagement() {
       }
 
       const sectionData = {
-        title: piedavajumsForm.title,
-        duration: piedavajumsForm.duration,
-        description: piedavajumsForm.description,
-        additionalTitle: piedavajumsForm.additionalTitle,
-        additionalDescription: piedavajumsForm.additionalDescription,
+        title: piedavajumsForm.title.trim(),
+        duration: piedavajumsForm.duration.trim(),
+        description: piedavajumsForm.description.trim(),
+        additionalTitle: piedavajumsForm.additionalTitle.trim(),
+        additionalDescription: piedavajumsForm.additionalDescription.trim(),
         image: imageUrl
       };
 
@@ -1275,6 +1277,18 @@ function ContentManagement() {
     });
     setSelectedPiedavajumsImage(null);
     setUploadError(null);
+  };
+
+  const handleMovePiedavajums = async (id: string, direction: 'up' | 'down') => {
+    try {
+      setIsReordering(true);
+      await movePiedavajumsSection(id, direction);
+    } catch (error) {
+      console.error('Error moving piedavajums section:', error);
+      alert('Failed to move piedavajums section');
+    } finally {
+      setIsReordering(false);
+    }
   };
 
   const renderTeamMembers = () => (
@@ -1772,8 +1786,8 @@ function ContentManagement() {
             <label className="block text-sm font-medium mb-2">Header Text</label>
             <input
               type="text"
-              value={piedavajumsHeader}
-              onChange={(e) => setPiedavajumsHeader(e.target.value)}
+              value={localPiedavajumsHeader}
+              onChange={(e) => setLocalPiedavajumsHeader(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-md"
               placeholder="Enter header text"
             />
@@ -1782,8 +1796,8 @@ function ContentManagement() {
           <div>
             <label className="block text-sm font-medium mb-2">Introduction Paragraph 1</label>
             <textarea
-              value={piedavajumsIntro[0]}
-              onChange={(e) => setPiedavajumsIntro(prev => 
+              value={localPiedavajumsIntro[0]}
+              onChange={(e) => setLocalPiedavajumsIntro(prev => 
                 prev.map((text, i) => i === 0 ? e.target.value : text)
               )}
               className="w-full h-20 p-2 border border-gray-300 rounded-md"
@@ -1794,8 +1808,8 @@ function ContentManagement() {
           <div>
             <label className="block text-sm font-medium mb-2">Introduction Paragraph 2</label>
             <textarea
-              value={piedavajumsIntro[1]}
-              onChange={(e) => setPiedavajumsIntro(prev => 
+              value={localPiedavajumsIntro[1]}
+              onChange={(e) => setLocalPiedavajumsIntro(prev => 
                 prev.map((text, i) => i === 1 ? e.target.value : text)
               )}
               className="w-full h-20 p-2 border border-gray-300 rounded-md"
@@ -1834,40 +1848,78 @@ function ContentManagement() {
             <div className="text-gray-500">No piedavajums sections found. Add your first section!</div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {piedavajumsSections.map((section) => (
-              <div key={section._id} className="border border-gray-200 rounded-lg p-4">
-                <div className="mb-3">
-                  <img 
-                    src={section.image} 
-                    alt={section.title} 
-                    className="w-full h-32 object-cover rounded" 
-                  />
+          <div className="space-y-4">
+            {piedavajumsSections.map((section, index) => (
+              <div key={section._id} className="border border-gray-200 rounded-lg p-4 flex items-start space-x-4">
+                {/* Order Controls */}
+                <div className="flex flex-col space-y-1">
+                  <button
+                    onClick={() => handleMovePiedavajums(section._id!, 'up')}
+                    disabled={index === 0 || isReordering}
+                    className={`p-1 rounded ${index === 0 || isReordering ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'}`}
+                    title="Move up"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleMovePiedavajums(section._id!, 'down')}
+                    disabled={index === piedavajumsSections.length - 1 || isReordering}
+                    className={`p-1 rounded ${index === piedavajumsSections.length - 1 || isReordering ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'}`}
+                    title="Move down"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
                 </div>
-                <h4 className="font-medium text-gray-900 text-sm mb-2 truncate">
-                  {section.title}
-                </h4>
-                {section.duration && (
-                  <p className="text-xs text-gray-500 mb-2">
-                    {section.duration}
-                  </p>
-                )}
-                <p className="text-sm text-gray-600 mb-3 line-clamp-3">
-                  {section.description}
-                </p>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => handleEditPiedavajums(section)}
-                    className="flex-1 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => section._id && handleDeletePiedavajums(section._id)}
-                    className="flex-1 bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
+
+                {/* Section Content */}
+                <div className="flex-1 flex space-x-4">
+                  <div className="w-24 h-24 flex-shrink-0">
+                    <img 
+                      src={section.image} 
+                      alt={section.title} 
+                      className="w-full h-full object-cover rounded" 
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-gray-900 text-sm mb-1 truncate">
+                          {section.title}
+                        </h4>
+                        {section.duration && (
+                          <p className="text-xs text-gray-500 mb-1">
+                            {section.duration}
+                          </p>
+                        )}
+                        <p className="text-sm text-gray-600 line-clamp-2">
+                          {section.description}
+                        </p>
+                        {section.additionalTitle && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            Additional: {section.additionalTitle}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex space-x-2 ml-4">
+                        <button
+                          onClick={() => handleEditPiedavajums(section)}
+                          className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => section._id && handleDeletePiedavajums(section._id)}
+                          className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -1886,7 +1938,7 @@ function ContentManagement() {
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Title</label>
+                  <label className="block text-sm font-medium mb-2">Title *</label>
                   <input
                     type="text"
                     value={piedavajumsForm.title}
@@ -1908,7 +1960,7 @@ function ContentManagement() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2">Description</label>
+                <label className="block text-sm font-medium mb-2">Description *</label>
                 <textarea
                   value={piedavajumsForm.description}
                   onChange={(e) => setPiedavajumsForm(prev => ({ ...prev, description: e.target.value }))}
@@ -1939,7 +1991,7 @@ function ContentManagement() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2">Image</label>
+                <label className="block text-sm font-medium mb-2">Image *</label>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <button
