@@ -751,21 +751,21 @@ function ContentManagement() {
   const { logout } = useAdmin();
   const { teamMembers, addTeamMember, updateTeamMember, deleteTeamMember, isLoading: isLoadingTeamMembers } = useTeam();
   const { aboutText, updateAboutText } = useAbout();
-  const { testimonials, addTestimonial, updateTestimonial, deleteTestimonial, isLoading: isLoadingTestimonials } = useTestimonials();
-  const { partners, addPartner, updatePartner, deletePartner, isLoading: isLoadingPartners } = usePartners();
+  const { testimonials, addTestimonial, updateTestimonial, deleteTestimonial } = useTestimonials();
+  const { partners, addPartner, updatePartner, deletePartner } = usePartners();
   const { piedavajumsSections, addPiedavajumsSection, updatePiedavajumsSection, deletePiedavajumsSection, isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [activeTab, setActiveTab] = useState('team');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [localAboutText, setLocalAboutText] = useState(aboutText);
-  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const sectionRefs = {
-    hero: useRef<HTMLDivElement>(null),
-    about: useRef<HTMLDivElement>(null),
-    atsauksmes: useRef<HTMLDivElement>(null)
-  };
+  // const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const sectionRefs = {
+  //   hero: useRef<HTMLDivElement>(null),
+  //   about: useRef<HTMLDivElement>(null),
+  //   atsauksmes: useRef<HTMLDivElement>(null)
+  // };
 
   // Update local state when context changes
   useEffect(() => {
