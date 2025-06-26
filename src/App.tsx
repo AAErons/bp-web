@@ -141,7 +141,7 @@ function MainPage() {
   const { aboutText, isLoading: isLoadingAboutText } = useAbout();
   const { testimonials } = useTestimonials();
   const { partners } = usePartners();
-  const { piedavajumsSections, piedavajumsHeader, isLoading: isLoadingPiedavajums } = usePiedavajums();
+  const { isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRefs = {
@@ -478,7 +478,7 @@ function PiedavajumsPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeSection] = useState('piedavajums');
-  const { piedavajumsSections, piedavajumsHeader, addPiedavajumsSection, updatePiedavajumsSection, deletePiedavajumsSection, updatePiedavajumsHeader, reorderPiedavajumsSections, movePiedavajumsSection, isLoading: isLoadingPiedavajums } = usePiedavajums();
+  const { piedavajumsSections, piedavajumsHeader, isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -725,7 +725,7 @@ function ContentManagement() {
   const { aboutText, updateAboutText } = useAbout();
   const { testimonials, addTestimonial, updateTestimonial, deleteTestimonial } = useTestimonials();
   const { partners, addPartner, updatePartner, deletePartner } = usePartners();
-  const { piedavajumsSections, piedavajumsHeader, addPiedavajumsSection, updatePiedavajumsSection, deletePiedavajumsSection, updatePiedavajumsHeader, reorderPiedavajumsSections, movePiedavajumsSection, isLoading: isLoadingPiedavajums } = usePiedavajums();
+  const { piedavajumsSections, piedavajumsHeader, addPiedavajumsSection, updatePiedavajumsSection, deletePiedavajumsSection, updatePiedavajumsHeader, movePiedavajumsSection, isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [activeTab, setActiveTab] = useState('team');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
