@@ -3,13 +3,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 // API base URL configuration
 const API_BASE_URL = 'https://bp-web-api.vercel.app';
 
-interface AboutText {
-  _id?: string;
-  text: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 interface AboutContextType {
   aboutText: string;
   isLoading: boolean;
