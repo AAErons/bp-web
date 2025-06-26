@@ -1,8 +1,10 @@
 import './index.css';
 import { useRef, useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { AdminProvider } from './contexts/AdminContext';
+import { AdminProvider, useAdmin } from './contexts/AdminContext';
 import { GalleryProvider, useGallery } from './contexts/GalleryContext';
+import { TeamProvider, useTeam } from './contexts/TeamContext';
+import { AboutProvider, useAbout } from './contexts/AboutContext';
 import AdminLogin from './pages/AdminLogin';
 import GalleryManagement from './pages/GalleryManagement';
 import GalleryView from './components/GalleryView';
@@ -162,6 +164,8 @@ function MainPage() {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState('hero');
   const { isLoading } = useGallery();
+  const { teamMembers, isLoading: isLoadingTeamMembers } = useTeam();
+  const { aboutText, isLoading: isLoadingAboutText } = useAbout();
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRefs = {
@@ -169,45 +173,6 @@ function MainPage() {
     about: useRef<HTMLDivElement>(null),
     atsauksmes: useRef<HTMLDivElement>(null)
   };
-
-  const teamMembers: TeamMember[] = [
-    { 
-      name: 'E.V.', 
-      description: '"Kreisais Krasts" biedrs, kurš prot performēt divās valodās: latviešu un angļu. Ne tikai harizmātisks ceremoniju meistars, bet arī skatuves magnēts, kas apvieno psiholoģijas gudrības ar skanīgām vārdu vārsmām.', 
-      smallImage: evSmall, 
-      fullImage: evFull 
-    },
-    { 
-      name: 'Zirnis', 
-      description: 'Divkartējs "Ghetto Games" brīvrunu batla "Štuka par bazaru" uzvarētājs. BP radošais dzinējs un pulksteņmeistars. Zirnim vienmēr ir plāns un pēc vārda kabatā nav jāmeklē, jo viņš spēj uzburt reālu frīstailu jebkurā laikā un vietā.', 
-      smallImage: zirnisSmall, 
-      fullImage: zirnisFull 
-    },
-    { 
-      name: 'JeeKaa', 
-      description: '"Kreisais Krasts" vecbiedrs ar aptuveni 20 gadu bagāžu brīvrunā! Viņa stils? Mierīga plūsma, asi joki, pašironija un spēja pielāgoties jebkādiem apstākļiem. No mazām skatuvēm līdz lielām hallēm - JeeKaa vienmēr ienes īstu vārdu spēles garšu!', 
-      smallImage: jeekaaSmall, 
-      fullImage: jeekaaFull 
-    },
-    { 
-      name: 'Sniegs', 
-      description: 'Latvijas brīvrunas scēnas lielāko pasākumu veidotājs un vadītājs, kurš arī pēc 25 gadiem brīvrunā joprojām to dara ar aizrautību. Pieredze, radošums un spēja uzrunāt savus vienaudžus ir Sniega stiprā puse un ieguvums pasākuma kopējam skanējumam.', 
-      smallImage: sniegsSmall, 
-      fullImage: sniegsFull 
-    },
-    { 
-      name: 'Abra', 
-      description: '"Brīvrunu Projekta" aizsācējs un četrkārtējs "Ghetto Games" brīvrunu battla "Štuka par bazaru" čempions. Abras superspēja ir brīvrunā izmantot improvizācijas teātrī gūto pieredzi, tādējādi apvienojot dažādas mākslas formas vienā un regulāri sniedzot radošus risinājumus "ārpus kastes".', 
-      smallImage: abraSmall, 
-      fullImage: abraFull 
-    },
-    { 
-      name: 'Birch Please', 
-      description: 'DJ un bītmeikeris ar 10 gadu pieredzi. BP aisbergs, kuru pasākumos var redzēt kā DJ, taču neredzamā daļa ir saklausāma priekšnesumos, jo katra iznāciena pavadījums ir Birch Please autordarbs. Improvizācija ir klātesoša arī Birch esencē - scratch, kas bagātina šovu.', 
-      smallImage: birchSmall, 
-      fullImage: birchFull 
-    },
-  ];
 
   // Handle menu clicks
   const handleMenuClick = (section: string) => {
@@ -275,7 +240,7 @@ function MainPage() {
     };
   }, []);
 
-  if (isLoading) {
+  if (isLoading || isLoadingTeamMembers || isLoadingAboutText) {
     return (
       <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#CCB399]"></div>
@@ -326,29 +291,35 @@ function MainPage() {
         <section ref={sectionRefs.about} className="min-h-screen py-20">
           <div className="w-full max-w-4xl mx-auto px-4">
             <div className="text-center mb-8 md:mb-12 max-w-4xl mx-auto text-lg md:text-xl lg:text-2xl leading-relaxed font-bold">
-            "Brīvrunu Projekts" ir pirmais un vienīgais repa improvizācijas kolektīvs Latvijā. Skatītāju ieteikumus, vidi un notikuma tematiku "Brīvrunu Projekts" pārvērš repa improvizācijas etīdēs, kas rada pacilājošas emocijas un pasākuma pievienoto vērtību. Astoņu gadu laikā izkoptie formāti uzrunā plašu auditoriju, neatkarīgi no vecuma vai izpratnes par repu.
+              {aboutText}
             </div>
             
             {/* Team Members Grid */}
             <div className="w-full max-w-6xl">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto">
-                {teamMembers.map((member, index) => (
-                  <div 
-                    key={index}
-                    className="flex flex-col items-center cursor-pointer group"
-                    onClick={() => handleMemberClick(member)}
-                  >
-                    <div className="relative w-36 h-36 sm:w-40 sm:h-40 md:w-56 md:h-56 mb-3 overflow-hidden">
-                      <img 
-                        src={member.smallImage}
-                        alt={member.name} 
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
+              {teamMembers.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-gray-500 text-lg">No team members available</div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto">
+                  {teamMembers.map((member) => (
+                    <div 
+                      key={member._id}
+                      className="flex flex-col items-center cursor-pointer group"
+                      onClick={() => handleMemberClick(member)}
+                    >
+                      <div className="relative w-36 h-36 sm:w-40 sm:h-40 md:w-56 md:h-56 mb-3 overflow-hidden">
+                        <img 
+                          src={member.smallImage}
+                          alt={member.name} 
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      </div>
+                      <span className="text-sm md:text-base text-center font-medium transition-colors duration-200 group-hover:font-bold group-hover:text-[#CCB399]">{member.name}</span>
                     </div>
-                    <span className="text-sm md:text-base text-center font-medium transition-colors duration-200 group-hover:font-bold group-hover:text-[#CCB399]">{member.name}</span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -379,7 +350,8 @@ function MainPage() {
                         </>
                       ) : index === 1 ? (
                         <>
-                          "2025.gada 20.martā VEF KP izskanēja VSIA "Latvijas Koncerti" veidotā cikla "Mūzika Tev" pēdējais koncerts 7.-12.klasēm. Parasti šo koncertu veidojam demokrātiskāku, aicinot tajā piedalīties solistus un grupas, kuru muzikālie žanri un izpausmes mūsu jauniešiem ir tuvāki. Pirmo reizi iepazinām "Brīvrunu projektu", grupu, kam bija jānoslēdz visa koncertprogramma. Patiess bija mūsu- koncertu rīkotāju un, protams, arī publikas atzinums- "Brīvrunu projekts" bija tieši tas, kas jauniešiem bija vajadzīgs. Grupas uzstāšanās bija tik aizrautīga, tik enerģijas pārpilna, ka nav šaubu- visi koncerta apmeklētāji aizgāja no koncerta absolūti uzlādēti. Pārsteidz ne tikai viņu lieliskās repošanas prasmes, elektronikas izmantojums, bet arī asprātība un humors savos priekšnesumos iesaistot jauniešus no klausītāju rindām. Īpaši gribētos izcelt arī "Brīvrunu projekta" dalībnieku pieklājību, vienkāršību un sirsnību saskarē ar mums, koncerta veidotājiem. Noteikti pie izdevības turpināsim sadarbību ar "Brīvrunu projektu" arī nākotnē"
+                          "2025.gada 20.martā VEF KP izskanēja VSIA "Latvijas Koncerti" veidotā cikla "Mūzika Tev" pēdējais koncerts 7.-12.klasēm. Parasti šo koncertu veidojam demokrātiskāku, aicinot tajā piedalīties solistus un grupas, kuru muzikālie žanri un izpausmes mūsu jauniešiem ir tuvāki. Pirmo reizi iepazinām "Brīvrunu projektu", grupu, kam bija jānoslēdz visa koncertprogramma. Patiess bija mūsu- koncertu rīkotāju un, protams, arī publikas atzinums- "Brīvrunu projekts" bija tieši tas, kas jauniešiem bija vajadzīgs. Grupas uzstāšanās bija tik aizrautīga, tik enerģijas pārpilna, ka nav šaubu- visi koncerta apmeklētāji aizgāja no koncerta absolūti uzlādēti. Pārsteidz ne tikai viņu lieliskās repošanas prasmes, elektronikas izmantojums, bet arī asprātība un humors savos priekšnesumos iesaistot jauniešus no klausītāju rindām. Īpaši gribētos izcelt arī "Brīvrunu projekta" dalībnieku pieklājību, vienkāršību un sirsnību saskarē ar mums, koncerta veidotājiem. Noteikti pie izdevības turpināsim sadarbību ar "Brīvrunu projektu" arī nākotnē',
+                          signature: 'Ar cieņu, Karina Bērziņa, VSIA Latvijas Koncerti, Izglītības programmas vadītāja, producente'
                         </>
                       ) : (
                         '"Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai."'
@@ -837,25 +809,1371 @@ function AppWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
+function ContentManagement() {
+  const navigate = useNavigate();
+  const { logout } = useAdmin();
+  const { teamMembers, addTeamMember, updateTeamMember, deleteTeamMember, isLoading: isLoadingTeamMembers } = useTeam();
+  const { aboutText, updateAboutText, isLoading: isLoadingAboutText } = useAbout();
+  const [activeTab, setActiveTab] = useState('team');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
+  const [localAboutText, setLocalAboutText] = useState(aboutText);
+
+  // Update local state when context changes
+  useEffect(() => {
+    setLocalAboutText(aboutText);
+  }, [aboutText]);
+
+  // Team Member Form State
+  const [showTeamMemberForm, setShowTeamMemberForm] = useState(false);
+  const [editingMember, setEditingMember] = useState<string | null>(null);
+  const [teamMemberForm, setTeamMemberForm] = useState({
+    name: '',
+    description: '',
+    smallImage: '',
+    fullImage: ''
+  });
+  const [selectedSmallImage, setSelectedSmallImage] = useState<File | null>(null);
+  const [selectedFullImage, setSelectedFullImage] = useState<File | null>(null);
+  const smallImageInputRef = useRef<HTMLInputElement>(null);
+  const fullImageInputRef = useRef<HTMLInputElement>(null);
+
+  // About Section Text State
+  // const [aboutText, setAboutText] = useState('"Brīvrunu Projekts" ir pirmais un vienīgais repa improvizācijas kolektīvs Latvijā. Skatītāju ieteikumus, vidi un notikuma tematiku "Brīvrunu Projekts" pārvērš repa improvizācijas etīdēs, kas rada pacilājošas emocijas un pasākuma pievienoto vērtību. Astoņu gadu laikā izkoptie formāti uzrunā plašu auditoriju, neatkarīgi no vecuma vai izpratnes par repu.');
+
+  // Testimonials State
+  const [testimonials, setTestimonials] = useState([
+    {
+      id: 1,
+      company: 'GULBENES NOVADA JAUNIEŠU CENTRS "BĀZE"',
+      testimonial: 'Sadarbība ar "Brīvrunu Projektu" mūsu pasākumā "Gada atsitiens 2024" ietvaros bija patiesi iedvesmojoša un profesionāla. Iepriekš izrunātas detaļas un velmes tika realizētas ar uzviju. Brīvrunu projekts mūs pārsteidza ar unikāliem un spēcīgiem tekstiem par visiem pasākuma nominantiem, ko viņi izpildīja savā īpašajā stilā – ar harismu, dinamiku un lielisku savstarpējo saspēli. Mūzika, enerģija un kustība – viss kopā radīja neaizmirstamu pieredzi. Skatitāji, nominanti, organizātori palika sajūma par "Brīvrunu projekta" izpildījumu. No sirds iesakām šo komandu arī citiem!',
+      signature: 'Cieņā, Valērija Stībele, Gulbenes novada jauniešu centrs "Bāze" vadītāja'
+    },
+    {
+      id: 2,
+      company: 'VSIA "LATVIJAS KONCERTI"',
+      testimonial: '2025.gada 20.martā VEF KP izskanēja VSIA "Latvijas Koncerti" veidotā cikla "Mūzika Tev" pēdējais koncerts 7.-12.klasēm. Parasti šo koncertu veidojam demokrātiskāku, aicinot tajā piedalīties solistus un grupas, kuru muzikālie žanri un izpausmes mūsu jauniešiem ir tuvāki. Pirmo reizi iepazinām "Brīvrunu projektu", grupu, kam bija jānoslēdz visa koncertprogramma. Patiess bija mūsu- koncertu rīkotāju un, protams, arī publikas atzinums- "Brīvrunu projekts" bija tieši tas, kas jauniešiem bija vajadzīgs. Grupas uzstāšanās bija tik aizrautīga, tik enerģijas pārpilna, ka nav šaubu- visi koncerta apmeklētāji aizgāja no koncerta absolūti uzlādēti. Pārsteidz ne tikai viņu lieliskās repošanas prasmes, elektronikas izmantojums, bet arī asprātība un humors savos priekšnesumos iesaistot jauniešus no klausītāju rindām. Īpaši gribētos izcelt arī "Brīvrunu projekta" dalībnieku pieklājību, vienkāršību un sirsnību saskarē ar mums, koncerta veidotājiem. Noteikti pie izdevības turpināsim sadarbību ar "Brīvrunu projektu" arī nākotnē',
+      signature: 'Ar cieņu, Karina Bērziņa, VSIA Latvijas Koncerti, Izglītības programmas vadītāja, producente'
+    },
+    {
+      id: 3,
+      company: 'SWEDBANK',
+      testimonial: 'Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai.',
+      signature: '— SWEDBANK'
+    },
+    {
+      id: 4,
+      company: 'IDEJU INSTITŪTS',
+      testimonial: 'Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai.',
+      signature: '— IDEJU INSTITŪTS'
+    }
+  ]);
+
+  // Testimonial Form State
+  const [showTestimonialForm, setShowTestimonialForm] = useState(false);
+  const [editingTestimonial, setEditingTestimonial] = useState<number | null>(null);
+  const [testimonialForm, setTestimonialForm] = useState({
+    company: '',
+    testimonial: '',
+    signature: ''
+  });
+
+  // Partners State
+  const [partners, setPartners] = useState([
+    { id: 1, name: 'Tio Kauss', logo: tioKaussLogo },
+    { id: 2, name: 'Straume', logo: straumeLogo },
+    { id: 3, name: 'Spiediens', logo: spiediensLogo },
+    { id: 4, name: 'Sigulda', logo: siguldaLogo },
+    { id: 5, name: 'Riga', logo: rigaLogo },
+    { id: 6, name: 'Scania', logo: scaniaLogo },
+    { id: 7, name: 'Positvis', logo: positvisLogo },
+    { id: 8, name: 'LMT', logo: lmtLogo },
+    { id: 9, name: 'Investment Agency', logo: investmentAgencyLogo },
+    { id: 10, name: 'Ideju Kauss', logo: idejuKaussLogo },
+    { id: 11, name: 'IKEA', logo: ikeaLogo },
+    { id: 12, name: 'Fee', logo: feeLogo },
+    { id: 13, name: 'Dienas Bizness', logo: dienasBiznessLogo },
+    { id: 14, name: 'The Bronxs', logo: theBronxsLogo },
+    { id: 15, name: 'Swedbank', logo: swedbankLogo }
+  ]);
+
+  // Partner Form State
+  const [showPartnerForm, setShowPartnerForm] = useState(false);
+  const [editingPartner, setEditingPartner] = useState<number | null>(null);
+  const [partnerForm, setPartnerForm] = useState({
+    name: '',
+    logo: ''
+  });
+
+  // Piedavajums Form State
+  const [showPiedavajumsForm, setShowPiedavajumsForm] = useState(false);
+  const [editingPiedavajums, setEditingPiedavajums] = useState<number | null>(null);
+  const [piedavajumsForm, setPiedavajumsForm] = useState({
+    title: '',
+    duration: '',
+    description: '',
+    additionalTitle: '',
+    additionalDescription: '',
+    image: ''
+  });
+
+  // Piedavajums State
+  const [piedavajumsHeader, setPiedavajumsHeader] = useState('TAS IR "BRĪVRUNU PROJEKTS"!');
+  const [piedavajumsIntro, setPiedavajumsIntro] = useState([
+    'Mūsu arsenālā ir vairāk nekā 15 dažādas idejas, kā pāris minūtēs jūsu pasākums var iegūt unikālu skanējumu un radīt apmeklētājiem emocijas.',
+    'Mēs spējam gan izveidot notikumu no nulles, gan izcelt un paspilgtināt jūsu ideju vai stāstu. Tāpēc mūs atkārtoti aicina uzstāties pilsētas svētkos, korporatīvās ballēs, festivālos un citos notikumos, jo katra performance ir vienreizēja un unikāla.'
+  ]);
+  const [piedavajumsSections, setPiedavajumsSections] = useState([
+    {
+      id: 1,
+      title: 'PUBLISKS KONCERTS',
+      duration: '15 I 30 I 45 minūtes',
+      description: 'Garākā uzstāšanās forma no 15 līdz 45 minūtēm. Tā ietver vairāk nekā 10 dažādas repa improvizācijas etīdes, kas kopumā veido pilnvērtīgu koncerta pieredzi.',
+      additionalTitle: 'PAPILDUS PIEREDZE – REPA IMPROVIZĀCIJAS DARBNĪCA',
+      additionalDescription: '60-90 minūšu laikā dalībniekiem ir iespēja uzzināt un praktiski pamēģināt iztēles iekustināšanas, dīdžejošanas un repa vingrinājumus, kas ir svarīgi, lai veidotu brīvrunu. Iegūtās prasmes noder ikdienas dzīvē, ne tikai repā.',
+      image: publicConcert
+    },
+    {
+      id: 2,
+      title: 'NOTIKUMS SLĒGTĀ VIDĒ',
+      duration: '15 I 20 minūtes',
+      description: 'Īpaši izveidota programma no BP uzdevumu "zelta repertuāra", kas 15 līdz 20 minūšu šovā iekustina un izklaidē, radot neaizmirstamas emocijas. Šī ir iespēja priekšnesumā iesaistīt īpašus cilvēkus, produktus vai pakalpojumus.',
+      additionalTitle: 'ĻOTI PERSONĪGA PIEREDZE – RAKSTĪTI TEKSTI',
+      additionalDescription: 'Brīvrunas improvizācija ir gaisīga, taču reizēm ir nepieciešama īpaša detalizācija, lai kādu cilvēku, produktu vai pakalpojumu noliktu pasākuma centrā. Šādos gadījumos ir iespēja sagatavot iepriekš iestudētu priekšnesumu ar iepriekš sagatavotu tekstu.',
+      image: closedEvent
+    },
+    {
+      id: 3,
+      title: 'PRODUKTU VAI PAKALPOJUMU POPULARIZĒŠANA',
+      duration: '',
+      description: 'Ja produkts vai pakalpojums saskan ar BP komandas vērtībām, esam atvērti arī reklāmas sadarbībām, piedāvājot teksta rakstīšanas pakalpojumu, audio ierakstīšanu, kā arī BP dalībnieku izmantošanu saturā.',
+      additionalTitle: '',
+      additionalDescription: '',
+      image: presentation
+    }
+  ]);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin');
+  };
+
+  const validateFile = (file: File): string | null => {
+    if (!file.type.startsWith('image/')) {
+      return `${file.name} is not an image file`;
+    }
+    if (file.size > 20 * 1024 * 1024) {
+      return `${file.name} is too large. Maximum size is 20MB`;
+    }
+    return null;
+  };
+
+  const uploadImage = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('imageFile', file);
+    
+    const res = await fetch('https://bp-web-api.vercel.app/api/images', {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!res.ok) {
+      if (res.status === 413) {
+        throw new Error(`File ${file.name} is too large. Maximum size is 20MB`);
+      } else if (res.status === 0) {
+        throw new Error('Network error: Unable to connect to the server. Please check your internet connection.');
+      } else {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.message || `Failed to upload ${file.name}: ${res.statusText}`);
+      }
+    }
+
+    const data = await res.json();
+    console.log('Cloudinary upload response:', data); // Debug log
+    
+    // Handle the actual response structure from your backend
+    if (data.imageUrl) {
+      return data.imageUrl;
+    } else if (data.url) {
+      return data.url;
+    } else if (data.secure_url) {
+      return data.secure_url;
+    } else if (data.public_id) {
+      // If we only get public_id, construct the URL
+      return `https://res.cloudinary.com/dqgrzx5yt/image/upload/${data.public_id}`;
+    } else {
+      throw new Error('Invalid response from image upload service');
+    }
+  };
+
+  const handleSave = async (section: string) => {
+    if (section === 'About text') {
+      try {
+        setIsSubmitting(true);
+        await updateAboutText(localAboutText);
+        alert('About text saved successfully!');
+      } catch (error) {
+        console.error('Error saving about text:', error);
+        alert('Failed to save about text');
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      setIsSubmitting(true);
+      // Simulate API call for other sections
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setIsSubmitting(false);
+      alert(`${section} saved successfully!`);
+    }
+  };
+
+  const handleAddTeamMember = () => {
+    setEditingMember(null);
+    setTeamMemberForm({
+      name: '',
+      description: '',
+      smallImage: '',
+      fullImage: ''
+    });
+    setSelectedSmallImage(null);
+    setSelectedFullImage(null);
+    setUploadError(null);
+    setShowTeamMemberForm(true);
+  };
+
+  const handleEditTeamMember = (member: any) => {
+    setEditingMember(member._id); // Use MongoDB _id instead of id
+    setTeamMemberForm({
+      name: member.name,
+      description: member.description,
+      smallImage: member.smallImage,
+      fullImage: member.fullImage
+    });
+    setSelectedSmallImage(null);
+    setSelectedFullImage(null);
+    setUploadError(null);
+    setShowTeamMemberForm(true);
+  };
+
+  const handleDeleteTeamMember = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this team member?')) {
+      try {
+        await deleteTeamMember(id);
+      } catch (error) {
+        console.error('Error deleting team member:', error);
+        alert('Failed to delete team member');
+      }
+    }
+  };
+
+  const handleSaveTeamMember = async () => {
+    try {
+      setUploadError(null);
+      setIsSubmitting(true);
+      
+      let smallImageUrl = teamMemberForm.smallImage;
+      let fullImageUrl = teamMemberForm.fullImage;
+
+      // Calculate total uploads needed
+      const totalUploads = (selectedSmallImage ? 1 : 0) + (selectedFullImage ? 1 : 0);
+      setUploadProgress({ current: 0, total: totalUploads });
+
+      console.log('Starting team member save process...');
+      console.log('Initial URLs - smallImage:', smallImageUrl, 'fullImage:', fullImageUrl);
+      console.log('Total uploads needed:', totalUploads);
+
+      // Upload new images if selected
+      if (selectedSmallImage) {
+        console.log('Uploading small image:', selectedSmallImage.name);
+        const error = validateFile(selectedSmallImage);
+        if (error) {
+          setUploadError(error);
+          setIsSubmitting(false);
+          return;
+        }
+        smallImageUrl = await uploadImage(selectedSmallImage);
+        console.log('Small image uploaded successfully:', smallImageUrl);
+        setUploadProgress(prev => ({ ...prev, current: prev.current + 1 }));
+      }
+
+      if (selectedFullImage) {
+        console.log('Uploading full image:', selectedFullImage.name);
+        const error = validateFile(selectedFullImage);
+        if (error) {
+          setUploadError(error);
+          setIsSubmitting(false);
+          return;
+        }
+        fullImageUrl = await uploadImage(selectedFullImage);
+        console.log('Full image uploaded successfully:', fullImageUrl);
+        setUploadProgress(prev => ({ ...prev, current: prev.current + 1 }));
+      }
+
+      const memberData = {
+        name: teamMemberForm.name,
+        description: teamMemberForm.description,
+        smallImage: smallImageUrl,
+        fullImage: fullImageUrl
+      };
+
+      console.log('Final member data to send:', memberData);
+
+      if (editingMember) {
+        // Update existing member
+        await updateTeamMember(editingMember, memberData);
+      } else {
+        // Add new member
+        await addTeamMember(memberData);
+      }
+
+      setShowTeamMemberForm(false);
+      setEditingMember(null);
+      setSelectedSmallImage(null);
+      setSelectedFullImage(null);
+      setUploadError(null);
+      if (smallImageInputRef.current) smallImageInputRef.current.value = '';
+      if (fullImageInputRef.current) fullImageInputRef.current.value = '';
+    } catch (error) {
+      console.error('Error saving team member:', error);
+      setUploadError(error instanceof Error ? error.message : 'Failed to save team member');
+    } finally {
+      setIsSubmitting(false);
+      setUploadProgress({ current: 0, total: 0 });
+    }
+  };
+
+  const handleCancelTeamMember = () => {
+    setShowTeamMemberForm(false);
+    setEditingMember(null);
+    setSelectedSmallImage(null);
+    setSelectedFullImage(null);
+    setUploadError(null);
+    if (smallImageInputRef.current) smallImageInputRef.current.value = '';
+    if (fullImageInputRef.current) fullImageInputRef.current.value = '';
+  };
+
+  const handleAddTestimonial = () => {
+    setEditingTestimonial(null);
+    setTestimonialForm({
+      company: '',
+      testimonial: '',
+      signature: ''
+    });
+    setShowTestimonialForm(true);
+  };
+
+  const handleEditTestimonial = (testimonial: any) => {
+    setEditingTestimonial(testimonial.id);
+    setTestimonialForm({
+      company: testimonial.company,
+      testimonial: testimonial.testimonial,
+      signature: testimonial.signature
+    });
+    setShowTestimonialForm(true);
+  };
+
+  const handleDeleteTestimonial = (id: number) => {
+    if (window.confirm('Are you sure you want to delete this testimonial?')) {
+      setTestimonials(prev => prev.filter(testimonial => testimonial.id !== id));
+    }
+  };
+
+  const handleSaveTestimonial = () => {
+    if (editingTestimonial) {
+      // Update existing testimonial
+      setTestimonials(prev => prev.map(testimonial => 
+        testimonial.id === editingTestimonial 
+          ? { ...testimonial, ...testimonialForm }
+          : testimonial
+      ));
+    } else {
+      // Add new testimonial
+      const newTestimonial = {
+        id: Math.max(...testimonials.map(t => t.id)) + 1,
+        ...testimonialForm
+      };
+      setTestimonials(prev => [...prev, newTestimonial]);
+    }
+    setShowTestimonialForm(false);
+    setEditingTestimonial(null);
+  };
+
+  const handleCancelTestimonial = () => {
+    setShowTestimonialForm(false);
+    setEditingTestimonial(null);
+  };
+
+  const handleAddPartner = () => {
+    setEditingPartner(null);
+    setPartnerForm({
+      name: '',
+      logo: ''
+    });
+    setShowPartnerForm(true);
+  };
+
+  const handleEditPartner = (partner: any) => {
+    setEditingPartner(partner.id);
+    setPartnerForm({
+      name: partner.name,
+      logo: partner.logo
+    });
+    setShowPartnerForm(true);
+  };
+
+  const handleDeletePartner = (id: number) => {
+    if (window.confirm('Are you sure you want to delete this partner?')) {
+      setPartners(prev => prev.filter(partner => partner.id !== id));
+    }
+  };
+
+  const handleSavePartner = () => {
+    if (editingPartner) {
+      // Update existing partner
+      setPartners(prev => prev.map(partner => 
+        partner.id === editingPartner 
+          ? { ...partner, ...partnerForm }
+          : partner
+      ));
+    } else {
+      // Add new partner
+      const newPartner = {
+        id: Math.max(...partners.map(p => p.id)) + 1,
+        ...partnerForm
+      };
+      setPartners(prev => [...prev, newPartner]);
+    }
+    setShowPartnerForm(false);
+    setEditingPartner(null);
+  };
+
+  const handleCancelPartner = () => {
+    setShowPartnerForm(false);
+    setEditingPartner(null);
+  };
+
+  const handleAddPiedavajums = () => {
+    setEditingPiedavajums(null);
+    setPiedavajumsForm({
+      title: '',
+      duration: '',
+      description: '',
+      additionalTitle: '',
+      additionalDescription: '',
+      image: ''
+    });
+    setShowPiedavajumsForm(true);
+  };
+
+  const handleEditPiedavajums = (section: any) => {
+    setEditingPiedavajums(section.id);
+    setPiedavajumsForm({
+      title: section.title,
+      duration: section.duration,
+      description: section.description,
+      additionalTitle: section.additionalTitle || '',
+      additionalDescription: section.additionalDescription || '',
+      image: section.image
+    });
+    setShowPiedavajumsForm(true);
+  };
+
+  const handleDeletePiedavajums = (id: number) => {
+    if (window.confirm('Are you sure you want to delete this piedavajums section?')) {
+      setPiedavajumsSections(prev => prev.filter(section => section.id !== id));
+    }
+  };
+
+  const handleSavePiedavajums = () => {
+    if (editingPiedavajums) {
+      // Update existing section
+      setPiedavajumsSections(prev => prev.map(section => 
+        section.id === editingPiedavajums 
+          ? { ...section, ...piedavajumsForm }
+          : section
+      ));
+    } else {
+      // Add new section
+      const newSection = {
+        id: Math.max(...piedavajumsSections.map(s => s.id)) + 1,
+        ...piedavajumsForm
+      };
+      setPiedavajumsSections(prev => [...prev, newSection]);
+    }
+    setShowPiedavajumsForm(false);
+    setEditingPiedavajums(null);
+  };
+
+  const handleCancelPiedavajums = () => {
+    setShowPiedavajumsForm(false);
+    setEditingPiedavajums(null);
+  };
+
+  const renderTeamMembers = () => (
+    <div className="space-y-6">
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h3 className="text-lg font-medium mb-4">About Section Text</h3>
+        <textarea
+          value={localAboutText}
+          onChange={(e) => setLocalAboutText(e.target.value)}
+          className="w-full h-32 p-3 border border-gray-300 rounded-md"
+          placeholder="Enter about section text..."
+        />
+        <button
+          onClick={() => handleSave('About text')}
+          disabled={isSubmitting}
+          className="mt-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+        >
+          {isSubmitting ? 'Saving...' : 'Save About Text'}
+        </button>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-medium">Team Members</h3>
+          <button
+            onClick={handleAddTeamMember}
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+          >
+            + Add Team Member
+          </button>
+        </div>
+        
+        {isLoadingTeamMembers ? (
+          <div className="text-center py-8">
+            <div className="text-gray-500">Loading team members...</div>
+          </div>
+        ) : teamMembers.length === 0 ? (
+          <div className="text-center py-8">
+            <div className="text-gray-500">No team members found. Add your first team member!</div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {teamMembers.map((member) => (
+              <div key={member._id} className="border border-gray-200 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <img 
+                    src={member.smallImage} 
+                    alt={member.name} 
+                    className="w-16 h-16 object-cover rounded flex-shrink-0" 
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-gray-900 truncate">{member.name}</h4>
+                    <p className="text-sm text-gray-600 mt-1 line-clamp-3">
+                      {member.description}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex space-x-2 mt-4">
+                  <button
+                    onClick={() => handleEditTeamMember(member)}
+                    className="flex-1 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteTeamMember(member._id)}
+                    className="flex-1 bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Team Member Form Modal */}
+      {showTeamMemberForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-medium mb-4">
+              {editingMember ? 'Edit Team Member' : 'Add New Team Member'}
+            </h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Name</label>
+                <input
+                  type="text"
+                  value={teamMemberForm.name}
+                  onChange={(e) => setTeamMemberForm(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="Enter member name"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Description</label>
+                <textarea
+                  value={teamMemberForm.description}
+                  onChange={(e) => setTeamMemberForm(prev => ({ ...prev, description: e.target.value }))}
+                  className="w-full h-32 p-2 border border-gray-300 rounded-md"
+                  placeholder="Enter member description"
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Small Image</label>
+                  <div className="space-y-2">
+                    <input
+                      ref={smallImageInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setSelectedSmallImage(file);
+                          setUploadError(null);
+                        }
+                      }}
+                      className="hidden"
+                    />
+                    <div className="flex items-center space-x-3">
+                      <button
+                        type="button"
+                        onClick={() => smallImageInputRef.current?.click()}
+                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md border border-gray-300"
+                      >
+                        Choose Image
+                      </button>
+                      {(teamMemberForm.smallImage || selectedSmallImage) && (
+                        <img 
+                          src={selectedSmallImage ? URL.createObjectURL(selectedSmallImage) : teamMemberForm.smallImage} 
+                          alt="Small preview" 
+                          className="w-12 h-12 object-cover rounded border"
+                        />
+                      )}
+                    </div>
+                    {selectedSmallImage && (
+                      <p className="text-xs text-green-600">
+                        Selected: {selectedSmallImage.name}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Large Image</label>
+                  <div className="space-y-2">
+                    <input
+                      ref={fullImageInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setSelectedFullImage(file);
+                          setUploadError(null);
+                        }
+                      }}
+                      className="hidden"
+                    />
+                    <div className="flex items-center space-x-3">
+                      <button
+                        type="button"
+                        onClick={() => fullImageInputRef.current?.click()}
+                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md border border-gray-300"
+                      >
+                        Choose Image
+                      </button>
+                      {(teamMemberForm.fullImage || selectedFullImage) && (
+                        <img 
+                          src={selectedFullImage ? URL.createObjectURL(selectedFullImage) : teamMemberForm.fullImage} 
+                          alt="Large preview" 
+                          className="w-12 h-12 object-cover rounded border"
+                        />
+                      )}
+                    </div>
+                    {selectedFullImage && (
+                      <p className="text-xs text-green-600">
+                        Selected: {selectedFullImage.name}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Upload Progress */}
+              {isSubmitting && uploadProgress.total > 0 && (
+                <div className="bg-blue-50 p-3 rounded-md">
+                  <div className="text-sm text-blue-700 mb-2">
+                    Uploading images... {uploadProgress.current}/{uploadProgress.total}
+                  </div>
+                  <div className="w-full bg-blue-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${(uploadProgress.current / uploadProgress.total) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
+              )}
+
+              {/* Error Display */}
+              {uploadError && (
+                <div className="bg-red-50 border border-red-200 p-3 rounded-md">
+                  <p className="text-sm text-red-700">{uploadError}</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex space-x-3 mt-6">
+              <button
+                onClick={handleSaveTeamMember}
+                disabled={isSubmitting}
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Saving...' : (editingMember ? 'Update Member' : 'Add Member')}
+              </button>
+              <button
+                onClick={handleCancelTeamMember}
+                disabled={isSubmitting}
+                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderTestimonials = () => (
+    <div className="space-y-6">
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-medium">Testimonials</h3>
+          <button
+            onClick={handleAddTestimonial}
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+          >
+            + Add Testimonial
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {testimonials.map((testimonial) => (
+            <div key={testimonial.id} className="border border-gray-200 rounded-lg p-4">
+              <div className="space-y-3">
+                <div>
+                  <h4 className="font-medium text-gray-900 text-sm">{testimonial.company}</h4>
+                  <p className="text-sm text-gray-600 mt-1 line-clamp-4">
+                    {testimonial.testimonial}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-2 italic">
+                    {testimonial.signature}
+                  </p>
+                </div>
+              </div>
+              <div className="flex space-x-2 mt-4">
+                <button
+                  onClick={() => handleEditTestimonial(testimonial)}
+                  className="flex-1 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteTestimonial(testimonial.id)}
+                  className="flex-1 bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Testimonial Form Modal */}
+      {showTestimonialForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-medium mb-4">
+              {editingTestimonial ? 'Edit Testimonial' : 'Add New Testimonial'}
+            </h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Company/Organization</label>
+                <input
+                  type="text"
+                  value={testimonialForm.company}
+                  onChange={(e) => setTestimonialForm(prev => ({ ...prev, company: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="Enter company or organization name"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Testimonial</label>
+                <textarea
+                  value={testimonialForm.testimonial}
+                  onChange={(e) => setTestimonialForm(prev => ({ ...prev, testimonial: e.target.value }))}
+                  className="w-full h-32 p-2 border border-gray-300 rounded-md"
+                  placeholder="Enter testimonial text"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Signature</label>
+                <input
+                  type="text"
+                  value={testimonialForm.signature}
+                  onChange={(e) => setTestimonialForm(prev => ({ ...prev, signature: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="Enter signature (e.g., name and title)"
+                />
+              </div>
+            </div>
+            
+            <div className="flex space-x-3 mt-6">
+              <button
+                onClick={handleSaveTestimonial}
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+              >
+                {editingTestimonial ? 'Update Testimonial' : 'Add Testimonial'}
+              </button>
+              <button
+                onClick={handleCancelTestimonial}
+                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderPartners = () => (
+    <div className="space-y-6">
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-medium">Partners</h3>
+          <button
+            onClick={handleAddPartner}
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+          >
+            + Add Partner
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {partners.map((partner) => (
+            <div key={partner.id} className="border border-gray-200 rounded-lg p-4 text-center">
+              <div className="mb-3">
+                <img 
+                  src={partner.logo} 
+                  alt={partner.name} 
+                  className="w-16 h-16 mx-auto object-contain" 
+                />
+              </div>
+              <h4 className="font-medium text-gray-900 text-sm mb-3 truncate">
+                {partner.name}
+              </h4>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => handleEditPartner(partner)}
+                  className="flex-1 bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeletePartner(partner.id)}
+                  className="flex-1 bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Partner Form Modal */}
+      {showPartnerForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-medium mb-4">
+              {editingPartner ? 'Edit Partner' : 'Add New Partner'}
+            </h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Partner Name</label>
+                <input
+                  type="text"
+                  value={partnerForm.name}
+                  onChange={(e) => setPartnerForm(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="Enter partner name"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Logo</label>
+                <div className="flex items-center space-x-3">
+                  <button
+                    type="button"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md border border-gray-300"
+                    onClick={() => alert('Logo upload functionality coming soon!')}
+                  >
+                    Upload Logo
+                  </button>
+                  {partnerForm.logo && (
+                    <img 
+                      src={partnerForm.logo} 
+                      alt="Logo preview" 
+                      className="w-12 h-12 object-contain border rounded"
+                    />
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Logo upload functionality coming soon</p>
+              </div>
+            </div>
+            
+            <div className="flex space-x-3 mt-6">
+              <button
+                onClick={handleSavePartner}
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+              >
+                {editingPartner ? 'Update Partner' : 'Add Partner'}
+              </button>
+              <button
+                onClick={handleCancelPartner}
+                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderPiedavajums = () => (
+    <div className="space-y-6">
+      {/* Header and Intro Text Section */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h3 className="text-lg font-medium mb-4">Piedavajums Header & Introduction</h3>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Header Text</label>
+            <input
+              type="text"
+              value={piedavajumsHeader}
+              onChange={(e) => setPiedavajumsHeader(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md"
+              placeholder="Enter header text"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Introduction Paragraph 1</label>
+            <textarea
+              value={piedavajumsIntro[0]}
+              onChange={(e) => setPiedavajumsIntro(prev => 
+                prev.map((text, i) => i === 0 ? e.target.value : text)
+              )}
+              className="w-full h-20 p-2 border border-gray-300 rounded-md"
+              placeholder="Enter first paragraph"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Introduction Paragraph 2</label>
+            <textarea
+              value={piedavajumsIntro[1]}
+              onChange={(e) => setPiedavajumsIntro(prev => 
+                prev.map((text, i) => i === 1 ? e.target.value : text)
+              )}
+              className="w-full h-20 p-2 border border-gray-300 rounded-md"
+              placeholder="Enter second paragraph"
+            />
+          </div>
+        </div>
+
+        <button
+          onClick={() => handleSave('Piedavajums header and intro')}
+          disabled={isSubmitting}
+          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+        >
+          {isSubmitting ? 'Saving...' : 'Save Header & Intro'}
+        </button>
+      </div>
+
+      {/* Piedavajums Sections */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-medium">Piedavajums Sections</h3>
+          <button
+            onClick={handleAddPiedavajums}
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+          >
+            + Add Section
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {piedavajumsSections.map((section) => (
+            <div key={section.id} className="border border-gray-200 rounded-lg p-4">
+              <div className="mb-3">
+                <img 
+                  src={section.image} 
+                  alt={section.title} 
+                  className="w-full h-32 object-cover rounded" 
+                />
+              </div>
+              <h4 className="font-medium text-gray-900 text-sm mb-2 truncate">
+                {section.title}
+              </h4>
+              {section.duration && (
+                <p className="text-xs text-gray-500 mb-2">
+                  {section.duration}
+                </p>
+              )}
+              <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                {section.description}
+              </p>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => handleEditPiedavajums(section)}
+                  className="flex-1 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeletePiedavajums(section.id)}
+                  className="flex-1 bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Piedavajums Form Modal */}
+      {showPiedavajumsForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-medium mb-4">
+              {editingPiedavajums ? 'Edit Piedavajums Section' : 'Add New Piedavajums Section'}
+            </h3>
+            
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Title</label>
+                  <input
+                    type="text"
+                    value={piedavajumsForm.title}
+                    onChange={(e) => setPiedavajumsForm(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    placeholder="Enter section title"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Duration</label>
+                  <input
+                    type="text"
+                    value={piedavajumsForm.duration}
+                    onChange={(e) => setPiedavajumsForm(prev => ({ ...prev, duration: e.target.value }))}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    placeholder="Enter duration (optional)"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Description</label>
+                <textarea
+                  value={piedavajumsForm.description}
+                  onChange={(e) => setPiedavajumsForm(prev => ({ ...prev, description: e.target.value }))}
+                  className="w-full h-20 p-2 border border-gray-300 rounded-md"
+                  placeholder="Enter section description"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Additional Title (Optional)</label>
+                <input
+                  type="text"
+                  value={piedavajumsForm.additionalTitle}
+                  onChange={(e) => setPiedavajumsForm(prev => ({ ...prev, additionalTitle: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="Enter additional title (optional)"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Additional Description (Optional)</label>
+                <textarea
+                  value={piedavajumsForm.additionalDescription}
+                  onChange={(e) => setPiedavajumsForm(prev => ({ ...prev, additionalDescription: e.target.value }))}
+                  className="w-full h-20 p-2 border border-gray-300 rounded-md"
+                  placeholder="Enter additional description (optional)"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Image</label>
+                <div className="flex items-center space-x-3">
+                  <button
+                    type="button"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md border border-gray-300"
+                    onClick={() => alert('Image upload functionality coming soon!')}
+                  >
+                    Upload Image
+                  </button>
+                  {piedavajumsForm.image && (
+                    <img 
+                      src={piedavajumsForm.image} 
+                      alt="Image preview" 
+                      className="w-16 h-16 object-cover rounded border"
+                    />
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Image upload functionality coming soon</p>
+              </div>
+            </div>
+            
+            <div className="flex space-x-3 mt-6">
+              <button
+                onClick={handleSavePiedavajums}
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+              >
+                {editingPiedavajums ? 'Update Section' : 'Add Section'}
+              </button>
+              <button
+                onClick={handleCancelPiedavajums}
+                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      {/* Navigation Header */}
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => navigate('/admin/dashboard')}
+                className="text-gray-600 hover:text-gray-900 flex items-center"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Dashboard
+              </button>
+              <h1 className="text-xl font-semibold">Content Management</h1>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Tab Navigation */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex space-x-8">
+            {[
+              { id: 'team', name: 'Team Members' },
+              { id: 'testimonials', name: 'Testimonials' },
+              { id: 'partners', name: 'Partners' },
+              { id: 'piedavajums', name: 'Piedavajums' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === tab.id
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 sm:px-0">
+          {activeTab === 'team' && renderTeamMembers()}
+          {activeTab === 'testimonials' && renderTestimonials()}
+          {activeTab === 'partners' && renderPartners()}
+          {activeTab === 'piedavajums' && renderPiedavajums()}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function Dashboard() {
+  const navigate = useNavigate();
+  const { logout } = useAdmin();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin');
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      {/* Navigation Header */}
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <h1 className="text-xl font-semibold">Admin Dashboard</h1>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 sm:px-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Gallery Management Card */}
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">
+                        Gallery Management
+                      </dt>
+                      <dd className="text-lg font-medium text-gray-900">
+                        Manage photo galleries
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-6 py-4">
+                <div className="text-sm">
+                  <button
+                    onClick={() => navigate('/admin/gallery')}
+                    className="font-medium text-blue-600 hover:text-blue-500"
+                  >
+                    Go to Gallery Management →
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Content Management Card */}
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">
+                        Content Management
+                      </dt>
+                      <dd className="text-lg font-medium text-gray-900">
+                        Manage website content
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-6 py-4">
+                <div className="text-sm">
+                  <button
+                    onClick={() => navigate('/admin/content')}
+                    className="font-medium text-blue-600 hover:text-blue-500"
+                  >
+                    Go to Content Management →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
 function App() {
   return (
     <AdminProvider>
       <GalleryProvider>
-        <Routes>
-          <Route path="/" element={<UnderConstruction />} />
-          <Route path="/demo/*" element={<MainPage />} />
-          <Route path="/demo/galerija" element={<GalleryPage />} />
-          <Route path="/demo/piedavajums" element={<PiedavajumsPage />} />
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route
-            path="/admin/gallery"
-            element={
-              <ProtectedRoute>
-                <GalleryManagement />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        <TeamProvider>
+          <AboutProvider>
+            <Routes>
+              <Route path="/" element={<UnderConstruction />} />
+              <Route path="/demo/*" element={<MainPage />} />
+              <Route path="/demo/galerija" element={<GalleryPage />} />
+              <Route path="/demo/piedavajums" element={<PiedavajumsPage />} />
+              <Route path="/admin" element={<AdminLogin />} />
+              <Route
+                path="/admin/content"
+                element={
+                  <ProtectedRoute>
+                    <ContentManagement />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/gallery"
+                element={
+                  <ProtectedRoute>
+                    <GalleryManagement />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </AboutProvider>
+        </TeamProvider>
       </GalleryProvider>
     </AdminProvider>
   );

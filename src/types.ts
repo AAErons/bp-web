@@ -18,4 +18,15 @@ export interface Gallery {
   images: GalleryImage[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TeamMember {
+  _id: string;
+  id: string;
+  name: string;
+  description: string;
+  smallImage: string;
+  fullImage: string;
+  createdAt: string;
+  updatedAt: string;
 } 
