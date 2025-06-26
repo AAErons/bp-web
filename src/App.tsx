@@ -5,29 +5,17 @@ import { AdminProvider, useAdmin } from './contexts/AdminContext';
 import { GalleryProvider, useGallery } from './contexts/GalleryContext';
 import { TeamProvider, useTeam } from './contexts/TeamContext';
 import { AboutProvider, useAbout } from './contexts/AboutContext';
+import { TestimonialsProvider, useTestimonials } from './contexts/TestimonialsContext';
+import { PartnersProvider, usePartners } from './contexts/PartnersContext';
+import { PiedavajumsProvider, usePiedavajums } from './contexts/PiedavajumsContext';
 import AdminLogin from './pages/AdminLogin';
 import GalleryManagement from './pages/GalleryManagement';
 import GalleryView from './components/GalleryView';
 import bpLogo from './assets/bp_logo.png';
-import swedbankLogo from './assets/partners/swedbank.png';
-import tioKaussLogo from './assets/partners/tio-kauss.png';
-import straumeLogo from './assets/partners/straume.jpeg';
-import spiediensLogo from './assets/partners/spiediens.png';
-import siguldaLogo from './assets/partners/sigulda.png';
-import rigaLogo from './assets/partners/riga.png';
-import scaniaLogo from './assets/partners/scania.png';
-import positvisLogo from './assets/partners/positvis.png';
-import lmtLogo from './assets/partners/lmt.jpg';
-import investmentAgencyLogo from './assets/partners/investment-agency.png';
-import idejuKaussLogo from './assets/partners/ideju-kauss.png';
-import ikeaLogo from './assets/partners/ikea.png';
-import feeLogo from './assets/partners/fee.png';
-import dienasBiznessLogo from './assets/partners/dienas_bizness.jpeg';
 import publicConcert from './assets/howItWorks/public.jpg';
 import closedEvent from './assets/howItWorks/closed.jpg';
 import presentation from './assets/howItWorks/presentation.jpg';
 import heroBg from './assets/title.jpg';
-import theBronxsLogo from './assets/partners/thebronxs.jpeg';
 
 // Define TeamMember type
 interface TeamMember {
@@ -154,6 +142,9 @@ function MainPage() {
   const { isLoading } = useGallery();
   const { teamMembers, isLoading: isLoadingTeamMembers } = useTeam();
   const { aboutText, isLoading: isLoadingAboutText } = useAbout();
+  const { testimonials, isLoading: isLoadingTestimonials } = useTestimonials();
+  const { partners, isLoading: isLoadingPartners } = usePartners();
+  const { piedavajumsSections, isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRefs = {
@@ -228,7 +219,7 @@ function MainPage() {
     };
   }, []);
 
-  if (isLoading || isLoadingTeamMembers || isLoadingAboutText) {
+  if (isLoading || isLoadingTeamMembers || isLoadingAboutText || isLoadingTestimonials || isLoadingPartners || isLoadingPiedavajums) {
     return (
       <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#CCB399]"></div>
@@ -321,47 +312,16 @@ function MainPage() {
                 Ko saka mūsu klienti par "Brīvrunu projektu"?
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                {[
-                  { company: 'GULBENES NOVADA JAUNIEŠU CENTRS "BĀZE"', logo: 'GULBENES NOVADA JAUNIEŠU CENTRS "BĀZE"' },
-                  { company: 'VSIA "LATVIJAS KONCERTI"', logo: 'VSIA "LATVIJAS KONCERTI"' },
-                  { company: 'SWEDBANK', logo: 'SWEDBANK' },
-                  { company: 'IDEJU INSTITŪTS', logo: 'IDEJU INSTITŪTS' }
-                ].map((item, index) => (
-                  <div key={index} className="bg-white border border-black p-6 md:p-8 relative">
+                {testimonials.map((testimonial, index) => (
+                  <div key={testimonial._id} className="bg-white border border-black p-6 md:p-8 relative">
                     <div className="absolute -top-4 left-6 bg-black text-white px-4 font-bold text-sm md:text-base">
-                      {item.logo}
+                      {testimonial.company}
                     </div>
                     <div className="text-sm md:text-base lg:text-lg leading-relaxed mb-6">
-                      {index === 0 ? (
-                        <>
-                          "Sadarbība ar "Brīvrunu Projektu" mūsu pasākumā "Gada atsitiens 2024" ietvaros bija patiesi iedvesmojoša un profesionāla. Iepriekš izrunātas detaļas un velmes tika realizētas ar uzviju. Brīvrunu projekts mūs pārsteidza ar unikāliem un spēcīgiem tekstiem par visiem pasākuma nominantiem, ko viņi izpildīja savā īpašajā stilā – ar harismu, dinamiku un lielisku savstarpējo saspēli. Mūzika, enerģija un kustība – viss kopā radīja neaizmirstamu pieredzi. Skatitāji, nominanti, organizātori palika sajūma par "Brīvrunu projekta" izpildījumu. No sirds iesakām šo komandu arī citiem!"
-                        </>
-                      ) : index === 1 ? (
-                        <>
-                          "2025.gada 20.martā VEF KP izskanēja VSIA "Latvijas Koncerti" veidotā cikla "Mūzika Tev" pēdējais koncerts 7.-12.klasēm. Parasti šo koncertu veidojam demokrātiskāku, aicinot tajā piedalīties solistus un grupas, kuru muzikālie žanri un izpausmes mūsu jauniešiem ir tuvāki. Pirmo reizi iepazinām "Brīvrunu projektu", grupu, kam bija jānoslēdz visa koncertprogramma. Patiess bija mūsu- koncertu rīkotāju un, protams, arī publikas atzinums- "Brīvrunu projekts" bija tieši tas, kas jauniešiem bija vajadzīgs. Grupas uzstāšanās bija tik aizrautīga, tik enerģijas pārpilna, ka nav šaubu- visi koncerta apmeklētāji aizgāja no koncerta absolūti uzlādēti. Pārsteidz ne tikai viņu lieliskās repošanas prasmes, elektronikas izmantojums, bet arī asprātība un humors savos priekšnesumos iesaistot jauniešus no klausītāju rindām. Īpaši gribētos izcelt arī "Brīvrunu projekta" dalībnieku pieklājību, vienkāršību un sirsnību saskarē ar mums, koncerta veidotājiem. Noteikti pie izdevības turpināsim sadarbību ar "Brīvrunu projektu" arī nākotnē',
-                          signature: 'Ar cieņu, Karina Bērziņa, VSIA Latvijas Koncerti, Izglītības programmas vadītāja, producente'
-                        </>
-                      ) : (
-                        '"Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai."'
-                      )}
+                      {testimonial.testimonial}
                     </div>
                     <div className="text-right font-medium">
-                      {index === 0 ? (
-                        <>
-                          — Cieņā,<br />
-                          Valērija Stībele<br />
-                          Gulbenes novada jauniešu centrs "Bāze" vadītāja
-                        </>
-                      ) : index === 1 ? (
-                        <>
-                          — Ar cieņu,<br />
-                          Karina Bērziņa<br />
-                          VSIA Latvijas Koncerti<br />
-                          Izglītības programmas vadītāja, producente
-                        </>
-                      ) : (
-                        `— ${item.company}`
-                      )}
+                      — {testimonial.signature}
                     </div>
                   </div>
                 ))}
@@ -370,25 +330,9 @@ function MainPage() {
               <div className="text-center mb-16">
                 <div className="font-bold text-sm md:text-base mb-6">MŪSU PARTNERI</div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8 justify-items-center items-center">
-                  {[
-                    { logo: tioKaussLogo, name: 'Tio Kauss' },
-                    { logo: straumeLogo, name: 'Straume' },
-                    { logo: spiediensLogo, name: 'Spiediens' },
-                    { logo: siguldaLogo, name: 'Sigulda' },
-                    { logo: rigaLogo, name: 'Riga' },
-                    { logo: scaniaLogo, name: 'Scania' },
-                    { logo: positvisLogo, name: 'Positvis' },
-                    { logo: lmtLogo, name: 'LMT' },
-                    { logo: investmentAgencyLogo, name: 'Investment Agency' },
-                    { logo: idejuKaussLogo, name: 'Ideju Kauss' },
-                    { logo: ikeaLogo, name: 'IKEA' },
-                    { logo: feeLogo, name: 'Fee' },
-                    { logo: dienasBiznessLogo, name: 'Dienas Bizness' },
-                    { logo: theBronxsLogo, name: 'The Bronxs' },
-                    { logo: swedbankLogo, name: 'Swedbank' }
-                  ].map((partner, index) => (
+                  {partners.map((partner) => (
                     <div 
-                      key={index} 
+                      key={partner._id} 
                       className="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center p-2 hover:opacity-80 transition-opacity"
                     >
                       <img
@@ -802,6 +746,9 @@ function ContentManagement() {
   const { logout } = useAdmin();
   const { teamMembers, addTeamMember, updateTeamMember, deleteTeamMember, isLoading: isLoadingTeamMembers } = useTeam();
   const { aboutText, updateAboutText } = useAbout();
+  const { testimonials, addTestimonial, updateTestimonial, deleteTestimonial, isLoading: isLoadingTestimonials } = useTestimonials();
+  const { partners, addPartner, updatePartner, deletePartner, isLoading: isLoadingPartners } = usePartners();
+  const { piedavajumsSections, addPiedavajumsSection, updatePiedavajumsSection, deletePiedavajumsSection, isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [activeTab, setActiveTab] = useState('team');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -831,36 +778,36 @@ function ContentManagement() {
   // const [aboutText, setAboutText] = useState('"Brīvrunu Projekts" ir pirmais un vienīgais repa improvizācijas kolektīvs Latvijā. Skatītāju ieteikumus, vidi un notikuma tematiku "Brīvrunu Projekts" pārvērš repa improvizācijas etīdēs, kas rada pacilājošas emocijas un pasākuma pievienoto vērtību. Astoņu gadu laikā izkoptie formāti uzrunā plašu auditoriju, neatkarīgi no vecuma vai izpratnes par repu.');
 
   // Testimonials State
-  const [testimonials, setTestimonials] = useState([
-    {
-      id: 1,
-      company: 'GULBENES NOVADA JAUNIEŠU CENTRS "BĀZE"',
-      testimonial: 'Sadarbība ar "Brīvrunu Projektu" mūsu pasākumā "Gada atsitiens 2024" ietvaros bija patiesi iedvesmojoša un profesionāla. Iepriekš izrunātas detaļas un velmes tika realizētas ar uzviju. Brīvrunu projekts mūs pārsteidza ar unikāliem un spēcīgiem tekstiem par visiem pasākuma nominantiem, ko viņi izpildīja savā īpašajā stilā – ar harismu, dinamiku un lielisku savstarpējo saspēli. Mūzika, enerģija un kustība – viss kopā radīja neaizmirstamu pieredzi. Skatitāji, nominanti, organizātori palika sajūma par "Brīvrunu projekta" izpildījumu. No sirds iesakām šo komandu arī citiem!',
-      signature: 'Cieņā, Valērija Stībele, Gulbenes novada jauniešu centrs "Bāze" vadītāja'
-    },
-    {
-      id: 2,
-      company: 'VSIA "LATVIJAS KONCERTI"',
-      testimonial: '2025.gada 20.martā VEF KP izskanēja VSIA "Latvijas Koncerti" veidotā cikla "Mūzika Tev" pēdējais koncerts 7.-12.klasēm. Parasti šo koncertu veidojam demokrātiskāku, aicinot tajā piedalīties solistus un grupas, kuru muzikālie žanri un izpausmes mūsu jauniešiem ir tuvāki. Pirmo reizi iepazinām "Brīvrunu projektu", grupu, kam bija jānoslēdz visa koncertprogramma. Patiess bija mūsu- koncertu rīkotāju un, protams, arī publikas atzinums- "Brīvrunu projekts" bija tieši tas, kas jauniešiem bija vajadzīgs. Grupas uzstāšanās bija tik aizrautīga, tik enerģijas pārpilna, ka nav šaubu- visi koncerta apmeklētāji aizgāja no koncerta absolūti uzlādēti. Pārsteidz ne tikai viņu lieliskās repošanas prasmes, elektronikas izmantojums, bet arī asprātība un humors savos priekšnesumos iesaistot jauniešus no klausītāju rindām. Īpaši gribētos izcelt arī "Brīvrunu projekta" dalībnieku pieklājību, vienkāršību un sirsnību saskarē ar mums, koncerta veidotājiem. Noteikti pie izdevības turpināsim sadarbību ar "Brīvrunu projektu" arī nākotnē',
-      signature: 'Ar cieņu, Karina Bērziņa, VSIA Latvijas Koncerti, Izglītības programmas vadītāja, producente'
-    },
-    {
-      id: 3,
-      company: 'SWEDBANK',
-      testimonial: 'Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai.',
-      signature: '— SWEDBANK'
-    },
-    {
-      id: 4,
-      company: 'IDEJU INSTITŪTS',
-      testimonial: 'Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai.',
-      signature: '— IDEJU INSTITŪTS'
-    }
-  ]);
+  // const [testimonials, setTestimonials] = useState([
+  //   {
+  //     id: 1,
+  //     company: 'GULBENES NOVADA JAUNIEŠU CENTRS "BĀZE"',
+  //     testimonial: 'Sadarbība ar "Brīvrunu Projektu" mūsu pasākumā "Gada atsitiens 2024" ietvaros bija patiesi iedvesmojoša un profesionāla. Iepriekš izrunātas detaļas un velmes tika realizētas ar uzviju. Brīvrunu projekts mūs pārsteidza ar unikāliem un spēcīgiem tekstiem par visiem pasākuma nominantiem, ko viņi izpildīja savā īpašajā stilā – ar harismu, dinamiku un lielisku savstarpējo saspēli. Mūzika, enerģija un kustība – viss kopā radīja neaizmirstamu pieredzi. Skatitāji, nominanti, organizātori palika sajūma par "Brīvrunu projekta" izpildījumu. No sirds iesakām šo komandu arī citiem!',
+  //     signature: 'Cieņā, Valērija Stībele, Gulbenes novada jauniešu centrs "Bāze" vadītāja'
+  //   },
+  //   {
+  //     id: 2,
+  //     company: 'VSIA "LATVIJAS KONCERTI"',
+  //     testimonial: '2025.gada 20.martā VEF KP izskanēja VSIA "Latvijas Koncerti" veidotā cikla "Mūzika Tev" pēdējais koncerts 7.-12.klasēm. Parasti šo koncertu veidojam demokrātiskāku, aicinot tajā piedalīties solistus un grupas, kuru muzikālie žanri un izpausmes mūsu jauniešiem ir tuvāki. Pirmo reizi iepazinām "Brīvrunu projektu", grupu, kam bija jānoslēdz visa koncertprogramma. Patiess bija mūsu- koncertu rīkotāju un, protams, arī publikas atzinums- "Brīvrunu projekts" bija tieši tas, kas jauniešiem bija vajadzīgs. Grupas uzstāšanās bija tik aizrautīga, tik enerģijas pārpilna, ka nav šaubu- visi koncerta apmeklētāji aizgāja no koncerta absolūti uzlādēti. Pārsteidz ne tikai viņu lieliskās repošanas prasmes, elektronikas izmantojums, bet arī asprātība un humors savos priekšnesumos iesaistot jauniešus no klausītāju rindām. Īpaši gribētos izcelt arī "Brīvrunu projekta" dalībnieku pieklājību, vienkāršību un sirsnību saskarē ar mums, koncerta veidotājiem. Noteikti pie izdevības turpināsim sadarbību ar "Brīvrunu projektu" arī nākotnē',
+  //     signature: 'Ar cieņu, Karina Bērziņa, VSIA Latvijas Koncerti, Izglītības programmas vadītāja, producente'
+  //   },
+  //   {
+  //     id: 3,
+  //     company: 'SWEDBANK',
+  //     testimonial: 'Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai.',
+  //     signature: '— SWEDBANK'
+  //   },
+  //   {
+  //     id: 4,
+  //     company: 'IDEJU INSTITŪTS',
+  //     testimonial: 'Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai.',
+  //     signature: '— IDEJU INSTITŪTS'
+  //   }
+  // ]);
 
   // Testimonial Form State
   const [showTestimonialForm, setShowTestimonialForm] = useState(false);
-  const [editingTestimonial, setEditingTestimonial] = useState<number | null>(null);
+  const [editingTestimonial, setEditingTestimonial] = useState<string | null>(null);
   const [testimonialForm, setTestimonialForm] = useState({
     company: '',
     testimonial: '',
@@ -868,35 +815,37 @@ function ContentManagement() {
   });
 
   // Partners State
-  const [partners, setPartners] = useState([
-    { id: 1, name: 'Tio Kauss', logo: tioKaussLogo },
-    { id: 2, name: 'Straume', logo: straumeLogo },
-    { id: 3, name: 'Spiediens', logo: spiediensLogo },
-    { id: 4, name: 'Sigulda', logo: siguldaLogo },
-    { id: 5, name: 'Riga', logo: rigaLogo },
-    { id: 6, name: 'Scania', logo: scaniaLogo },
-    { id: 7, name: 'Positvis', logo: positvisLogo },
-    { id: 8, name: 'LMT', logo: lmtLogo },
-    { id: 9, name: 'Investment Agency', logo: investmentAgencyLogo },
-    { id: 10, name: 'Ideju Kauss', logo: idejuKaussLogo },
-    { id: 11, name: 'IKEA', logo: ikeaLogo },
-    { id: 12, name: 'Fee', logo: feeLogo },
-    { id: 13, name: 'Dienas Bizness', logo: dienasBiznessLogo },
-    { id: 14, name: 'The Bronxs', logo: theBronxsLogo },
-    { id: 15, name: 'Swedbank', logo: swedbankLogo }
-  ]);
+  // const [partners, setPartners] = useState([
+  //   { id: 1, name: 'Tio Kauss', logo: tioKaussLogo },
+  //   { id: 2, name: 'Straume', logo: straumeLogo },
+  //   { id: 3, name: 'Spiediens', logo: spiediensLogo },
+  //   { id: 4, name: 'Sigulda', logo: siguldaLogo },
+  //   { id: 5, name: 'Riga', logo: rigaLogo },
+  //   { id: 6, name: 'Scania', logo: scaniaLogo },
+  //   { id: 7, name: 'Positvis', logo: positvisLogo },
+  //   { id: 8, name: 'LMT', logo: lmtLogo },
+  //   { id: 9, name: 'Investment Agency', logo: investmentAgencyLogo },
+  //   { id: 10, name: 'Ideju Kauss', logo: idejuKaussLogo },
+  //   { id: 11, name: 'IKEA', logo: ikeaLogo },
+  //   { id: 12, name: 'Fee', logo: feeLogo },
+  //   { id: 13, name: 'Dienas Bizness', logo: dienasBiznessLogo },
+  //   { id: 14, name: 'The Bronxs', logo: theBronxsLogo },
+  //   { id: 15, name: 'Swedbank', logo: swedbankLogo }
+  // ]);
 
   // Partner Form State
   const [showPartnerForm, setShowPartnerForm] = useState(false);
-  const [editingPartner, setEditingPartner] = useState<number | null>(null);
+  const [editingPartner, setEditingPartner] = useState<string | null>(null);
   const [partnerForm, setPartnerForm] = useState({
     name: '',
     logo: ''
   });
+  const [selectedPartnerLogo, setSelectedPartnerLogo] = useState<File | null>(null);
+  const partnerLogoInputRef = useRef<HTMLInputElement>(null);
 
   // Piedavajums Form State
   const [showPiedavajumsForm, setShowPiedavajumsForm] = useState(false);
-  const [editingPiedavajums, setEditingPiedavajums] = useState<number | null>(null);
+  const [editingPiedavajums, setEditingPiedavajums] = useState<string | null>(null);
   const [piedavajumsForm, setPiedavajumsForm] = useState({
     title: '',
     duration: '',
@@ -905,6 +854,8 @@ function ContentManagement() {
     additionalDescription: '',
     image: ''
   });
+  const [selectedPiedavajumsImage, setSelectedPiedavajumsImage] = useState<File | null>(null);
+  const piedavajumsImageInputRef = useRef<HTMLInputElement>(null);
 
   // Piedavajums State
   const [piedavajumsHeader, setPiedavajumsHeader] = useState('TAS IR "BRĪVRUNU PROJEKTS"!');
@@ -912,35 +863,35 @@ function ContentManagement() {
     'Mūsu arsenālā ir vairāk nekā 15 dažādas idejas, kā pāris minūtēs jūsu pasākums var iegūt unikālu skanējumu un radīt apmeklētājiem emocijas.',
     'Mēs spējam gan izveidot notikumu no nulles, gan izcelt un paspilgtināt jūsu ideju vai stāstu. Tāpēc mūs atkārtoti aicina uzstāties pilsētas svētkos, korporatīvās ballēs, festivālos un citos notikumos, jo katra performance ir vienreizēja un unikāla.'
   ]);
-  const [piedavajumsSections, setPiedavajumsSections] = useState([
-    {
-      id: 1,
-      title: 'PUBLISKS KONCERTS',
-      duration: '15 I 30 I 45 minūtes',
-      description: 'Garākā uzstāšanās forma no 15 līdz 45 minūtēm. Tā ietver vairāk nekā 10 dažādas repa improvizācijas etīdes, kas kopumā veido pilnvērtīgu koncerta pieredzi.',
-      additionalTitle: 'PAPILDUS PIEREDZE – REPA IMPROVIZĀCIJAS DARBNĪCA',
-      additionalDescription: '60-90 minūšu laikā dalībniekiem ir iespēja uzzināt un praktiski pamēģināt iztēles iekustināšanas, dīdžejošanas un repa vingrinājumus, kas ir svarīgi, lai veidotu brīvrunu. Iegūtās prasmes noder ikdienas dzīvē, ne tikai repā.',
-      image: publicConcert
-    },
-    {
-      id: 2,
-      title: 'NOTIKUMS SLĒGTĀ VIDĒ',
-      duration: '15 I 20 minūtes',
-      description: 'Īpaši izveidota programma no BP uzdevumu "zelta repertuāra", kas 15 līdz 20 minūšu šovā iekustina un izklaidē, radot neaizmirstamas emocijas. Šī ir iespēja priekšnesumā iesaistīt īpašus cilvēkus, produktus vai pakalpojumus.',
-      additionalTitle: 'ĻOTI PERSONĪGA PIEREDZE – RAKSTĪTI TEKSTI',
-      additionalDescription: 'Brīvrunas improvizācija ir gaisīga, taču reizēm ir nepieciešama īpaša detalizācija, lai kādu cilvēku, produktu vai pakalpojumu noliktu pasākuma centrā. Šādos gadījumos ir iespēja sagatavot iepriekš iestudētu priekšnesumu ar iepriekš sagatavotu tekstu.',
-      image: closedEvent
-    },
-    {
-      id: 3,
-      title: 'PRODUKTU VAI PAKALPOJUMU POPULARIZĒŠANA',
-      duration: '',
-      description: 'Ja produkts vai pakalpojums saskan ar BP komandas vērtībām, esam atvērti arī reklāmas sadarbībām, piedāvājot teksta rakstīšanas pakalpojumu, audio ierakstīšanu, kā arī BP dalībnieku izmantošanu saturā.',
-      additionalTitle: '',
-      additionalDescription: '',
-      image: presentation
-    }
-  ]);
+  // const [piedavajumsSections, setPiedavajumsSections] = useState([
+  //   {
+  //     id: 1,
+  //     title: 'PUBLISKS KONCERTS',
+  //     duration: '15 I 30 I 45 minūtes',
+  //     description: 'Garākā uzstāšanās forma no 15 līdz 45 minūtēm. Tā ietver vairāk nekā 10 dažādas repa improvizācijas etīdes, kas kopumā veido pilnvērtīgu koncerta pieredzi.',
+  //     additionalTitle: 'PAPILDUS PIEREDZE – REPA IMPROVIZĀCIJAS DARBNĪCA',
+  //     additionalDescription: '60-90 minūšu laikā dalībniekiem ir iespēja uzzināt un praktiski pamēģināt iztēles iekustināšanas, dīdžejošanas un repa vingrinājumus, kas ir svarīgi, lai veidotu brīvrunu. Iegūtās prasmes noder ikdienas dzīvē, ne tikai repā.',
+  //     image: publicConcert
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'NOTIKUMS SLĒGTĀ VIDĒ',
+  //     duration: '15 I 20 minūtes',
+  //     description: 'Īpaši izveidota programma no BP uzdevumu "zelta repertuāra", kas 15 līdz 20 minūšu šovā iekustina un izklaidē, radot neaizmirstamas emocijas. Šī ir iespēja priekšnesumā iesaistīt īpašus cilvēkus, produktus vai pakalpojumus.',
+  //     additionalTitle: 'ĻOTI PERSONĪGA PIEREDZE – RAKSTĪTI TEKSTI',
+  //     additionalDescription: 'Brīvrunas improvizācija ir gaisīga, taču reizēm ir nepieciešama īpaša detalizācija, lai kādu cilvēku, produktu vai pakalpojumu noliktu pasākuma centrā. Šādos gadījumos ir iespēja sagatavot iepriekš iestudētu priekšnesumu ar iepriekš sagatavotu tekstu.',
+  //     image: closedEvent
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'PRODUKTU VAI PAKALPOJUMU POPULARIZĒŠANA',
+  //     duration: '',
+  //     description: 'Ja produkts vai pakalpojums saskan ar BP komandas vērtībām, esam atvērti arī reklāmas sadarbībām, piedāvājot teksta rakstīšanas pakalpojumu, audio ierakstīšanu, kā arī BP dalībnieku izmantošanu saturā.',
+  //     additionalTitle: '',
+  //     additionalDescription: '',
+  //     image: presentation
+  //   }
+  // ]);
 
   const handleLogout = () => {
     logout();
@@ -1152,7 +1103,7 @@ function ContentManagement() {
   };
 
   const handleEditTestimonial = (testimonial: any) => {
-    setEditingTestimonial(testimonial.id);
+    setEditingTestimonial(testimonial._id);
     setTestimonialForm({
       company: testimonial.company,
       testimonial: testimonial.testimonial,
@@ -1161,30 +1112,37 @@ function ContentManagement() {
     setShowTestimonialForm(true);
   };
 
-  const handleDeleteTestimonial = (id: number) => {
+  const handleDeleteTestimonial = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this testimonial?')) {
-      setTestimonials(prev => prev.filter(testimonial => testimonial.id !== id));
+      try {
+        await deleteTestimonial(id);
+      } catch (error) {
+        console.error('Error deleting testimonial:', error);
+        alert('Failed to delete testimonial');
+      }
     }
   };
 
-  const handleSaveTestimonial = () => {
-    if (editingTestimonial) {
-      // Update existing testimonial
-      setTestimonials(prev => prev.map(testimonial => 
-        testimonial.id === editingTestimonial 
-          ? { ...testimonial, ...testimonialForm }
-          : testimonial
-      ));
-    } else {
-      // Add new testimonial
-      const newTestimonial = {
-        id: Math.max(...testimonials.map(t => t.id)) + 1,
-        ...testimonialForm
-      };
-      setTestimonials(prev => [...prev, newTestimonial]);
+  const handleSaveTestimonial = async () => {
+    try {
+      if (editingTestimonial) {
+        // Update existing testimonial
+        await updateTestimonial(editingTestimonial, testimonialForm);
+      } else {
+        // Add new testimonial
+        await addTestimonial(testimonialForm);
+      }
+      setShowTestimonialForm(false);
+      setEditingTestimonial(null);
+      setTestimonialForm({
+        company: '',
+        testimonial: '',
+        signature: ''
+      });
+    } catch (error) {
+      console.error('Error saving testimonial:', error);
+      alert('Failed to save testimonial');
     }
-    setShowTestimonialForm(false);
-    setEditingTestimonial(null);
   };
 
   const handleCancelTestimonial = () => {
@@ -1198,47 +1156,85 @@ function ContentManagement() {
       name: '',
       logo: ''
     });
+    setSelectedPartnerLogo(null);
+    setUploadError(null);
     setShowPartnerForm(true);
   };
 
   const handleEditPartner = (partner: any) => {
-    setEditingPartner(partner.id);
+    setEditingPartner(partner._id);
     setPartnerForm({
       name: partner.name,
       logo: partner.logo
     });
+    setSelectedPartnerLogo(null);
+    setUploadError(null);
     setShowPartnerForm(true);
   };
 
-  const handleDeletePartner = (id: number) => {
+  const handleDeletePartner = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this partner?')) {
-      setPartners(prev => prev.filter(partner => partner.id !== id));
+      try {
+        await deletePartner(id);
+      } catch (error) {
+        console.error('Error deleting partner:', error);
+        alert('Failed to delete partner');
+      }
     }
   };
 
-  const handleSavePartner = () => {
-    if (editingPartner) {
-      // Update existing partner
-      setPartners(prev => prev.map(partner => 
-        partner.id === editingPartner 
-          ? { ...partner, ...partnerForm }
-          : partner
-      ));
-    } else {
-      // Add new partner
-      const newPartner = {
-        id: Math.max(...partners.map(p => p.id)) + 1,
-        ...partnerForm
+  const handleSavePartner = async () => {
+    try {
+      setUploadError(null);
+      setIsSubmitting(true);
+      
+      let logoUrl = partnerForm.logo;
+
+      // Upload new logo if selected
+      if (selectedPartnerLogo) {
+        console.log('Uploading partner logo:', selectedPartnerLogo.name);
+        logoUrl = await uploadImage(selectedPartnerLogo);
+        console.log('Partner logo uploaded successfully:', logoUrl);
+      }
+
+      const partnerData = {
+        name: partnerForm.name,
+        logo: logoUrl
       };
-      setPartners(prev => [...prev, newPartner]);
+
+      if (editingPartner) {
+        // Update existing partner
+        await updatePartner(editingPartner, partnerData);
+      } else {
+        // Add new partner
+        await addPartner(partnerData);
+      }
+      
+      setShowPartnerForm(false);
+      setEditingPartner(null);
+      setPartnerForm({
+        name: '',
+        logo: ''
+      });
+      setSelectedPartnerLogo(null);
+      setUploadError(null);
+    } catch (error) {
+      console.error('Error saving partner:', error);
+      setUploadError(error instanceof Error ? error.message : 'Failed to save partner');
+    } finally {
+      setIsSubmitting(false);
     }
-    setShowPartnerForm(false);
-    setEditingPartner(null);
   };
 
   const handleCancelPartner = () => {
     setShowPartnerForm(false);
     setEditingPartner(null);
+    setPartnerForm({
+      name: '',
+      logo: ''
+    });
+    setSelectedPartnerLogo(null);
+    setUploadError(null);
   };
 
   const handleAddPiedavajums = () => {
@@ -1251,11 +1247,13 @@ function ContentManagement() {
       additionalDescription: '',
       image: ''
     });
+    setSelectedPiedavajumsImage(null);
+    setUploadError(null);
     setShowPiedavajumsForm(true);
   };
 
   const handleEditPiedavajums = (section: any) => {
-    setEditingPiedavajums(section.id);
+    setEditingPiedavajums(section._id);
     setPiedavajumsForm({
       title: section.title,
       duration: section.duration,
@@ -1264,38 +1262,86 @@ function ContentManagement() {
       additionalDescription: section.additionalDescription || '',
       image: section.image
     });
+    setSelectedPiedavajumsImage(null);
+    setUploadError(null);
     setShowPiedavajumsForm(true);
   };
 
-  const handleDeletePiedavajums = (id: number) => {
+  const handleDeletePiedavajums = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this piedavajums section?')) {
-      setPiedavajumsSections(prev => prev.filter(section => section.id !== id));
+      try {
+        await deletePiedavajumsSection(id);
+      } catch (error) {
+        console.error('Error deleting piedavajums section:', error);
+        alert('Failed to delete piedavajums section');
+      }
     }
   };
 
-  const handleSavePiedavajums = () => {
-    if (editingPiedavajums) {
-      // Update existing section
-      setPiedavajumsSections(prev => prev.map(section => 
-        section.id === editingPiedavajums 
-          ? { ...section, ...piedavajumsForm }
-          : section
-      ));
-    } else {
-      // Add new section
-      const newSection = {
-        id: Math.max(...piedavajumsSections.map(s => s.id)) + 1,
-        ...piedavajumsForm
+  const handleSavePiedavajums = async () => {
+    try {
+      setUploadError(null);
+      setIsSubmitting(true);
+      
+      let imageUrl = piedavajumsForm.image;
+
+      // Upload new image if selected
+      if (selectedPiedavajumsImage) {
+        console.log('Uploading piedavajums image:', selectedPiedavajumsImage.name);
+        imageUrl = await uploadImage(selectedPiedavajumsImage);
+        console.log('Piedavajums image uploaded successfully:', imageUrl);
+      }
+
+      const sectionData = {
+        title: piedavajumsForm.title,
+        duration: piedavajumsForm.duration,
+        description: piedavajumsForm.description,
+        additionalTitle: piedavajumsForm.additionalTitle,
+        additionalDescription: piedavajumsForm.additionalDescription,
+        image: imageUrl
       };
-      setPiedavajumsSections(prev => [...prev, newSection]);
+
+      if (editingPiedavajums) {
+        // Update existing section
+        await updatePiedavajumsSection(editingPiedavajums, sectionData);
+      } else {
+        // Add new section
+        await addPiedavajumsSection(sectionData);
+      }
+      
+      setShowPiedavajumsForm(false);
+      setEditingPiedavajums(null);
+      setPiedavajumsForm({
+        title: '',
+        duration: '',
+        description: '',
+        additionalTitle: '',
+        additionalDescription: '',
+        image: ''
+      });
+      setSelectedPiedavajumsImage(null);
+      setUploadError(null);
+    } catch (error) {
+      console.error('Error saving piedavajums section:', error);
+      setUploadError(error instanceof Error ? error.message : 'Failed to save piedavajums section');
+    } finally {
+      setIsSubmitting(false);
     }
-    setShowPiedavajumsForm(false);
-    setEditingPiedavajums(null);
   };
 
   const handleCancelPiedavajums = () => {
     setShowPiedavajumsForm(false);
     setEditingPiedavajums(null);
+    setPiedavajumsForm({
+      title: '',
+      duration: '',
+      description: '',
+      additionalTitle: '',
+      additionalDescription: '',
+      image: ''
+    });
+    setSelectedPiedavajumsImage(null);
+    setUploadError(null);
   };
 
   const renderTeamMembers = () => (
@@ -1545,7 +1591,7 @@ function ContentManagement() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="border border-gray-200 rounded-lg p-4">
+            <div key={testimonial._id} className="border border-gray-200 rounded-lg p-4">
               <div className="space-y-3">
                 <div>
                   <h4 className="font-medium text-gray-900 text-sm">{testimonial.company}</h4>
@@ -1553,7 +1599,7 @@ function ContentManagement() {
                     {testimonial.testimonial}
                   </p>
                   <p className="text-xs text-gray-500 mt-2 italic">
-                    {testimonial.signature}
+                    — {testimonial.signature}
                   </p>
                 </div>
               </div>
@@ -1565,7 +1611,7 @@ function ContentManagement() {
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDeleteTestimonial(testimonial.id)}
+                  onClick={() => testimonial._id && handleDeleteTestimonial(testimonial._id)}
                   className="flex-1 bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
                 >
                   Delete
@@ -1653,7 +1699,7 @@ function ContentManagement() {
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {partners.map((partner) => (
-            <div key={partner.id} className="border border-gray-200 rounded-lg p-4 text-center">
+            <div key={partner._id} className="border border-gray-200 rounded-lg p-4 text-center">
               <div className="mb-3">
                 <img 
                   src={partner.logo} 
@@ -1672,7 +1718,7 @@ function ContentManagement() {
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDeletePartner(partner.id)}
+                  onClick={() => partner._id && handleDeletePartner(partner._id)}
                   className="flex-1 bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700"
                 >
                   Delete
@@ -1705,23 +1751,60 @@ function ContentManagement() {
               
               <div>
                 <label className="block text-sm font-medium mb-2">Logo</label>
-                <div className="flex items-center space-x-3">
-                  <button
-                    type="button"
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md border border-gray-300"
-                    onClick={() => alert('Logo upload functionality coming soon!')}
-                  >
-                    Upload Logo
-                  </button>
-                  {partnerForm.logo && (
-                    <img 
-                      src={partnerForm.logo} 
-                      alt="Logo preview" 
-                      className="w-12 h-12 object-contain border rounded"
-                    />
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <button
+                      type="button"
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                      onClick={() => partnerLogoInputRef.current?.click()}
+                    >
+                      {selectedPartnerLogo ? 'Change Logo' : 'Upload Logo'}
+                    </button>
+                    {selectedPartnerLogo && (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedPartnerLogo(null)}
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  
+                  <input
+                    ref={partnerLogoInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const error = validateFile(file);
+                        if (error) {
+                          setUploadError(error);
+                          return;
+                        }
+                        setSelectedPartnerLogo(file);
+                        setUploadError(null);
+                      }
+                    }}
+                    className="hidden"
+                  />
+                  
+                  {(selectedPartnerLogo || partnerForm.logo) && (
+                    <div className="mt-3">
+                      <p className="text-sm text-gray-600 mb-2">Logo Preview:</p>
+                      <img 
+                        src={selectedPartnerLogo ? URL.createObjectURL(selectedPartnerLogo) : partnerForm.logo} 
+                        alt="Logo preview" 
+                        className="w-24 h-24 object-contain border rounded bg-gray-50"
+                      />
+                    </div>
+                  )}
+                  
+                  {uploadError && (
+                    <p className="text-red-600 text-sm mt-2">{uploadError}</p>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Logo upload functionality coming soon</p>
               </div>
             </div>
             
@@ -1809,44 +1892,54 @@ function ContentManagement() {
           </button>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {piedavajumsSections.map((section) => (
-            <div key={section.id} className="border border-gray-200 rounded-lg p-4">
-              <div className="mb-3">
-                <img 
-                  src={section.image} 
-                  alt={section.title} 
-                  className="w-full h-32 object-cover rounded" 
-                />
-              </div>
-              <h4 className="font-medium text-gray-900 text-sm mb-2 truncate">
-                {section.title}
-              </h4>
-              {section.duration && (
-                <p className="text-xs text-gray-500 mb-2">
-                  {section.duration}
+        {isLoadingPiedavajums ? (
+          <div className="text-center py-8">
+            <div className="text-gray-500">Loading piedavajums sections...</div>
+          </div>
+        ) : piedavajumsSections.length === 0 ? (
+          <div className="text-center py-8">
+            <div className="text-gray-500">No piedavajums sections found. Add your first section!</div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {piedavajumsSections.map((section) => (
+              <div key={section._id} className="border border-gray-200 rounded-lg p-4">
+                <div className="mb-3">
+                  <img 
+                    src={section.image} 
+                    alt={section.title} 
+                    className="w-full h-32 object-cover rounded" 
+                  />
+                </div>
+                <h4 className="font-medium text-gray-900 text-sm mb-2 truncate">
+                  {section.title}
+                </h4>
+                {section.duration && (
+                  <p className="text-xs text-gray-500 mb-2">
+                    {section.duration}
+                  </p>
+                )}
+                <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                  {section.description}
                 </p>
-              )}
-              <p className="text-sm text-gray-600 mb-3 line-clamp-3">
-                {section.description}
-              </p>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => handleEditPiedavajums(section)}
-                  className="flex-1 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeletePiedavajums(section.id)}
-                  className="flex-1 bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
-                >
-                  Delete
-                </button>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => handleEditPiedavajums(section)}
+                    className="flex-1 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => section._id && handleDeletePiedavajums(section._id)}
+                    className="flex-1 bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Piedavajums Form Modal */}
@@ -1914,36 +2007,75 @@ function ContentManagement() {
               
               <div>
                 <label className="block text-sm font-medium mb-2">Image</label>
-                <div className="flex items-center space-x-3">
-                  <button
-                    type="button"
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md border border-gray-300"
-                    onClick={() => alert('Image upload functionality coming soon!')}
-                  >
-                    Upload Image
-                  </button>
-                  {piedavajumsForm.image && (
-                    <img 
-                      src={piedavajumsForm.image} 
-                      alt="Image preview" 
-                      className="w-16 h-16 object-cover rounded border"
-                    />
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <button
+                      type="button"
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                      onClick={() => piedavajumsImageInputRef.current?.click()}
+                    >
+                      {selectedPiedavajumsImage ? 'Change Image' : 'Upload Image'}
+                    </button>
+                    {selectedPiedavajumsImage && (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedPiedavajumsImage(null)}
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  
+                  <input
+                    ref={piedavajumsImageInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const error = validateFile(file);
+                        if (error) {
+                          setUploadError(error);
+                          return;
+                        }
+                        setSelectedPiedavajumsImage(file);
+                        setUploadError(null);
+                      }
+                    }}
+                    className="hidden"
+                  />
+                  
+                  {(selectedPiedavajumsImage || piedavajumsForm.image) && (
+                    <div className="mt-3">
+                      <p className="text-sm text-gray-600 mb-2">Image Preview:</p>
+                      <img 
+                        src={selectedPiedavajumsImage ? URL.createObjectURL(selectedPiedavajumsImage) : piedavajumsForm.image} 
+                        alt="Image preview" 
+                        className="w-32 h-24 object-cover border rounded bg-gray-50"
+                      />
+                    </div>
+                  )}
+                  
+                  {uploadError && (
+                    <p className="text-red-600 text-sm mt-2">{uploadError}</p>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Image upload functionality coming soon</p>
               </div>
             </div>
             
             <div className="flex space-x-3 mt-6">
               <button
                 onClick={handleSavePiedavajums}
-                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                disabled={isSubmitting}
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
               >
-                {editingPiedavajums ? 'Update Section' : 'Add Section'}
+                {isSubmitting ? 'Saving...' : (editingPiedavajums ? 'Update Section' : 'Add Section')}
               </button>
               <button
                 onClick={handleCancelPiedavajums}
-                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                disabled={isSubmitting}
+                className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -2129,37 +2261,43 @@ function App() {
       <GalleryProvider>
         <TeamProvider>
           <AboutProvider>
-            <Routes>
-              <Route path="/" element={<UnderConstruction />} />
-              <Route path="/demo/*" element={<MainPage />} />
-              <Route path="/demo/galerija" element={<GalleryPage />} />
-              <Route path="/demo/piedavajums" element={<PiedavajumsPage />} />
-              <Route path="/admin" element={<AdminLogin />} />
-              <Route
-                path="/admin/content"
-                element={
-                  <ProtectedRoute>
-                    <ContentManagement />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/gallery"
-                element={
-                  <ProtectedRoute>
-                    <GalleryManagement />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
+            <TestimonialsProvider>
+              <PartnersProvider>
+                <PiedavajumsProvider>
+                  <Routes>
+                    <Route path="/" element={<UnderConstruction />} />
+                    <Route path="/demo/*" element={<MainPage />} />
+                    <Route path="/demo/galerija" element={<GalleryPage />} />
+                    <Route path="/demo/piedavajums" element={<PiedavajumsPage />} />
+                    <Route path="/admin" element={<AdminLogin />} />
+                    <Route
+                      path="/admin/content"
+                      element={
+                        <ProtectedRoute>
+                          <ContentManagement />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/dashboard"
+                      element={
+                        <ProtectedRoute>
+                          <Dashboard />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/gallery"
+                      element={
+                        <ProtectedRoute>
+                          <GalleryManagement />
+                        </ProtectedRoute>
+                      }
+                    />
+                  </Routes>
+                </PiedavajumsProvider>
+              </PartnersProvider>
+            </TestimonialsProvider>
           </AboutProvider>
         </TeamProvider>
       </GalleryProvider>
