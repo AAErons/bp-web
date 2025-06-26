@@ -144,7 +144,7 @@ function MainPage() {
   const { aboutText, isLoading: isLoadingAboutText } = useAbout();
   const { testimonials, isLoading: isLoadingTestimonials } = useTestimonials();
   const { partners, isLoading: isLoadingPartners } = usePartners();
-  const { piedavajumsSections, isLoading: isLoadingPiedavajums } = usePiedavajums();
+  const { piedavajumsSections, addPiedavajumsSection, updatePiedavajumsSection, deletePiedavajumsSection, isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRefs = {
@@ -312,7 +312,7 @@ function MainPage() {
                 Ko saka mūsu klienti par "Brīvrunu projektu"?
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                {testimonials.map((testimonial, index) => (
+                {testimonials.map((testimonial) => (
                   <div key={testimonial._id} className="bg-white border border-black p-6 md:p-8 relative">
                     <div className="absolute -top-4 left-6 bg-black text-white px-4 font-bold text-sm md:text-base">
                       {testimonial.company}
@@ -754,6 +754,13 @@ function ContentManagement() {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [localAboutText, setLocalAboutText] = useState(aboutText);
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const sectionRefs = {
+    hero: useRef<HTMLDivElement>(null),
+    about: useRef<HTMLDivElement>(null),
+    atsauksmes: useRef<HTMLDivElement>(null)
+  };
 
   // Update local state when context changes
   useEffect(() => {
@@ -774,38 +781,7 @@ function ContentManagement() {
   const smallImageInputRef = useRef<HTMLInputElement>(null);
   const fullImageInputRef = useRef<HTMLInputElement>(null);
 
-  // About Section Text State
-  // const [aboutText, setAboutText] = useState('"Brīvrunu Projekts" ir pirmais un vienīgais repa improvizācijas kolektīvs Latvijā. Skatītāju ieteikumus, vidi un notikuma tematiku "Brīvrunu Projekts" pārvērš repa improvizācijas etīdēs, kas rada pacilājošas emocijas un pasākuma pievienoto vērtību. Astoņu gadu laikā izkoptie formāti uzrunā plašu auditoriju, neatkarīgi no vecuma vai izpratnes par repu.');
-
   // Testimonials State
-  // const [testimonials, setTestimonials] = useState([
-  //   {
-  //     id: 1,
-  //     company: 'GULBENES NOVADA JAUNIEŠU CENTRS "BĀZE"',
-  //     testimonial: 'Sadarbība ar "Brīvrunu Projektu" mūsu pasākumā "Gada atsitiens 2024" ietvaros bija patiesi iedvesmojoša un profesionāla. Iepriekš izrunātas detaļas un velmes tika realizētas ar uzviju. Brīvrunu projekts mūs pārsteidza ar unikāliem un spēcīgiem tekstiem par visiem pasākuma nominantiem, ko viņi izpildīja savā īpašajā stilā – ar harismu, dinamiku un lielisku savstarpējo saspēli. Mūzika, enerģija un kustība – viss kopā radīja neaizmirstamu pieredzi. Skatitāji, nominanti, organizātori palika sajūma par "Brīvrunu projekta" izpildījumu. No sirds iesakām šo komandu arī citiem!',
-  //     signature: 'Cieņā, Valērija Stībele, Gulbenes novada jauniešu centrs "Bāze" vadītāja'
-  //   },
-  //   {
-  //     id: 2,
-  //     company: 'VSIA "LATVIJAS KONCERTI"',
-  //     testimonial: '2025.gada 20.martā VEF KP izskanēja VSIA "Latvijas Koncerti" veidotā cikla "Mūzika Tev" pēdējais koncerts 7.-12.klasēm. Parasti šo koncertu veidojam demokrātiskāku, aicinot tajā piedalīties solistus un grupas, kuru muzikālie žanri un izpausmes mūsu jauniešiem ir tuvāki. Pirmo reizi iepazinām "Brīvrunu projektu", grupu, kam bija jānoslēdz visa koncertprogramma. Patiess bija mūsu- koncertu rīkotāju un, protams, arī publikas atzinums- "Brīvrunu projekts" bija tieši tas, kas jauniešiem bija vajadzīgs. Grupas uzstāšanās bija tik aizrautīga, tik enerģijas pārpilna, ka nav šaubu- visi koncerta apmeklētāji aizgāja no koncerta absolūti uzlādēti. Pārsteidz ne tikai viņu lieliskās repošanas prasmes, elektronikas izmantojums, bet arī asprātība un humors savos priekšnesumos iesaistot jauniešus no klausītāju rindām. Īpaši gribētos izcelt arī "Brīvrunu projekta" dalībnieku pieklājību, vienkāršību un sirsnību saskarē ar mums, koncerta veidotājiem. Noteikti pie izdevības turpināsim sadarbību ar "Brīvrunu projektu" arī nākotnē',
-  //     signature: 'Ar cieņu, Karina Bērziņa, VSIA Latvijas Koncerti, Izglītības programmas vadītāja, producente'
-  //   },
-  //   {
-  //     id: 3,
-  //     company: 'SWEDBANK',
-  //     testimonial: 'Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai.',
-  //     signature: '— SWEDBANK'
-  //   },
-  //   {
-  //     id: 4,
-  //     company: 'IDEJU INSTITŪTS',
-  //     testimonial: 'Sadarbība ar Brīvrunu Projektu vienmēr ir bijusi ļoti iedvesmojoša un profesionāla. Viņu spēja radīt saturu, kas uzrunā un aizrauj, ir patiesi unikāla. Projekti, ko īstenojām kopā ar viņiem, bija ne tikai kvalitatīvi, bet arī emocionāli spēcīgi un ar lielu pievienoto vērtību mūsu auditorijai.',
-  //     signature: '— IDEJU INSTITŪTS'
-  //   }
-  // ]);
-
-  // Testimonial Form State
   const [showTestimonialForm, setShowTestimonialForm] = useState(false);
   const [editingTestimonial, setEditingTestimonial] = useState<string | null>(null);
   const [testimonialForm, setTestimonialForm] = useState({
@@ -815,25 +791,6 @@ function ContentManagement() {
   });
 
   // Partners State
-  // const [partners, setPartners] = useState([
-  //   { id: 1, name: 'Tio Kauss', logo: tioKaussLogo },
-  //   { id: 2, name: 'Straume', logo: straumeLogo },
-  //   { id: 3, name: 'Spiediens', logo: spiediensLogo },
-  //   { id: 4, name: 'Sigulda', logo: siguldaLogo },
-  //   { id: 5, name: 'Riga', logo: rigaLogo },
-  //   { id: 6, name: 'Scania', logo: scaniaLogo },
-  //   { id: 7, name: 'Positvis', logo: positvisLogo },
-  //   { id: 8, name: 'LMT', logo: lmtLogo },
-  //   { id: 9, name: 'Investment Agency', logo: investmentAgencyLogo },
-  //   { id: 10, name: 'Ideju Kauss', logo: idejuKaussLogo },
-  //   { id: 11, name: 'IKEA', logo: ikeaLogo },
-  //   { id: 12, name: 'Fee', logo: feeLogo },
-  //   { id: 13, name: 'Dienas Bizness', logo: dienasBiznessLogo },
-  //   { id: 14, name: 'The Bronxs', logo: theBronxsLogo },
-  //   { id: 15, name: 'Swedbank', logo: swedbankLogo }
-  // ]);
-
-  // Partner Form State
   const [showPartnerForm, setShowPartnerForm] = useState(false);
   const [editingPartner, setEditingPartner] = useState<string | null>(null);
   const [partnerForm, setPartnerForm] = useState({
@@ -863,35 +820,6 @@ function ContentManagement() {
     'Mūsu arsenālā ir vairāk nekā 15 dažādas idejas, kā pāris minūtēs jūsu pasākums var iegūt unikālu skanējumu un radīt apmeklētājiem emocijas.',
     'Mēs spējam gan izveidot notikumu no nulles, gan izcelt un paspilgtināt jūsu ideju vai stāstu. Tāpēc mūs atkārtoti aicina uzstāties pilsētas svētkos, korporatīvās ballēs, festivālos un citos notikumos, jo katra performance ir vienreizēja un unikāla.'
   ]);
-  // const [piedavajumsSections, setPiedavajumsSections] = useState([
-  //   {
-  //     id: 1,
-  //     title: 'PUBLISKS KONCERTS',
-  //     duration: '15 I 30 I 45 minūtes',
-  //     description: 'Garākā uzstāšanās forma no 15 līdz 45 minūtēm. Tā ietver vairāk nekā 10 dažādas repa improvizācijas etīdes, kas kopumā veido pilnvērtīgu koncerta pieredzi.',
-  //     additionalTitle: 'PAPILDUS PIEREDZE – REPA IMPROVIZĀCIJAS DARBNĪCA',
-  //     additionalDescription: '60-90 minūšu laikā dalībniekiem ir iespēja uzzināt un praktiski pamēģināt iztēles iekustināšanas, dīdžejošanas un repa vingrinājumus, kas ir svarīgi, lai veidotu brīvrunu. Iegūtās prasmes noder ikdienas dzīvē, ne tikai repā.',
-  //     image: publicConcert
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'NOTIKUMS SLĒGTĀ VIDĒ',
-  //     duration: '15 I 20 minūtes',
-  //     description: 'Īpaši izveidota programma no BP uzdevumu "zelta repertuāra", kas 15 līdz 20 minūšu šovā iekustina un izklaidē, radot neaizmirstamas emocijas. Šī ir iespēja priekšnesumā iesaistīt īpašus cilvēkus, produktus vai pakalpojumus.',
-  //     additionalTitle: 'ĻOTI PERSONĪGA PIEREDZE – RAKSTĪTI TEKSTI',
-  //     additionalDescription: 'Brīvrunas improvizācija ir gaisīga, taču reizēm ir nepieciešama īpaša detalizācija, lai kādu cilvēku, produktu vai pakalpojumu noliktu pasākuma centrā. Šādos gadījumos ir iespēja sagatavot iepriekš iestudētu priekšnesumu ar iepriekš sagatavotu tekstu.',
-  //     image: closedEvent
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'PRODUKTU VAI PAKALPOJUMU POPULARIZĒŠANA',
-  //     duration: '',
-  //     description: 'Ja produkts vai pakalpojums saskan ar BP komandas vērtībām, esam atvērti arī reklāmas sadarbībām, piedāvājot teksta rakstīšanas pakalpojumu, audio ierakstīšanu, kā arī BP dalībnieku izmantošanu saturā.',
-  //     additionalTitle: '',
-  //     additionalDescription: '',
-  //     image: presentation
-  //   }
-  // ]);
 
   const handleLogout = () => {
     logout();
