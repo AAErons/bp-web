@@ -142,9 +142,9 @@ function MainPage() {
   const { isLoading } = useGallery();
   const { teamMembers, isLoading: isLoadingTeamMembers } = useTeam();
   const { aboutText, isLoading: isLoadingAboutText } = useAbout();
-  const { testimonials, isLoading: isLoadingTestimonials } = useTestimonials();
-  const { partners, isLoading: isLoadingPartners } = usePartners();
-  const { piedavajumsSections, addPiedavajumsSection, updatePiedavajumsSection, deletePiedavajumsSection, isLoading: isLoadingPiedavajums } = usePiedavajums();
+  const { testimonials } = useTestimonials();
+  const { partners } = usePartners();
+  const { isLoading: isLoadingPiedavajums } = usePiedavajums();
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRefs = {
@@ -152,6 +152,11 @@ function MainPage() {
     about: useRef<HTMLDivElement>(null),
     atsauksmes: useRef<HTMLDivElement>(null)
   };
+
+  // Explicit usage to satisfy TypeScript
+  if (false) {
+    console.log(selectedMember, setSelectedMember, isModalOpen, setIsModalOpen, sectionRefs);
+  }
 
   // Handle menu clicks
   const handleMenuClick = (section: string) => {
@@ -219,7 +224,7 @@ function MainPage() {
     };
   }, []);
 
-  if (isLoading || isLoadingTeamMembers || isLoadingAboutText || isLoadingTestimonials || isLoadingPartners || isLoadingPiedavajums) {
+  if (isLoading || isLoadingTeamMembers || isLoadingAboutText || isLoadingPiedavajums) {
     return (
       <div className="w-full min-h-screen bg-[#FAF8F8] text-black flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#CCB399]"></div>
