@@ -4,6 +4,9 @@ import { useGallery } from '../contexts/GalleryContext';
 import type { Gallery } from '../types';
 import GalleryView from '../components/GalleryView';
 
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
 export default function GalleryManagement() {
   const { galleries, addGallery, updateGallery, deleteGallery } = useGallery();
   const navigate = useNavigate();
@@ -25,7 +28,7 @@ export default function GalleryManagement() {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectedTitleImageIndex, setSelectedTitleImageIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
   const handleSetTitleImage = (imageId: string | number) => {
     if (typeof imageId === 'string') {
@@ -54,7 +57,7 @@ export default function GalleryManagement() {
         errors.push(`${file.name} is not an image file`);
       }
       if (file.size > MAX_FILE_SIZE) {
-        errors.push(`${file.name} is too large. Maximum size is 20MB`);
+        errors.push(`${file.name} is too large. Maximum size is 10MB`);
       }
     });
     return errors;
@@ -80,30 +83,25 @@ export default function GalleryManagement() {
       for (let i = 0; i < selectedImages.length; i++) {
         const file = selectedImages[i];
         const formData = new FormData();
-        formData.append('imageFile', file);
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
         try {
-          const res = await fetch('https://bp-web-api.vercel.app/api/images', {
+          const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
             method: 'POST',
             body: formData,
           });
-          
           if (!res.ok) {
-            if (res.status === 413) {
-              throw new Error(`File ${file.name} is too large. Maximum size is 20MB`);
-            } else if (res.status === 0) {
-              throw new Error('Network error: Unable to connect to the server. Please check your internet connection.');
-            } else {
-              const errorData = await res.json().catch(() => null);
-              throw new Error(errorData?.message || `Failed to upload ${file.name}: ${res.statusText}`);
-            }
+            const errorData = await res.json().catch(() => null);
+            throw new Error(errorData?.error?.message || `Failed to upload ${file.name}: ${res.statusText}`);
           }
-
           const data = await res.json();
-          if (data._id) {
+          if (data.secure_url) {
             uploadedImages.push({
-              id: data._id,
+              id: data.secure_url,
               titleImage: i === selectedTitleImageIndex
             });
+          } else {
+            throw new Error('Invalid response from Cloudinary');
           }
         } catch (error) {
           console.error('Error uploading image:', error);
@@ -356,7 +354,7 @@ export default function GalleryManagement() {
                     {editingId ? 'Add More Images' : 'Images'}
                   </label>
                   <p className="text-sm text-gray-500 mb-2">
-                    Maximum file size: 20MB. Supported formats: JPG, PNG, GIF
+                    Maximum file size: 10MB. Supported formats: JPG, PNG, GIF
                   </p>
                   <input
                     ref={fileInputRef}

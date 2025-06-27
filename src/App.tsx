@@ -22,6 +22,11 @@ interface TeamMember {
   fullImage: string;
 }
 
+// Use Vite environment variables for Cloudinary config
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+// Make sure to add VITE_CLOUDINARY_UPLOAD_PRESET=your_unsigned_preset to your .env file
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
 function UnderConstruction() {
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-green-500">
@@ -256,10 +261,14 @@ function MainPage() {
                     TAS IR BRĪVRUNU KAS?
                   </h1>
                   <span
-                    className="block text-white text-sm md:text-xl lg:text-2xl font-semibold uppercase tracking-wider mt-1 md:mt-2 cursor-pointer hover:underline"
-                    onClick={() => navigate('/demo/piedavajums')}
+                    className="block mt-1 md:mt-2"
                   >
-                    UZZINĀT VAIRĀK
+                    <span
+                      className="inline-block border border-white px-3 py-1 text-white text-sm md:text-xl lg:text-2xl font-semibold uppercase tracking-wider cursor-pointer transition-colors duration-200 hover:text-[#CCB399] hover:border-[#CCB399] bg-transparent"
+                      onClick={() => navigate('/demo/piedavajums')}
+                    >
+                      UZZINĀT VAIRĀK
+                    </span>
                   </span>
                 </div>
               </div>
@@ -609,7 +618,7 @@ function PiedavajumsPage() {
           {/* Contact Form */}
           <div className="w-full max-w-2xl mx-auto mt-16 mb-8 px-4">
             <div className="border-t border-black pt-8">
-              <h3 className="text-center text-lg md:text-xl font-bold mb-6">Jautājumi?</h3>
+              <h3 className="text-center text-lg md:text-xl font-bold mb-6">Sazinieties ar mums!</h3>
               <form onSubmit={handleFormSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -807,47 +816,36 @@ function ContentManagement() {
     if (!file.type.startsWith('image/')) {
       return `${file.name} is not an image file`;
     }
-    if (file.size > 20 * 1024 * 1024) {
-      return `${file.name} is too large. Maximum size is 20MB`;
+    if (file.size > 10 * 1024 * 1024) {
+      return `${file.name} is too large. Maximum size is 10MB`;
     }
     return null;
   };
 
+  // Replace uploadImage with direct-to-Cloudinary logic
   const uploadImage = async (file: File): Promise<string> => {
+    const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`;
     const formData = new FormData();
-    formData.append('imageFile', file);
-    
-    const res = await fetch('https://bp-web-api.vercel.app/api/images', {
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+    const res = await fetch(url, {
       method: 'POST',
       body: formData,
     });
-    
+
     if (!res.ok) {
-      if (res.status === 413) {
-        throw new Error(`File ${file.name} is too large. Maximum size is 20MB`);
-      } else if (res.status === 0) {
-        throw new Error('Network error: Unable to connect to the server. Please check your internet connection.');
-      } else {
-        const errorData = await res.json().catch(() => null);
-        throw new Error(errorData?.message || `Failed to upload ${file.name}: ${res.statusText}`);
-      }
+      const errorData = await res.json().catch(() => null);
+      throw new Error(errorData?.error?.message || `Failed to upload ${file.name}: ${res.statusText}`);
     }
 
     const data = await res.json();
-    console.log('Cloudinary upload response:', data); // Debug log
-    
-    // Handle the actual response structure from your backend
-    if (data.imageUrl) {
-      return data.imageUrl;
+    if (data.secure_url) {
+      return data.secure_url;
     } else if (data.url) {
       return data.url;
-    } else if (data.secure_url) {
-      return data.secure_url;
-    } else if (data.public_id) {
-      // If we only get public_id, construct the URL
-      return `https://res.cloudinary.com/dqgrzx5yt/image/upload/${data.public_id}`;
     } else {
-      throw new Error('Invalid response from image upload service');
+      throw new Error('Invalid response from Cloudinary');
     }
   };
 

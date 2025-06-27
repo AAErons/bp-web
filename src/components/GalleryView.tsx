@@ -7,6 +7,24 @@ interface GalleryViewProps {
   onDeleteGallery?: (id: string) => void;
 }
 
+function groupGalleriesByYear(galleries: Gallery[]) {
+  const groups: Record<string, Gallery[]> = {};
+  galleries.forEach(gallery => {
+    const year = new Date(gallery.eventDate).getFullYear().toString();
+    if (!groups[year]) groups[year] = [];
+    groups[year].push(gallery);
+  });
+  return groups;
+}
+
+function formatDateEU(dateString: string) {
+  const d = new Date(dateString);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
 export default function GalleryView({ galleries, onGalleryClick, onDeleteGallery }: GalleryViewProps) {
   const [selectedGallery, setSelectedGallery] = useState<Gallery | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -43,58 +61,76 @@ export default function GalleryView({ galleries, onGalleryClick, onDeleteGallery
     );
   };
 
+  // Group and sort galleries by year
+  const grouped = groupGalleriesByYear(galleries);
+  const years = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
+  const currentYear = new Date().getFullYear().toString();
+
   return (
     <>
-      {/* Gallery Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {galleries.map((gallery) => (
-          <div
-            key={gallery._id || gallery.id}
-            className="group relative bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
-            onClick={() => handleGalleryClick(gallery)}
-          >
-            {/* Gallery Cover Image */}
-            <div className="aspect-w-16 aspect-h-9 bg-gray-200 relative">
-              {gallery.images.length > 0 ? (
-                <img
-                  src={gallery.images.find(img => img.titleImage)?.url || gallery.images[0].url}
-                  alt={gallery.name}
-                  className="object-cover w-full h-64"
-                />
-              ) : (
-                <div className="w-full h-64 flex items-center justify-center bg-gray-100">
-                  <span className="text-gray-400">No images</span>
-                </div>
-              )}
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
-            </div>
-
-            {/* Gallery Info */}
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{gallery.name}</h3>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-500">
-                  {new Date(gallery.eventDate).toLocaleDateString()}
-                </span>
-                <span className="text-sm text-gray-500">
-                  {gallery.images.length} {gallery.images.length === 1 ? 'image' : 'images'}
-                </span>
-              </div>
-              {onDeleteGallery && (
-                <button
-                  className="mt-4 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                  onClick={e => {
-                    e.stopPropagation();
-                    onDeleteGallery(gallery._id);
-                  }}
-                >
-                  Delete
-                </button>
-              )}
-            </div>
+      {/* Grouped Gallery Grid */}
+      {years.map((year, idx) => (
+        <div key={year} className="mb-12">
+          <div className="flex items-center my-8">
+            <div className="flex-grow border-t border-gray-300"></div>
+            <span className="mx-6 text-2xl font-bold text-gray-700 bg-white px-4 py-1 uppercase tracking-widest shadow-sm">
+              {year}
+            </span>
+            <div className="flex-grow border-t border-gray-300"></div>
           </div>
-        ))}
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {grouped[year]
+              .sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime())
+              .map((gallery) => (
+                <div
+                  key={gallery._id || gallery.id}
+                  className="group relative bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+                  onClick={() => handleGalleryClick(gallery)}
+                >
+                  {/* Gallery Cover Image */}
+                  <div className="aspect-w-16 aspect-h-9 bg-gray-200 relative">
+                    {gallery.images.length > 0 ? (
+                      <img
+                        src={gallery.images.find(img => img.titleImage)?.url || gallery.images[0].url}
+                        alt={gallery.name}
+                        className="object-cover w-full h-64"
+                      />
+                    ) : (
+                      <div className="w-full h-64 flex items-center justify-center bg-gray-100">
+                        <span className="text-gray-400">No images</span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
+                  </div>
+
+                  {/* Gallery Info */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{gallery.name}</h3>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">
+                        {formatDateEU(gallery.eventDate)}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {gallery.images.length} {gallery.images.length === 1 ? 'image' : 'images'}
+                      </span>
+                    </div>
+                    {onDeleteGallery && (
+                      <button
+                        className="mt-4 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                        onClick={e => {
+                          e.stopPropagation();
+                          onDeleteGallery(gallery._id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      ))}
 
       {/* Lightbox Modal */}
       {selectedGallery && (
@@ -124,18 +160,6 @@ export default function GalleryView({ galleries, onGalleryClick, onDeleteGallery
                     alt={selectedGallery.images[selectedImageIndex].title || 'Gallery image'}
                     className="max-w-full max-h-[80vh] object-contain"
                   />
-                  {selectedGallery.images[selectedImageIndex].title && (
-                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent text-white">
-                      <h3 className="text-lg font-medium">
-                        {selectedGallery.images[selectedImageIndex].title}
-                      </h3>
-                      {selectedGallery.images[selectedImageIndex].description && (
-                        <p className="text-sm text-gray-200">
-                          {selectedGallery.images[selectedImageIndex].description}
-                        </p>
-                      )}
-                    </div>
-                  )}
                 </div>
               ) : (
                 <div className="text-white text-center">

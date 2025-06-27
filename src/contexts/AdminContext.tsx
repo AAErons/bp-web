@@ -23,7 +23,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const login = async (password: string): Promise<boolean> => {
     // In production, this should be a server-side check
     // For now, we'll check against the environment variable
-    const adminPassword = "123456";
+    const adminPassword = "OnTRoScEst";
     
     if (password === adminPassword) {
       localStorage.setItem('adminAuth', 'true');
