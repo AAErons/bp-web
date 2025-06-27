@@ -243,10 +243,10 @@ function MainPage() {
                 className="w-full max-h-[calc(100vh-4rem)] md:max-h-[calc(100vh-5rem)] h-auto object-contain object-top"
                 style={{ display: 'block' }}
               />
-              <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center -mb-2 md:mb-12 z-10 px-4">
-                <div className="bg-black/70 px-2 md:px-4 py-3 md:py-5 flex flex-col items-center">
+              <div className="absolute bottom-2 left-0 right-0 flex flex-col items-center md:mb-12 z-10 px-4">
+                <div className="bg-black/70 px-2 md:px-4 py-1 md:py-2 flex flex-col items-center">
                   <h1 
-                    className="font-extrabold uppercase text-white text-center text-3xl md:text-6xl tracking-tight"
+                    className="font-extrabold uppercase text-white text-center text-2xl md:text-6xl lg:text-7xl tracking-tight"
                     style={{
                       lineHeight: '1.1',
                       letterSpacing: '-0.03em',
@@ -256,7 +256,7 @@ function MainPage() {
                     TAS IR BRĪVRUNU KAS?
                   </h1>
                   <span
-                    className="block text-white text-base md:text-xl font-semibold uppercase tracking-wider mt-2 cursor-pointer hover:underline"
+                    className="block text-white text-sm md:text-xl lg:text-2xl font-semibold uppercase tracking-wider mt-1 md:mt-2 cursor-pointer hover:underline"
                     onClick={() => navigate('/demo/piedavajums')}
                   >
                     UZZINĀT VAIRĀK
