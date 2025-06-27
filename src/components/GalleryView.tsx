@@ -64,12 +64,11 @@ export default function GalleryView({ galleries, onGalleryClick, onDeleteGallery
   // Group and sort galleries by year
   const grouped = groupGalleriesByYear(galleries);
   const years = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
-  const currentYear = new Date().getFullYear().toString();
 
   return (
     <>
       {/* Grouped Gallery Grid */}
-      {years.map((year, idx) => (
+      {years.map((year) => (
         <div key={year} className="mb-12">
           <div className="flex items-center my-8">
             <div className="flex-grow border-t border-gray-300"></div>
