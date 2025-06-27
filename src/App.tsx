@@ -499,14 +499,14 @@ function PiedavajumsPage() {
     e.preventDefault();
     setFormStatus('sending');
     try {
-      const response = await fetch('https://formspree.io/f/mblobqbr', {
+      const response = await fetch('https://formspree.io/f/xgvyrvrw', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ...formData,
-          _replyto: 'eriksfreimanis@gmail.com',
+          _replyto: 'brivrunuprojekts@gmail.com',
           _subject: 'Jauns jautājums no BP mājaslapas',
         }),
       });
