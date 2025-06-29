@@ -348,7 +348,7 @@ function MainPage() {
               </div>
 
               <div className="text-center">
-                <div className="flex justify-center gap-12 md:gap-16">
+                <div className="flex justify-center gap-6 md:gap-16">
                   <a 
                     href="https://www.instagram.com/brivrunuprojekts/" 
                     target="_blank" 
