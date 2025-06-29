@@ -27,23 +27,6 @@ const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 // Make sure to add VITE_CLOUDINARY_UPLOAD_PRESET=your_unsigned_preset to your .env file
 const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
-function UnderConstruction() {
-  return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-green-500">
-      <div className="bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center max-w-md w-full">
-        <h1 className="text-2xl font-bold text-amber-600 mb-4 flex items-center gap-2">
-          <span role="img" aria-label="construction">🚧</span>
-          Under Construction
-          <span role="img" aria-label="construction">🚧</span>
-        </h1>
-        <div className="text-center text-gray-700 mb-2">Iegriezies vēlāk!</div>
-        <div className="text-center text-gray-700 mb-4">Mēs cepjam augšā ko jaudīgu!</div>
-        <div className="text-7xl animate-bounce">👨‍🍳</div>
-      </div>
-    </div>
-  );
-}
-
 function Navigation({ activeSection, onMenuClick, location }: { 
   activeSection: string; 
   onMenuClick: (section: string) => void;
@@ -55,14 +38,14 @@ function Navigation({ activeSection, onMenuClick, location }: {
   // Determine active state based on both activeSection and location
   const getActiveState = (section: string) => {
     // For main page sections
-    if (location.pathname === '/demo') {
+    if (location.pathname === '/') {
       return activeSection === section;
     }
     // For galerija and piedavajums pages
-    if (location.pathname === '/demo/galerija') {
+    if (location.pathname === '/galerija') {
       return section === 'galerija';
     }
-    if (location.pathname === '/demo/piedavajums') {
+    if (location.pathname === '/piedavajums') {
       return section === 'piedavajums';
     }
     return false;
@@ -73,12 +56,12 @@ function Navigation({ activeSection, onMenuClick, location }: {
 
   // Handle BP logo click
   const handleLogoClick = () => {
-    if (location.pathname === '/demo') {
-      // If already on /demo, scroll to hero
+    if (location.pathname === '/') {
+      // If already on root, scroll to hero
       onMenuClick('hero');
     } else {
-      // If not, navigate to /demo#hero
-      navigate('/demo#hero');
+      // If not, navigate to root#hero
+      navigate('/#hero');
     }
     setIsMenuOpen(false);
   };
@@ -163,7 +146,7 @@ function MainPage() {
   // Handle menu clicks
   const handleMenuClick = (section: string) => {
     if (section === 'galerija' || section === 'piedavajums') {
-      navigate(`/demo/${section}`);
+      navigate(`/${section}`);
       return;
     }
 
@@ -265,7 +248,7 @@ function MainPage() {
                   >
                     <span
                       className="inline-block border border-white px-3 py-1 text-white text-sm md:text-xl lg:text-2xl font-semibold uppercase tracking-wider cursor-pointer transition-colors duration-200 hover:text-[#CCB399] hover:border-[#CCB399] bg-transparent"
-                      onClick={() => navigate('/demo/piedavajums')}
+                      onClick={() => navigate('/piedavajums')}
                     >
                       UZZINĀT VAIRĀK
                     </span>
@@ -468,10 +451,10 @@ function GalleryPage() {
 
   const handleMenuClick = (section: string) => {
     if (section === 'galerija' || section === 'piedavajums') {
-      navigate(`/demo/${section}`);
+      navigate(`/${section}`);
       return;
     }
-    navigate(`/demo#${section}`);
+    navigate(`/#${section}`);
   };
 
   return (
@@ -542,10 +525,10 @@ function PiedavajumsPage() {
 
   const handleMenuClick = (section: string) => {
     if (section === 'galerija' || section === 'piedavajums') {
-      navigate(`/demo/${section}`);
+      navigate(`/${section}`);
       return;
     }
-    navigate(`/demo#${section}`);
+    navigate(`/#${section}`);
   };
 
   if (isLoadingPiedavajums) {
@@ -2258,10 +2241,9 @@ function App() {
               <PartnersProvider>
                 <PiedavajumsProvider>
                   <Routes>
-                    <Route path="/" element={<UnderConstruction />} />
-                    <Route path="/demo/*" element={<MainPage />} />
-                    <Route path="/demo/galerija" element={<GalleryPage />} />
-                    <Route path="/demo/piedavajums" element={<PiedavajumsPage />} />
+                    <Route path="/" element={<MainPage />} />
+                    <Route path="/galerija" element={<GalleryPage />} />
+                    <Route path="/piedavajums" element={<PiedavajumsPage />} />
                     <Route path="/admin" element={<AdminLogin />} />
                     <Route
                       path="/admin/content"
